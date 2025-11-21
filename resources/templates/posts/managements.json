@@ -1,0 +1,72 @@
+[
+    {
+        "name": "managements",
+        "label": "Managements", 
+        "multilanguage": "true",
+        "lang_option" : [
+            {
+                "name" : "Indonesian",
+                "value" : "id",
+                "master" : "true"
+            },
+            {
+                "name" : "English",
+                "value" : "en",
+                "master" : "false"
+            }
+        ],
+        "components": [
+            {
+                "keyName": "list",
+                "label": "List",
+                "section": "3",
+                "fields": [
+                    {
+                        "name": "name",
+                        "label": "Name",
+                        "type": "text"
+                    },
+                    {
+                        "name": "position",
+                        "label": "Position",
+                        "type": "text"
+                    },
+                    {
+                        "name": "picture",
+                        "label": "Profile Picture",
+                        "type": "image",
+                        "size" : 60,
+                        "info": "Recommended 450 x 450 px (ratio 1:1) and recommended file size 60 KB"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "type": "textarea"
+                    },
+                    {
+                        "name": "document_list",
+                        "label": "Document List",
+                        "type": "repeater_page",
+                        "list": [
+                            {
+                                "name": "title",
+                                "label": "Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "format",
+                                "label": "Format",
+                                "type": "text"
+                            },
+                            {
+                                "name": "cv",
+                                "label": "CV",
+                                "type": "upload"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

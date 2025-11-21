@@ -1,0 +1,337 @@
+[
+    {
+        "name": "products",
+        "label": "Products", 
+        "multilanguage": "true",
+        "lang_option" : [
+            {
+                "name" : "Indonesian",
+                "value" : "id",
+                "master" : "true"
+            },
+            {
+                "name" : "English",
+                "value" : "en",
+                "master" : "false"
+            }
+        ],
+        "components": [
+            {
+                "keyName": "banner",
+                "label": "Banner",
+                "section": "3",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "small_title",
+                        "label": "Small Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "thumbnail_image",
+                        "label": "Thumbnail Image",
+                        "type": "image",
+                        "info": "Recommended file size 100 KB"
+                    },
+                    {
+                      "name": "alt_text_thumbnail_image",
+                      "label": "Alt Text (Thumbnail Image)",
+                      "type": "text",
+                      "placeholder": "ex: alt text image"
+                    },
+                    {
+                        "name": "thumbnail_desc",
+                        "label": "Thumbnail Description",
+                        "type": "textarea"
+                    },
+                    {
+                        "name": "image_mobile",
+                        "label": "Image Mobile",
+                        "type": "image",
+                        "size" : 100,
+                        "info": "Recommended 540 x 960 px (ratio 9:16) and recommended file size 100 KB"
+                    },
+                    {
+                      "name": "alt_text_image_mobile",
+                      "label": "Alt Text (Image Mobile)",
+                      "type": "text",
+                      "placeholder": "ex: alt text image"
+                    },
+                    {
+                        "name": "image_desktop",
+                        "label": "Image desktop",
+                        "type": "image",
+                        "size" : 220,
+                        "info": "Recommended 2160 x 1080 px (ratio 2:1) and recommended file size 220 KB"
+                    },
+                    {
+                      "name": "alt_text_image_desktop",
+                      "label": "Alt Text (Image Desktop)",
+                      "type": "text",
+                      "placeholder": "ex: alt text image"
+                    }
+                ]
+            },
+            {
+                "keyName": "product_datasheet",
+                "label": "Product Solutions",
+                "section": "3",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "datasheet_list",
+                        "label": "Product List",
+                        "type": "repeater",
+                        "list": [
+                            {
+                                "name": "status",
+                                "label": "Status",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "label": "Active",
+                                        "value": "active"
+                                    },
+                                    {
+                                        "label": "Inactive",
+                                        "value": "inactive"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "sidebarmenu_title",
+                                "label": "Sidemenu Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "title",
+                                "label": "Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "description",
+                                "label": "Description",
+                                "type": "editor"
+                            },
+                            {
+                                "name": "upload",
+                                "label": "File",
+                                "multilang_file": true,
+                                "type": "upload"
+                            },
+                            {
+                                "name": "image",
+                                "label": "Image",
+                                "type": "image",
+                                "size" : 60,
+                                "info": "Recommended 450 x 450 px (ratio 1:1) and recommended file size 60 KB"
+                            },
+                            {
+                              "name": "alt_text",
+                              "label": "Alt Text",
+                              "type": "text",
+                              "placeholder": "ex: alt text image"
+                            },
+                            {
+                                "name": "card_title",
+                                "label": "[Card] Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "delivery_method",
+                                "label": "[Card] Delivery Method",
+                                "type": "text"
+                            },
+                            {
+                                "name": "application",
+                                "label": "[Card] Application",
+                                "type": "editor"
+                            },
+                            {
+                                "name": "datasheet_name",
+                                "label": "[Card] Datasheet Name 1",
+                                "type": "text"
+                            },
+                            {
+                                "name": "datasheet_file",
+                                "label": "[Card] Datasheet File 1",
+                                "multilang_file": true,
+                                "type": "upload"
+                            },
+                            {
+                                "name": "datasheet_name2",
+                                "label": "[Card] Datasheet Name 2",
+                                "type": "text"
+                            },
+                            {
+                                "name": "datasheet_file2",
+                                "label": "[Card] Datasheet File 2",
+                                "multilang_file": true,
+                                "type": "upload"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "keyName": "product_datasheet2",
+                "label": "Product Datasheet",
+                "section": "3",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "datasheet_list",
+                        "label": "Datasheet List",
+                        "type": "repeater",
+                        "list": [
+                            {
+                                "name": "status",
+                                "label": "Status",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "label": "Active",
+                                        "value": "active"
+                                    },
+                                    {
+                                        "label": "Inactive",
+                                        "value": "inactive"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "list",
+                                "label": "List",
+                                "type": "repeater",
+                                "list": [
+                                    {
+                                        "name": "status",
+                                        "label": "Status",
+                                        "type": "select",
+                                        "options": [
+                                            {
+                                                "label": "Active",
+                                                "value": "active"
+                                            },
+                                            {
+                                                "label": "Inactive",
+                                                "value": "inactive"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "sidebarmenu_title",
+                                        "label": "Sidemenu Title",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "name": "title",
+                                        "label": "Title",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "name": "description",
+                                        "label": "Description",
+                                        "type": "editor"
+                                    },
+                                    {
+                                        "name": "image",
+                                        "label": "Image",
+                                        "type": "image",
+                                        "size" : 60,
+                                        "info": "Recommended 450 x 450 px (ratio 1:1) and recommended file size 60 KB"
+                                    },
+                                    {
+                                      "name": "alt_text",
+                                      "label": "Alt Text",
+                                      "type": "text",
+                                      "placeholder": "ex: alt text image"
+                                    },
+                                    {
+                                        "name": "file",
+                                        "label": "File",
+                                        "type": "upload"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "keyName": "seo_meta",
+                "label": "Seo Meta",
+                "section": "1",
+                "fields": [
+                    {
+                        "name": "meta_title",
+                        "label": "Meta Tag",
+                        "type": "text"
+                    },
+                    {
+                        "name": "meta_desc",
+                        "label": "Meta Description",
+                        "type": "textarea2"
+                    }
+                ]
+            }
+        ]
+    }
+]

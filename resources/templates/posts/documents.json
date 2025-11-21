@@ -1,0 +1,48 @@
+[
+    {
+        "name": "articles",
+        "label": "Articles",
+        "multilanguage": "true",
+        "lang_option" : [
+            {
+                "name" : "Indonesian",
+                "value" : "id",
+                "master" : "true"
+            },
+            {
+                "name" : "English",
+                "value" : "en",
+                "master" : "false"
+            }
+        ],
+        "components": [
+            {
+                "keyName": "Document",
+                "label": "Document",
+                "section": "3",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "document",
+                        "label": "Document",
+                        "type": "upload"
+                    }
+                ]
+            }
+        ]
+    }
+]

@@ -1,0 +1,674 @@
+[
+    {
+        "name": "business_solusions_dynamic",
+        "slug": "/our-business",
+        "label": "Business Solution - Infrastucture and Trading",
+        "multilanguage": "true",
+        "lang_option" : [
+            {
+                "name" : "Indonesian",
+                "value" : "id",
+                "master" : "true"
+            },
+            {
+                "name" : "English",
+                "value" : "en",
+                "master" : "false"
+            }
+        ],
+        "description": "",
+        "components": [
+            {
+                "keyName": "banner",
+                "label": "Banner",
+                "section": "1",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "type": "textarea2"
+                    },
+                    {
+                        "name": "image_mobile",
+                        "label": "Image Mobile",
+                        "type": "image"
+                    },
+                    {
+                      "name": "alt_text_image_mobile",
+                      "label": "Alt Text (Image Mobile)",
+                      "type": "text",
+                      "placeholder": "ex: alt text image"
+                    },
+                    {
+                        "name": "image_desktop",
+                        "label": "Image desktop",
+                        "type": "image"
+                    },
+                    {
+                      "name": "alt_text_image_desktop",
+                      "label": "Alt Text (Image Desktop)",
+                      "type": "text",
+                      "placeholder": "ex: alt text image"
+                    }
+                ]
+            },
+            {
+                "keyName": "content_left_image",
+                "label": "Content Left Image (Practices of Employment, Health and Safety)",
+                "section": "2",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "title2",
+                        "label": "Title 2",
+                        "type": "text"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "type": "textarea"
+                    },
+                    {
+                        "name": "image",
+                        "label": "Image",
+                        "type": "image"
+                    },
+                    {
+                        "name": "list",
+                        "label": "List",
+                        "type": "repeater",
+                        "list": [
+                            {
+                                "name": "status",
+                                "label": "Status",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "label": "Active",
+                                        "value": "active"
+                                    },
+                                    {
+                                        "label": "Inactive",
+                                        "value": "inactive"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "order",
+                                "label": "Order",
+                                "type": "number"
+                            },
+                            {
+                                "name": "title",
+                                "label": "Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "description",
+                                "label": "Description",
+                                "type": "editor_simple"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "keyName": "content_left_right",
+                "label": "Intro",
+                "section": "2",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "list",
+                        "label": "List",
+                        "type": "repeater",
+                        "list": [
+                            {
+                                "name": "status",
+                                "label": "Status",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "label": "Active",
+                                        "value": "active"
+                                    },
+                                    {
+                                        "label": "Inactive",
+                                        "value": "inactive"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "image_position",
+                                "label": "Image Position",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "label": "left",
+                                        "value": "left"
+                                    },
+                                    {
+                                        "label": "Right",
+                                        "value": "right"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "title",
+                                "label": "Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "description",
+                                "label": "Description",
+                                "type": "editor"
+                            },
+                            {
+                                "name": "image",
+                                "label": "Image",
+                                "type": "image"
+                            },
+                            {
+                              "name": "alt_text",
+                              "label": "Alt Text",
+                              "type": "text",
+                              "placeholder": "ex: alt text image"
+                            },
+                            {
+                                "name": "cta_label",
+                                "label": "Cta Label",
+                                "type": "text"
+                            },
+                            {
+                                "name": "cta_url",
+                                "label": "CTA URL",
+                                "type": "url"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "keyName": "contant_tab",
+                "label": "Content Tab (Business Pillars)",
+                "section": "2",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "tab",
+                        "label": "List",
+                        "type": "repeater",
+                        "list": [
+                            {
+                                "name": "status",
+                                "label": "Status",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "label": "Active",
+                                        "value": "active"
+                                    },
+                                    {
+                                        "label": "Inactive",
+                                        "value": "inactive"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "title",
+                                "label": "Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "description",
+                                "label": "Description",
+                                "type": "editor_simple"
+                            },
+                            {
+                                "name": "list",
+                                "label": "List",
+                                "type": "repeater",
+                                "list": [
+                                    {
+                                        "name": "status",
+                                        "label": "Status",
+                                        "type": "select",
+                                        "options": [
+                                            {
+                                                "label": "Active",
+                                                "value": "active"
+                                            },
+                                            {
+                                                "label": "Inactive",
+                                                "value": "inactive"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "title",
+                                        "label": "Title",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "name": "list",
+                                        "label": "List",
+                                        "type": "repeater",
+                                        "list": [
+                                            {
+                                                "name": "status",
+                                                "label": "Status",
+                                                "type": "select",
+                                                "options": [
+                                                    {
+                                                        "label": "Active",
+                                                        "value": "active"
+                                                    },
+                                                    {
+                                                        "label": "Inactive",
+                                                        "value": "inactive"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "name": "image",
+                                                "label": "Image",
+                                                "type": "image"
+                                            },
+                                            {
+                                              "name": "alt_text",
+                                              "label": "Alt Text",
+                                              "type": "text",
+                                              "placeholder": "ex: alt text image"
+                                            },
+                                            {
+                                                "name": "description",
+                                                "label": "Description",
+                                                "type": "editor"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "keyName": "icon_list_horizontal",
+                "label": "Pillar",
+                "section": "1",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "type": "textarea"
+                    },
+                    {
+                        "name": "list",
+                        "label": "List",
+                        "type": "repeater",
+                        "list": [
+                            {
+                                "name": "status",
+                                "label": "Status",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "label": "Active",
+                                        "value": "active"
+                                    },
+                                    {
+                                        "label": "Inactive",
+                                        "value": "inactive"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "icon",
+                                "label": "Icon",
+                                "type": "image"
+                            },
+                            {
+                                "name": "title",
+                                "label": "Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "description",
+                                "label": "Description",
+                                "type": "editor_simple"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "keyName": "content_left_right_2",
+                "label": "Content Image Text",
+                "section": "2",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "list",
+                        "label": "List",
+                        "type": "repeater",
+                        "list": [
+                            {
+                                "name": "status",
+                                "label": "Status",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "label": "Active",
+                                        "value": "active"
+                                    },
+                                    {
+                                        "label": "Inactive",
+                                        "value": "inactive"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "image_position",
+                                "label": "Image Position",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "label": "left",
+                                        "value": "left"
+                                    },
+                                    {
+                                        "label": "Right",
+                                        "value": "right"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "title",
+                                "label": "Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "description",
+                                "label": "Description",
+                                "type": "editor_simple"
+                            },
+                            {
+                                "name": "image",
+                                "label": "Image",
+                                "type": "image"
+                            },
+                            {
+                              "name": "alt_text",
+                              "label": "Alt Text",
+                              "type": "text",
+                              "placeholder": "ex: alt text image"
+                            },
+                            {
+                                "name": "cta_label",
+                                "label": "Cta Label",
+                                "type": "text"
+                            },
+                            {
+                                "name": "cta_url",
+                                "label": "CTA URL",
+                                "type": "url"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "keyName": "small_banner",
+                "label": "Related Company",
+                "section": "1",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "list",
+                        "label": "List",
+                        "type": "repeater",
+                        "list": [
+                            {
+                                "name": "status",
+                                "label": "Status",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "label": "Active",
+                                        "value": "active"
+                                    },
+                                    {
+                                        "label": "Inactive",
+                                        "value": "inactive"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "logo",
+                                "label": "Logo",
+                                "type": "image"
+                            },
+                            {
+                                "name": "cta_url",
+                                "label": "CTA URL",
+                                "type": "url"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "keyName": "news",
+                "label": "Related Article",
+                "section": "1",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "section_title",
+                        "label": "Section Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    }
+                ]
+            },
+            {
+                "keyName": "content_point",
+                "label": "Content Point to Point With Image (Practices of Employment, Health and Safety)",
+                "section": "2",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "image",
+                        "label": "Image",
+                        "type": "image"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "type": "editor"
+                    }
+                ]
+            },
+            {
+                "keyName": "seo_meta",
+                "label": "Seo Meta",
+                "section": "1",
+                "fields": [
+                    {
+                        "name": "meta_title",
+                        "label": "Meta Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "meta_desc",
+                        "label": "Meta Description",
+                        "type": "textarea"
+                    }
+                ]
+            }
+        ]
+    }
+]

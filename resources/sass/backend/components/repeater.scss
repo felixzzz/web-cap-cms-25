@@ -1,0 +1,15 @@
+.card.repeater .list-group {
+    border-top: 0;
+}
+
+.card.repeater {
+    .card-body {
+        .row {
+            border-bottom: 1px solid;
+            border-color: #d8dbe0;
+        }
+        .row:last-child {
+            border-bottom: 0;
+        }
+    }
+}

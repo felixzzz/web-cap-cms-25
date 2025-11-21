@@ -1,0 +1,25 @@
+{
+    "name": "antikode/anti-crud",
+    "description": "CRUD Generator for Laravel9 using Metronic",
+    "autoload": {
+        "psr-4": {
+            "Antikode\\AntiCrud\\": "src/",
+            "Antikode\\AntiCrud\\Console\\": "src/console/",
+            "Antikode\\AntiCrud\\Traits\\": "src/traits"
+        }
+    },
+    "authors": [
+        {
+            "name": "Rafi Halilintar",
+            "email": "masitingss@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Antikode\\AntiCrud\\AntiCrudProvider"
+            ]
+        }
+    },
+    "require": {}
+}

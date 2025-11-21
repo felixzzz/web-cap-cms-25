@@ -1,0 +1,32 @@
+
+    <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-primary btn-active-light-primary me-n3" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" control-id="ControlID-23">
+        <span class="svg-icon svg-icon-3 svg-icon-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24">
+                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                 <rect x="5" y="5" width="5" height="5" rx="1" fill="currentColor"></rect>
+                    <rect x="14" y="5" width="5" height="5" rx="1" fill="currentColor" opacity="0.3"></rect>
+                    <rect x="5" y="14" width="5" height="5" rx="1" fill="currentColor" opacity="0.3"></rect>
+                    <rect x="14" y="14" width="5" height="5" rx="1" fill="currentColor" opacity="0.3"></rect>
+                </g>
+            </svg>
+        </span>
+    </button>
+    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px" data-kt-menu="true" style="">
+    <div class="menu-item px-3">
+        <div class="menu-content fs-6 text-dark fw-bold px-3 py-4">Quick Actions</div>
+    </div>
+    <div class="separator mb-3 opacity-75"></div>
+        <div class="menu-item px-3">
+            <a href="{{ route('admin.whistleblowing.show', $model) }}" class="menu-link px-3">
+                View
+            </a>
+        </div>
+        <div class="separator mt-3 opacity-75"></div>
+        <div class="menu-item px-3">
+            <div class="menu-content px-3 py-3">
+                <div class="">
+                    <x-utils.delete-button :href="route('admin.whistleblowing.destroy', ['contact' =>$model])" />
+                </div>
+            </div>
+        </div>
+</div>

@@ -1,0 +1,15 @@
+@php
+$oldData = old($component);
+$inputValue = ( !empty($oldData) )? $oldData : $value;
+@endphp
+<div class="form-group">
+    <label class="col-form-label font-weight-bold">{{ $field['label'] }}</label>
+    <input
+        value="{{ $inputValue ? $inputValue : "" }}"
+        name="{{ $component }}"
+        type="date"
+        step="any"
+        class="form-control"
+        placeholder="{{ $field['label'] }}"
+        maxlength="255" />
+</div>

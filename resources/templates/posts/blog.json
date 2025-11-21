@@ -1,0 +1,67 @@
+[
+    {
+        "name": "blog",
+        "label": "Blog",
+        "multilanguage": "true",
+        "lang_option" : [
+            {
+                "name" : "Indonesian",
+                "value" : "id",
+                "master" : "true"
+            },
+            {
+                "name" : "English",
+                "value" : "en",
+                "master" : "false"
+            }
+        ],
+        "components": [
+            {
+                "keyName": "blog_content",
+                "label": "Content",
+                "section": "3",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "content",
+                        "label": "Content",
+                        "type": "editor"
+                    }
+                ]
+            },
+            {
+                "keyName": "seo_meta",
+                "label": "Seo Meta",
+                "section": "1",
+                "fields": [
+                    {
+                        "name": "meta_title",
+                        "label": "Meta Title",
+                        "type": "text",
+                        "required": true
+                    },
+                    {
+                        "name": "meta_desc",
+                        "label": "Meta Description",
+                        "type": "textarea2",
+                        "required": true
+                    }
+                ]
+            }
+        ]
+    }
+]
