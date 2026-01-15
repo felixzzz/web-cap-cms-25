@@ -26,6 +26,11 @@
             @lang('Edit')
         </a>
     </div>
+    <div class="menu-item px-3">
+        <a href="#" class="menu-link px-3" wire:click="$emit('openBannerEmbed', {{ $model->id }})">
+            @lang('Embed')
+        </a>
+    </div>
     <div class="separator mb-3 opacity-75"></div>
     <div class="menu-item px-3 pb-3">
         <x-utils.delete-button :href="route('admin.banner.destroy', $model)" :text="('Delete')" />

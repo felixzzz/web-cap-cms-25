@@ -16,10 +16,13 @@ class BannerActive extends Model
         'banner_group_id',
         'post_id',
         'location',
+        'start_date',
         'end_date',
+        'language',
     ];
 
     protected $casts = [
+        'start_date' => 'datetime',
         'end_date' => 'datetime',
     ];
 

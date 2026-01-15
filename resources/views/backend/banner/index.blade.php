@@ -15,6 +15,8 @@
 
         <x-slot name="body">
             <livewire:backend.banner.banner-group-table />
+            <livewire:backend.banner.banner-embed />
+            <livewire:backend.banner.banner-active-list />
         </x-slot>
     </x-backend.card>
 @endsection

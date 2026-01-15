@@ -12,6 +12,8 @@ use Carbon\Carbon;
 
 class BannerGroupTable extends DataTableComponent
 {
+    protected $listeners = ['refreshBannerGroupTable' => '$refresh'];
+
     protected $model = BannerGroup::class;
 
     public function builder(): Builder
@@ -44,17 +46,15 @@ class BannerGroupTable extends DataTableComponent
                 ->html(),
             Column::make('Embed At', 'id')
                 ->format(function ($value, $row, Column $column) {
-                    $posts = $row->posts;
-                    if ($posts->isNotEmpty()) {
-                        return $posts->pluck('title')->map(function ($title) {
-                            return '<span class="badge badge-light-primary my-1">' . $title . '</span>';
-                        })->implode(' ');
+                    $count = $row->activeBanners->count();
+                    if ($count > 0) {
+                        return '<a href="#" wire:click.prevent="$emit(\'openBannerActiveList\', ' . $row->id . ')" class="btn btn-sm btn-secondary" style="font-size:12px;">' . $count . ' Post(s)</a>';
                     }
                     return '<span class="text-muted">-</span>';
                 })
                 ->html(),
             Column::make('Created At', 'created_at')
-                ->format(fn($value) => Carbon::parse($value)->format('d M Y'))
+                ->format(fn($value) => Carbon::parse($value)->format('d M Y H:i'))
                 ->sortable(),
             Column::make('Actions')
                 ->label(
