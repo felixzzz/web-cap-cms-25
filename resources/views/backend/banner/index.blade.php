@@ -9,7 +9,8 @@
         </x-slot>
 
         <x-slot name="headerActions">
-            <x-utils.link icon="fa fa-plus" class="btn btn-sm btn-primary" :href="route('admin.banner.create')" :text="__('Create Banner')" />
+            <x-utils.link icon="fa fa-plus" class="btn btn-sm btn-primary" :href="route('admin.banner.create')"
+                :text="__('Create Banner')" />
         </x-slot>
 
         <x-slot name="body">
