@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Backend\BannerGroupController;
 use Tabuna\Breadcrumbs\Trail;
+use App\Models\BannerGroup;
 
 Route::group([
     'prefix' => 'banner',
@@ -22,4 +23,16 @@ Route::group([
         });
 
     Route::post('/', [BannerGroupController::class, 'store'])->name('store');
+
+    Route::group(['prefix' => '{banner_group}'], function () {
+        Route::get('edit', [BannerGroupController::class, 'edit'])
+            ->name('edit')
+            ->breadcrumbs(function (Trail $trail, BannerGroup $banner) {
+                $trail->parent('admin.banner.index')
+                    ->push(__('Edit Banner'), route('admin.banner.edit', $banner));
+            });
+
+        Route::patch('/', [BannerGroupController::class, 'update'])->name('update');
+        Route::delete('/', [BannerGroupController::class, 'destroy'])->name('destroy');
+    });
 });

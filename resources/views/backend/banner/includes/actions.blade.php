@@ -22,8 +22,11 @@
     <div class="separator mb-3 opacity-75"></div>
 
     <div class="menu-item px-3">
-        <a href="#" class="menu-link px-3">
-            Edit
+        <a href="{{ route('admin.banner.edit', $model) }}" class="menu-link px-3">
+            @lang('Edit')
         </a>
+    </div>
+    <div class="menu-item px-3">
+        <x-utils.delete-button :href="route('admin.banner.destroy', $model)" :text="__('Delete')" />
     </div>
 </div>
