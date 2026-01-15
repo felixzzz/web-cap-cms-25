@@ -12,7 +12,6 @@ return new class extends Migration {
      */
     public function up()
     {
-
         // Table: banner_groups
         Schema::create('banner_groups', function (Blueprint $table) {
             $table->id();
@@ -30,6 +29,7 @@ return new class extends Migration {
             $table->string('title')->nullable();
             $table->string('description')->nullable();
             $table->string('image')->nullable();
+            $table->string('aspect_ratio')->nullable(); // Added in consolidation
             $table->string('video')->nullable();
             $table->text('html')->nullable();
             $table->string('cta_url')->nullable();
@@ -43,7 +43,9 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('banner_group_id')->constrained('banner_groups')->onDelete('cascade');
             $table->foreignId('post_id')->nullable()->constrained('posts')->onDelete('cascade');
+            $table->string('language')->default('id'); // Added in consolidation
             $table->string('location')->nullable();
+            $table->dateTime('start_date')->nullable(); // Added in consolidation
             $table->dateTime('end_date')->nullable();
             $table->timestamps();
         });
@@ -56,7 +58,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        //
         Schema::dropIfExists('banner_active');
         Schema::dropIfExists('banners');
         Schema::dropIfExists('banner_groups');
