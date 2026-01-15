@@ -13,7 +13,6 @@ class BannerGroup extends Model
 
     protected $fillable = [
         'title',
-        'slug',
         'banners', // json
         'bulk_position',
     ];

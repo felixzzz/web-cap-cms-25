@@ -25,9 +25,7 @@ class BannerGroupTable extends DataTableComponent
             Column::make('Title', 'title')
                 ->searchable()
                 ->sortable(),
-            Column::make('Slug', 'slug')
-                ->sortable(),
-             Column::make('Created At', 'created_at')
+            Column::make('Created At', 'created_at')
                 ->sortable(),
             Column::make('Actions')
                 ->label(

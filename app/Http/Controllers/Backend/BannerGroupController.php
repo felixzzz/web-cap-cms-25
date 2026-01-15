@@ -37,15 +37,14 @@ class BannerGroupController extends Controller
     {
         $data = $request->validate([
             'title' => 'required',
-            // 'slug' => 'required|unique:banner_groups,slug',
             'banners' => 'nullable',
             'bulk_position' => 'nullable'
         ]);
 
         $banners = [];
         if (isset($data['banners'])) {
-             $banners = json_decode($data['banners'], true);
-             unset($data['banners']);
+            $banners = json_decode($data['banners'], true);
+            unset($data['banners']);
         }
 
         \DB::transaction(function () use ($data, $banners) {
@@ -90,7 +89,7 @@ class BannerGroupController extends Controller
 
         // Prepare banners for repeater
         $banner_group->load('banners');
-        $banners = $banner_group->banners()->orderBy('order')->get()->map(function($banner) {
+        $banners = $banner_group->banners()->orderBy('order')->get()->map(function ($banner) {
             return [
                 'title' => $banner->title,
                 'description' => $banner->description,
@@ -108,7 +107,7 @@ class BannerGroupController extends Controller
 
     public function update(Request $request, BannerGroup $banner_group)
     {
-         $data = $request->validate([
+        $data = $request->validate([
             'title' => 'required',
             'banners' => 'nullable',
             'bulk_position' => 'nullable'
@@ -116,8 +115,8 @@ class BannerGroupController extends Controller
 
         $banners = [];
         if (isset($data['banners'])) {
-             $banners = json_decode($data['banners'], true);
-             unset($data['banners']);
+            $banners = json_decode($data['banners'], true);
+            unset($data['banners']);
         }
 
         \DB::transaction(function () use ($data, $banners, $banner_group) {
