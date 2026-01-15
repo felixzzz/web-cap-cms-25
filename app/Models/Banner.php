@@ -17,6 +17,7 @@ class Banner extends Model
         'title',
         'description',
         'image',
+        'aspect_ratio',
         'video',
         'html',
         'cta_url',

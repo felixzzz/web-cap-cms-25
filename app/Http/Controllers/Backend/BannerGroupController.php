@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\BannerGroup;
+use App\Models\Extra\TemporaryUpload;
+use Illuminate\Support\Facades\Storage;
 
 class BannerGroupController extends Controller
 {
@@ -21,8 +23,20 @@ class BannerGroupController extends Controller
             'list' => [
                 ['type' => 'text', 'name' => 'title', 'label' => 'Title'],
                 ['type' => 'textarea', 'name' => 'description', 'label' => 'Description'],
+                [
+                    'type' => 'select',
+                    'name' => 'aspect_ratio',
+                    'label' => 'Aspect Ratio',
+                    'options' => [
+                        ['value' => '4/3', 'label' => '4:3'],
+                        ['value' => '1/1', 'label' => '1:1'],
+                        ['value' => '16/9', 'label' => '16:9'],
+                        ['value' => '3/4', 'label' => '3:4 (Portrait)'],
+                        ['value' => '9/16', 'label' => '9:16 (Portrait)'],
+                    ]
+                ],
                 ['type' => 'image', 'name' => 'image', 'label' => 'Image', 'info' => 'Upload main image'],
-                ['type' => 'text', 'name' => 'video_url', 'label' => 'Video URL'],
+                ['type' => 'video', 'name' => 'video', 'label' => 'Video', 'info' => 'Upload video (Max 2MB)'],
                 ['type' => 'textarea', 'name' => 'html_content', 'label' => 'HTML Content'],
                 ['type' => 'text', 'name' => 'cta_url', 'label' => 'CTA URL'],
                 ['type' => 'text', 'name' => 'cta_label', 'label' => 'CTA Label'],
@@ -56,8 +70,9 @@ class BannerGroupController extends Controller
                         'order' => $index,
                         'title' => $bannerData['title'] ?? null,
                         'description' => $bannerData['description'] ?? null,
-                        'image' => $bannerData['image'] ?? null,
-                        'video' => $bannerData['video_url'] ?? null, // Map video_url to video
+                        'image' => $this->resolveImage($bannerData['image'] ?? null),
+                        'aspect_ratio' => $bannerData['aspect_ratio'] ?? null,
+                        'video' => $this->resolveImage($bannerData['video'] ?? null), // Map video input to video column
                         'html' => $bannerData['html_content'] ?? null, // Map html_content to html
                         'cta_url' => $bannerData['cta_url'] ?? null,
                         'cta_label' => $bannerData['cta_label'] ?? null,
@@ -78,8 +93,20 @@ class BannerGroupController extends Controller
             'list' => [
                 ['type' => 'text', 'name' => 'title', 'label' => 'Title'],
                 ['type' => 'textarea', 'name' => 'description', 'label' => 'Description'],
+                [
+                    'type' => 'select',
+                    'name' => 'aspect_ratio',
+                    'label' => 'Aspect Ratio',
+                    'options' => [
+                        ['value' => '1/1', 'label' => '1:1'],
+                        ['value' => '4/3', 'label' => '4:3'],
+                        ['value' => '16/9', 'label' => '16:9'],
+                        ['value' => '3/4', 'label' => '3:4 (Portrait)'],
+                        ['value' => '9/16', 'label' => '9:16 (Portrait)'],
+                    ]
+                ],
                 ['type' => 'image', 'name' => 'image', 'label' => 'Image', 'info' => 'Upload main image'],
-                ['type' => 'text', 'name' => 'video_url', 'label' => 'Video URL'],
+                ['type' => 'video', 'name' => 'video', 'label' => 'Video', 'info' => 'Upload video (Max 2MB)'],
                 ['type' => 'textarea', 'name' => 'html_content', 'label' => 'HTML Content'],
                 ['type' => 'text', 'name' => 'cta_url', 'label' => 'CTA URL'],
                 ['type' => 'text', 'name' => 'cta_label', 'label' => 'CTA Label'],
@@ -94,7 +121,8 @@ class BannerGroupController extends Controller
                 'title' => $banner->title,
                 'description' => $banner->description,
                 'image' => $banner->image,
-                'video_url' => $banner->video,
+                'aspect_ratio' => $banner->aspect_ratio,
+                'video' => $banner->video,
                 'html_content' => $banner->html,
                 'cta_url' => $banner->cta_url,
                 'cta_label' => $banner->cta_label,
@@ -131,8 +159,9 @@ class BannerGroupController extends Controller
                         'order' => $index,
                         'title' => $bannerData['title'] ?? null,
                         'description' => $bannerData['description'] ?? null,
-                        'image' => $bannerData['image'] ?? null,
-                        'video' => $bannerData['video_url'] ?? null,
+                        'image' => $this->resolveImage($bannerData['image'] ?? null),
+                        'aspect_ratio' => $bannerData['aspect_ratio'] ?? null,
+                        'video' => $this->resolveImage($bannerData['video'] ?? null),
                         'html' => $bannerData['html_content'] ?? null,
                         'cta_url' => $bannerData['cta_url'] ?? null,
                         'cta_label' => $bannerData['cta_label'] ?? null,
@@ -149,5 +178,24 @@ class BannerGroupController extends Controller
     {
         $banner_group->delete();
         return redirect()->back()->withFlashSuccess(__('Banner Group Deleted Successfully.'));
+    }
+
+    private function resolveImage($image)
+    {
+        if (is_numeric($image)) {
+            $temp = TemporaryUpload::find($image);
+            if ($temp) {
+                $media = $temp->getFirstMedia();
+                if ($media) {
+                    $filename = $media->file_name;
+                    $uniqueFilename = time() . '_' . $filename;
+                    $destPath = 'images/banners/' . $uniqueFilename;
+                    Storage::disk('public')->put($destPath, file_get_contents($media->getPath()));
+                    $temp->delete();
+                    return $destPath;
+                }
+            }
+        }
+        return $image;
     }
 }

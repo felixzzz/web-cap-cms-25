@@ -241,72 +241,40 @@
                                     </select>
                                 </template>
                                 <template v-if="col.type == 'image'">
-                                    <div
-                                        class="image-input image-input-outline"
-                                    >
-                                        <div
-                                            class="image-input-wrapper w-125px h-125px"
-                                            :style="{
-                                                'background-image':
-                                                    'url(' +
-                                                    (imageSrc
-                                                        ? imageSrc
-                                                        : formModal[col.name]
-                                                        ? url +
-                                                          '/' +
-                                                          formModal[col.name]
-                                                        : '/img/no-image.jpg') +
-                                                    ')',
-                                            }"
-                                        ></div>
-                                        <label
-                                            class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                            data-kt-image-input-action="change"
-                                            data-bs-toggle="tooltip"
-                                            title="Change avatar"
-                                        >
-                                            <i
-                                                class="bi bi-pencil-fill fs-7"
-                                            ></i>
-                                            <input
-                                                type="file"
-                                                name="avatar"
-                                                accept=".png, .jpg, .jpeg"
-                                                @change="
-                                                    changeImage(
-                                                        $event,
-                                                        col.name
-                                                    )
-                                                "
-                                            />
-                                            <input
-                                                type="hidden"
-                                                name="avatar_remove"
-                                            />
-                                        </label>
-                                        <span
-                                            class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                            data-kt-image-input-action="cancel"
-                                            data-bs-toggle="tooltip"
-                                            title="Cancel avatar"
-                                        >
-                                            <i class="bi bi-x fs-2"></i>
-                                        </span>
-                                        <span
-                                            class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
-                                            data-kt-image-input-action="remove"
-                                            data-bs-toggle="tooltip"
-                                            title="Remove avatar"
-                                            @click="
-                                                removeImage($event, col.name)
-                                            "
-                                        >
-                                            <i class="bi bi-x fs-2"></i>
-                                        </span>
+                                    <div class="mb-3" v-if="formModal[col.name] && isNaN(formModal[col.name])">
+                                        <label class="form-label d-block">Current Image:</label>
+                                        <div class="position-relative d-inline-block">
+                                            <img :src="url + '/' + formModal[col.name]" alt="image" style="max-height: 100px; max-width: 100%;" class="rounded border" />
+                                            <button type="button" 
+                                                class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow position-absolute top-0 end-0 translate-middle-y translate-middle-x"
+                                                @click="removeImage(null, col.name)">
+                                                <i class="bi bi-x fs-2"></i>
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="form-text">
-                                        Allowed file types: png, jpg, jpeg.
+                                    <input type="file"
+                                        :id="(aliascomponent || component) + '_' + col.name + '_filepond'"
+                                        class="filepond"
+                                        :name="col.name" 
+                                    />
+                                </template>
+                                <template v-if="col.type == 'video'">
+                                    <div class="mb-3" v-if="formModal[col.name] && isNaN(formModal[col.name])">
+                                        <label class="form-label d-block">Current Video:</label>
+                                        <div class="position-relative d-inline-block">
+                                            <video :src="url + '/' + formModal[col.name]" controls style="max-height: 150px; max-width: 100%;" class="rounded border"></video>
+                                            <button type="button" 
+                                                class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow position-absolute top-0 end-0 translate-middle-y translate-middle-x"
+                                                @click="removeImage(null, col.name)">
+                                                <i class="bi bi-x fs-2"></i>
+                                            </button>
+                                        </div>
                                     </div>
+                                    <input type="file"
+                                        :id="(aliascomponent || component) + '_' + col.name + '_filepond' + '_video'"
+                                        class="filepond"
+                                        :name="col.name" 
+                                    />
                                 </template>
                                 <template v-if="col.type == 'editor'">
                                     <div
@@ -395,6 +363,7 @@ export default {
             allCkEditors: [],
             products: [],
             subsidiary_list: [],
+            allFilePonds: {},
         };
     },
     mounted() {
@@ -446,7 +415,9 @@ export default {
             this.showModal = true;
             this.resetFrom();
             this.generateFormModal();
+            this.generateFormModal();
             this.generateEditor();
+            this.generateFilePond();
         },
         resetFrom() {
             this.modeEdit = false;
@@ -605,6 +576,61 @@ export default {
                 }
             });
         },
+        generateFilePond() {
+            this.$nextTick(() => {
+                if (this.field && this.field.list) {
+                    this.field.list.forEach((col) => {
+                        if (col.type === 'image' || col.type === 'video') {
+                            let compName = (this.aliascomponent || this.component) + '_' + col.name + '_filepond';
+                            if (col.type === 'video') compName += '_video';
+                            
+                            const el = document.getElementById(compName);
+                            if (el) {
+                                if (this.allFilePonds[col.name]) {
+                                    this.allFilePonds[col.name].removeFiles();
+                                } else {
+                                    if (window.FilePondPluginFileValidateType) FilePond.registerPlugin(FilePondPluginFileValidateType);
+                                    if (window.FilePondPluginImagePreview) FilePond.registerPlugin(FilePondPluginImagePreview);
+                                    if (window.FilePondPluginFileValidateSize) FilePond.registerPlugin(FilePondPluginFileValidateSize);
+                                    
+                                    let options = {
+                                        server: {
+                                            url: '/upload/filepond',
+                                            headers: {
+                                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                            }
+                                        }
+                                    };
+
+                                    if (col.type === 'image') {
+                                        options.acceptedFileTypes = ['image/png', 'image/jpg', 'image/webp', 'image/jpeg'];
+                                    } else if (col.type === 'video') {
+                                        options.acceptedFileTypes = ['video/mp4', 'video/quicktime'];
+                                        options.maxFileSize = '2MB';
+                                    }
+
+                                    const pond = FilePond.create(el, options);
+
+                                    pond.on('processfile', (error, file) => {
+                                        if (!error) {
+                                            this.formModal[col.name] = file.serverId;
+                                        }
+                                    });
+
+                                    pond.on('removefile', (error, file) => {
+                                        if (this.formModal[col.name] == file.serverId) {
+                                            this.formModal[col.name] = "";
+                                        }
+                                    });
+                                    
+                                    this.allFilePonds[col.name] = pond;
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        },
         prepareDataEditor() {
             if (this.editor_fields) {
                 this.editor_fields.forEach((editor_field) => {
@@ -649,6 +675,7 @@ export default {
             this.formIndex = index;
             this.generateFormModal();
             this.generateEditor();
+            this.generateFilePond();
             this.formModal = { ...list }; // Clone object
             if (list.image) {
                 this.imageSrc = this.url + "/" + list.image;
