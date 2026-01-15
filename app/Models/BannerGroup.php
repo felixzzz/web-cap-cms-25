@@ -21,4 +21,9 @@ class BannerGroup extends Model
     protected $casts = [
         'banners' => 'array',
     ];
+
+    public function banners()
+    {
+        return $this->hasMany(Banner::class, 'banner_group_id');
+    }
 }

@@ -27,6 +27,8 @@ return new class extends Migration
         // Table: banners
         Schema::create('banners', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('banner_group_id')->constrained('banner_groups')->onDelete('cascade');
+            $table->integer('order')->default(0);
             $table->string('title')->nullable();
             $table->string('description')->nullable();
             $table->string('image')->nullable();
