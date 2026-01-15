@@ -14,6 +14,10 @@
                         <div class="card card-flush p-3">
                             <div class="card-body p-3">
                                 <div id="app">
+                                    <div class="d-flex justify-content-between align-items-center mb-5">
+                                        <h3 class="my-4">Edit Banner Group</h3>
+                                        <a href="{{ route('admin.banner.index') }}" class="btn btn-secondary me-4">@lang('Back to list')</a>
+                                    </div>
                                     <x-forms.text-input name="title" label="Title" required="1"
                                         placeholder="Banner Group Title" :value="$banner_group->title" />
                                     <accordion-repeater-component url="{{ config('app.url') . '/storage' }}"

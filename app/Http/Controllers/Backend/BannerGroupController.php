@@ -16,7 +16,7 @@ class BannerGroupController extends Controller
     public function create()
     {
         $field = [
-            'label' => 'Banners',
+            'label' => 'Banner Items',
             'name' => 'banners',
             'list' => [
                 ['type' => 'text', 'name' => 'title', 'label' => 'Title'],

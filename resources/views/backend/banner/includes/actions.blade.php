@@ -26,7 +26,8 @@
             @lang('Edit')
         </a>
     </div>
-    <div class="menu-item px-3">
-        <x-utils.delete-button :href="route('admin.banner.destroy', $model)" :text="__('Delete')" />
+    <div class="separator mb-3 opacity-75"></div>
+    <div class="menu-item px-3 pb-3">
+        <x-utils.delete-button :href="route('admin.banner.destroy', $model)" :text="('Delete')" />
     </div>
 </div>
