@@ -13,6 +13,7 @@ use App\Domains\Post\Services\PostService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Log;
 
 class PagesController extends Controller
 {
@@ -35,23 +36,23 @@ class PagesController extends Controller
             'select' => ['nullable', 'string']
         ]);
 
-        $query = Post::where('status','publish')
-                    ->where('type', Post::TYPE_PAGE);
+        $query = Post::where('status', 'publish')
+            ->where('type', Post::TYPE_PAGE);
         if ($request->has('select') && $request->select != '') {
             $columns = explode(',', $request->select);
             $query->select($columns);
         } else {
             $query->select('*')->with('meta');
         }
-        if ($request->has('search') && $request->search != ''){
+        if ($request->has('search') && $request->search != '') {
             $query->whereRaw('LOWER(title) LIKE ?', ["%{$request->search}%"]);
         }
-        if ($request->has('dynamic') && $request->dynamic != ''){
+        if ($request->has('dynamic') && $request->dynamic != '') {
             $query->where('pages_dynamic', $request->dynamic);
         }
-        if ($request->has('is_parent') && $request->is_parent != ''){
-            if ($request->is_parent == 'true'){
-                $query->where('template','business_solusions_dynamic')->where(function ($query) {
+        if ($request->has('is_parent') && $request->is_parent != '') {
+            if ($request->is_parent == 'true') {
+                $query->where('template', 'business_solusions_dynamic')->where(function ($query) {
                     $query->where('parent', '')
                         ->orWhereNull('parent');
                 });
@@ -88,7 +89,7 @@ class PagesController extends Controller
                 }
             }
 
-            return  [
+            return [
                 'id' => $value->id,
                 'title' => $value->title,
                 'template' => $value->template,
@@ -117,7 +118,7 @@ class PagesController extends Controller
                     'meta_keyword' => $value->meta_keyword
                 ],
                 'meta' => $valueMeta,
-                'storage_url' => config('filesystems.disks.s3.url')
+                'storage_url' => config('filesystems.default') == 's3' ? config('filesystems.disks.s3.url') : config('app.url') . '/storage'
             ];
         });
         return response()->json(['message' => 'Data Successfully Fetched', 'data' => $posts], 200);
@@ -132,7 +133,7 @@ class PagesController extends Controller
             ->whereDoesntHave('parent_data', function ($q) {
                 $q->where('slug', 'sustainability');
             })
-            ->where('template','business_solusions_dynamic')->where(function ($query) {
+            ->where('template', 'business_solusions_dynamic')->where(function ($query) {
                 $query->where('parent', '')
                     ->orWhereNull('parent');
             })
@@ -171,12 +172,12 @@ class PagesController extends Controller
     }
     public function pageSlugs(Request $request)
     {
-        $posts = Post::select('id','slug','template','pages_dynamic','title','status')
+        $posts = Post::select('id', 'slug', 'template', 'pages_dynamic', 'title', 'status')
             ->where('type', Post::TYPE_PAGE)
-            ->where('status','publish')
+            ->where('status', 'publish')
             ->get();
 
-        if(!count($posts)){
+        if (!count($posts)) {
             return response()->json(['message' => 'not found'], 404);
         }
 
@@ -185,79 +186,31 @@ class PagesController extends Controller
     }
     public function getDetailbySlug(Request $request, $slug)
     {
+        Log::info("DEBUG: getDetailbySlug called with $slug");
         $post = Post::where('type', Post::TYPE_PAGE)
-            ->where('status','publish')
+            ->where('status', 'publish')
             ->where('slug', $slug)
             ->whereNull('deleted_at')
             ->first();
 
-        if(!$post){
+        if (!$post) {
             return response()->json(['message' => 'not found'], 404);
         }
-
-        $valueMeta = [];
         if ($post) {
             $meta = $post->meta->groupBy('section');
 
             foreach ($meta as $keyName => $fields) {
+                // Return status for each section to see where it stops
+                // return response()->json(['message' => 'DEBUG ALIVE INSIDE LOOP', 'key' => $keyName], 200); 
+                // We know it entered 'banner'.
+
                 $data = new \stdClass();
-                $indonesiaRepeater = [];
-                $englishRepeater = [];
+                file_put_contents('/tmp/debug.log', "Processing Section: $keyName\n", FILE_APPEND);
                 foreach ($fields as $key => $val) {
+                    if ($keyName === 'technology_items') {
+                        file_put_contents('/tmp/debug.log', "  Processing Field: {$val->key}\n", FILE_APPEND);
+                    }
                     $data->{$val->key} = $this->is_json($val->value) ? json_decode($val->value, true) : $val->value;
-                    // if($keyName == 'awards' && $val->key=='list_id'){
-                    //    $awardsData = $data->{$val->key};
-                    //    usort($awardsData, function($a, $b) {
-                    //         $yearA = isset($a['year']) ? $a['year'] : -1000;
-                    //         $yearB = isset($b['year']) ? $b['year'] : PHP_INT_MIN;
-
-                    //         if ($yearA === $yearB) {
-                    //             return strcmp($a['award_title'], $b['award_title']);
-                    //         }
-                    //         return $yearB <=> $yearA;
-                    //     });
-                    //     $data->{$val->key} = $awardsData ;
-                    // }
-                    // if($keyName == 'awards' && $val->key=='list_en'){
-                    //     $awardsData = $data->{$val->key};
-                    //     usort($awardsData, function($a, $b) {
-                    //         $yearA = isset($a['year']) ? $a['year'] : -1000;
-                    //         $yearB = isset($b['year']) ? $b['year'] : PHP_INT_MIN;
-
-                    //         if ($yearA === $yearB) {
-                    //             return strcmp($a['award_title'], $b['award_title']);
-                    //         }
-                    //         return $yearB <=> $yearA;
-                    //      });
-                    //      $data->{$val->key} = $awardsData ;
-                    //  }
-                    //  if($keyName == 'certification' && $val->key=='list_id'){
-                    //     $certificationData = $data->{$val->key};
-                    //     usort($certificationData, function($a, $b) {
-                    //         $yearA = isset($a['year']) ? $a['year'] : -1000;
-                    //         $yearB = isset($b['year']) ? $b['year'] : PHP_INT_MIN;
-
-                    //         if ($yearA === $yearB) {
-                    //             return strcmp($a['certification_title'], $b['certification_title']);
-                    //         }
-                    //         return $yearB <=> $yearA;
-                    //      });
-                    //      $data->{$val->key} = $certificationData ;
-                    //  }
-                    //  if($keyName == 'certification' && $val->key=='list_en'){
-                    //      $certificationData = $data->{$val->key};
-                    //      usort($certificationData, function($a, $b) {
-                    //         $yearA = isset($a['year']) ? $a['year'] : -1000;
-                    //         $yearB = isset($b['year']) ? $b['year'] : PHP_INT_MIN;
-
-                    //         if ($yearA === $yearB) {
-                    //             return strcmp($a['certification_title'], $b['certification_title']);
-                    //         }
-                    //         return $yearB <=> $yearA;
-                    //       });
-                    //       $data->{$val->key} = $certificationData ;
-                    //   }
-
                     if ($keyName === 'banner' && $val->key === 'logo_en') {
                         $data->{$val->key} = $fields->firstWhere('key', 'logo_id')->value ?? null;
                     }
@@ -281,20 +234,20 @@ class PagesController extends Controller
             'meta_seo_description' => $post->meta_seo_description,
             'meta_keyword' => $post->meta_keyword,
             'meta' => $valueMeta,
-            'storage_url' => config('filesystems.disks.s3.url')
+            'storage_url' => config('filesystems.default') == 's3' ? config('filesystems.disks.s3.url') : config('app.url') . '/storage'
         ];
         return response()->json(['data' => $data], 200);
 
     }
     public function getDatabySection($template, $section)
     {
-        $post = Post::select('id','type','slug')
-            ->where('status','publish')
+        $post = Post::select('id', 'type', 'slug')
+            ->where('status', 'publish')
             ->where('type', Post::TYPE_PAGE)
             ->where('template', $template)
             ->first();
 
-        if(!$post){
+        if (!$post) {
             return response()->json(['message' => 'not found'], 404);
         }
 
@@ -307,9 +260,11 @@ class PagesController extends Controller
                             if (str_contains($key, 'custom_post_')) {
                                 $type = explode("_", $key);
                                 $custom_post = Post::select('id', 'title', 'slug')
-                                    ->with(['meta' => function ($query) {
-                                        $query->where('section','hero_banner');
-                                    }])
+                                    ->with([
+                                            'meta' => function ($query) {
+                                                $query->where('section', 'hero_banner');
+                                            }
+                                        ])
                                     ->where('id', $value)
                                     ->first();
 
@@ -353,9 +308,9 @@ class PagesController extends Controller
 
         // Initialize the query for posts
         $query = Post::select('posts.id', 'posts.slug', 'posts.title_en', 'posts.title', 'posts.template', 'posts.type', 'posts.post_type', 'posts.site_url')
-                    ->where('posts.type', 'page')
-                    ->where('status','publish')
-                    ->orderBy('posts.id', 'desc');
+            ->where('posts.type', 'page')
+            ->where('status', 'publish')
+            ->orderBy('posts.id', 'desc');
 
 
         if ($request->has('search') && !empty($request->search)) {
@@ -383,16 +338,20 @@ class PagesController extends Controller
 
 
         if ($lang === 'id') {
-            $posts = $query->with(['meta' => function ($query) use ($searchTerm) {
-                $query->whereRaw('LOWER(value) LIKE ?', ["%{$searchTerm}%"])
-                ->whereIn('key', ['title_id', 'content_id', 'document_id', 'name_id','file_title_id','document_title_id','description_id','content_id']);
-            }])->limit($request->limit)->get();
+            $posts = $query->with([
+                'meta' => function ($query) use ($searchTerm) {
+                    $query->whereRaw('LOWER(value) LIKE ?', ["%{$searchTerm}%"])
+                        ->whereIn('key', ['title_id', 'content_id', 'document_id', 'name_id', 'file_title_id', 'document_title_id', 'description_id', 'content_id']);
+                }
+            ])->limit($request->limit)->get();
         }
         if ($lang === 'en') {
-            $posts = $query->with(['meta' => function ($query) use ($searchTerm) {
-                $query->whereRaw('LOWER(value) LIKE ?', ["%{$searchTerm}%"])
-                ->whereIn('key', ['title_en', 'content_en', 'document_en', 'name_en','file_title_en','document_title_en','description_en','content_en']);
-            }])->limit($request->limit)->get();
+            $posts = $query->with([
+                'meta' => function ($query) use ($searchTerm) {
+                    $query->whereRaw('LOWER(value) LIKE ?', ["%{$searchTerm}%"])
+                        ->whereIn('key', ['title_en', 'content_en', 'document_en', 'name_en', 'file_title_en', 'document_title_en', 'description_en', 'content_en']);
+                }
+            ])->limit($request->limit)->get();
         }
 
         // Prepare data for response
@@ -440,7 +399,7 @@ class PagesController extends Controller
         if (in_array("press", $type)) {
             $allResults = array_merge($allResults, $this->normalizeResults($press, 'press'));
         }
-        if (count($type)  === 0) {
+        if (count($type) === 0) {
             $allResults = array_merge(
                 $this->normalizeResults($pages->toArray(), 'pages'),
                 $this->normalizeResults($reports, 'reports'),
@@ -466,16 +425,17 @@ class PagesController extends Controller
         return response()->json([
             'results' => [
                 'data' => $paginatedResults->items(),
-                    'current_page' => $paginatedResults->currentPage(),
-                    'from' => $paginatedResults->firstItem(),
-                    'last_page' => $paginatedResults->lastPage(),
-                    'per_page' => $paginatedResults->perPage(),
-                    'to' => $paginatedResults->lastItem(),
-                    'total' => $paginatedResults->total(),
+                'current_page' => $paginatedResults->currentPage(),
+                'from' => $paginatedResults->firstItem(),
+                'last_page' => $paginatedResults->lastPage(),
+                'per_page' => $paginatedResults->perPage(),
+                'to' => $paginatedResults->lastItem(),
+                'total' => $paginatedResults->total(),
             ]
         ], 200);
     }
-    function searchPress($data, $lang){
+    function searchPress($data, $lang)
+    {
         $searchTerm = strtolower($data['search']);
         $query = Document::select('*')
             ->where('page', 'news');
@@ -489,12 +449,13 @@ class PagesController extends Controller
         }
         return $query->limit($data['limit'])->get()->toArray();
     }
-    function searchReport($data, $lang){
+    function searchReport($data, $lang)
+    {
         $searchTerm = strtolower($data['search']);
         $query = Document::select('*')
             ->where(function ($query) {
                 $query->where('page', 'sustainability_reports')
-                      ->orWhere('page', 'investor_reports');
+                    ->orWhere('page', 'investor_reports');
             });
 
         if (!empty($searchTerm)) {
@@ -506,7 +467,8 @@ class PagesController extends Controller
         }
         return $query->limit($data['limit'])->get()->toArray();
     }
-    function searchPublication($data, $lang){
+    function searchPublication($data, $lang)
+    {
         $searchTerm = strtolower($data['search']);
         $query = Document::select('*')
             ->where('page', 'investor_publicatios')
@@ -521,11 +483,12 @@ class PagesController extends Controller
         }
         return $query->limit($data['limit'])->get()->toArray();
     }
-    function searchArticle($data, $lang){
+    function searchArticle($data, $lang)
+    {
         $searchTerm = strtolower($data['search']);
-        $query = Post::select('posts.id', 'posts.slug', 'posts.title_en', 'posts.title', 'posts.template', 'posts.type', 'posts.post_type','posts.published_at')
+        $query = Post::select('posts.id', 'posts.slug', 'posts.title_en', 'posts.title', 'posts.template', 'posts.type', 'posts.post_type', 'posts.published_at')
             ->where('posts.type', 'news')
-            ->where('status','publish')->where('published_at', '<=', date('Y-m-d H:i:s'))
+            ->where('status', 'publish')->where('published_at', '<=', date('Y-m-d H:i:s'))
             ->with('meta')
             ->orderBy('posts.id', 'desc');
 
@@ -548,23 +511,29 @@ class PagesController extends Controller
                 });
             }
         }
-        $query->with(['meta_result' => function ($query) use ($searchTerm) {
-            $query->where('key', 'content_id')->orWhere('key', 'content_en');
-        }]);
+        $query->with([
+            'meta_result' => function ($query) use ($searchTerm) {
+                $query->where('key', 'content_id')->orWhere('key', 'content_en');
+            }
+        ]);
 
         if ($lang === 'id') {
-            $posts = $query->with(['meta' => function ($query) use ($searchTerm) {
-                $query->whereRaw('LOWER(value) LIKE ?', ["%{$searchTerm}%"])->whereIn('key', ['title_id', 'content_id']);
-            }])->limit($data['limit'])->get();
+            $posts = $query->with([
+                'meta' => function ($query) use ($searchTerm) {
+                    $query->whereRaw('LOWER(value) LIKE ?', ["%{$searchTerm}%"])->whereIn('key', ['title_id', 'content_id']);
+                }
+            ])->limit($data['limit'])->get();
         }
         if ($lang === 'en') {
-            $posts = $query->with(['meta' => function ($query) use ($searchTerm) {
-                $query->whereRaw('LOWER(value) LIKE ?', ["%{$searchTerm}%"])->whereIn('key', ['title_en', 'content_en']);
-            }])->limit($data['limit'])->get();
+            $posts = $query->with([
+                'meta' => function ($query) use ($searchTerm) {
+                    $query->whereRaw('LOWER(value) LIKE ?', ["%{$searchTerm}%"])->whereIn('key', ['title_en', 'content_en']);
+                }
+            ])->limit($data['limit'])->get();
         }
 
         // Prepare data for response
-       return $posts->map(function ($post) {
+        return $posts->map(function ($post) {
             return [
                 'id' => $post->id,
                 'slug' => $post->slug,
@@ -621,7 +590,8 @@ class PagesController extends Controller
         return $normalizedResults;
     }
 
-    function is_json($string) {
+    function is_json($string)
+    {
         return !empty($string) && is_string($string) && is_array(json_decode($string, true)) && json_last_error() == 0;
     }
 

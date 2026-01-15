@@ -10,16 +10,16 @@
         "label": "Home",
         "slug": "/",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "description": "This is homepage template where all the home components are stored here.",
@@ -68,36 +68,36 @@
                         "name": "image_mobile",
                         "label": "Image Mobile",
                         "type": "image",
-                        "size" : 100,
-                        "ratio" : "9:16",
+                        "size": 100,
+                        "ratio": "9:16",
                         "info": "Recommended 540 x 960 px (ratio 9:16) and recommended file size 100 KB"
                     },
                     {
-                      "name": "alt_text_image_mobile",
-                      "label": "Alt Text (Image Mobile)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
                         "label": "Image desktop",
                         "type": "image",
-                        "size" : 220,
-                        "ratio" : "2:1",
+                        "size": 220,
+                        "ratio": "2:1",
                         "info": "Recommended 2160 x 1080 px (ratio 2:1) and recommended file size 220 KB"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "logo",
                         "label": "Logo",
                         "type": "image",
-                        "size" : 220,
-                        "ratio" : "1:1",
+                        "size": 220,
+                        "ratio": "1:1",
                         "info": "Recommended 540 x 540 px (ratio 1:1) and recommended file size 220 KB"
                     },
                     {
@@ -143,7 +143,6 @@
                         "label": "Description",
                         "type": "textarea"
                     },
-
                     {
                         "name": "label_discover",
                         "label": "Label Discover",
@@ -173,19 +172,20 @@
                                 "name": "image",
                                 "label": "Image",
                                 "type": "image",
-                                "size" : 80,
+                                "size": 80,
                                 "info": "Recommended 450 x 675 px (ratio 2:3) and recommended file size 80 KB"
                             },
                             {
-                              "name": "alt_text",
-                              "label": "Alt Text",
-                              "type": "text",
-                              "placeholder": "ex: alt text image"
+                                "name": "alt_text",
+                                "label": "Alt Text",
+                                "type": "text",
+                                "placeholder": "ex: alt text image"
                             }
                         ]
                     }
                 ]
-            },{
+            },
+            {
                 "keyName": "business_solution",
                 "label": "Business Solution",
                 "section": "1",
@@ -229,14 +229,14 @@
                                 "name": "image",
                                 "label": "Image",
                                 "type": "image",
-                                "size" : 80,
+                                "size": 80,
                                 "info": "Recommended 450 x 675 px (ratio 2:3) and recommended file size 80 KB"
                             },
                             {
-                              "name": "alt_text",
-                              "label": "Alt Text",
-                              "type": "text",
-                              "placeholder": "ex: alt text image"
+                                "name": "alt_text",
+                                "label": "Alt Text",
+                                "type": "text",
+                                "placeholder": "ex: alt text image"
                             },
                             {
                                 "name": "cta_label",
@@ -378,7 +378,7 @@
                         "name": "logo",
                         "label": "Logo",
                         "type": "image",
-                        "size" : 20,
+                        "size": 20,
                         "info": "Recommended 150 x 150 px (ratio 1:1) and recommended file size 20 KB"
                     },
                     {
@@ -469,14 +469,14 @@
                         "name": "image",
                         "label": "Image",
                         "type": "image",
-                        "size" : 160,
+                        "size": 160,
                         "info": "Recommended 1200 x 1200 px (ratio 1:1) and recommended file size 160 KB"
                     },
                     {
-                      "name": "alt_text",
-                      "label": "Alt Text",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text",
+                        "label": "Alt Text",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "list",
@@ -521,16 +521,16 @@
         "label": "About Us (Who We Are)",
         "slug": "/about/who-we-are",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "description": "A brief long short story about the company or related to.",
@@ -574,27 +574,27 @@
                         "name": "image_mobile",
                         "label": "Image Mobile",
                         "type": "image",
-                        "size" : 100,
+                        "size": 100,
                         "info": "Recommended 540 x 960 px (ratio 9:16) and recommended file size 100 KB"
                     },
                     {
-                      "name": "alt_text_image_mobile",
-                      "label": "Alt Text (Image Mobile)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
                         "label": "Image desktop",
                         "type": "image",
-                        "size" : 220,
+                        "size": 220,
                         "info": "Recommended 2160 x 1080 px (ratio 2:1) and recommended file size 220 KB"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -632,14 +632,14 @@
                         "name": "image",
                         "label": "Image",
                         "type": "image",
-                        "size" : 110,
+                        "size": 110,
                         "info": "Recommended 780 x 780 px (ratio 1:1) and recommended file size 110 KB"
                     },
                     {
-                      "name": "alt_text",
-                      "label": "Alt Text",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text",
+                        "label": "Alt Text",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -681,7 +681,8 @@
                         ]
                     }
                 ]
-            },{
+            },
+            {
                 "keyName": "vision_mission",
                 "label": "Vision & Mission",
                 "section": "1",
@@ -715,16 +716,16 @@
                         "name": "mision_image",
                         "label": "Mision Image",
                         "type": "image",
-                        "size" : 80,
+                        "size": 80,
                         "info": "Recommended 600 x 600 px (ratio 1:1) and recommended file size 80 KB"
                     },
                     {
-                      "name": "alt_text_mission",
-                      "label": "Alt Text (Mision Image)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
-                    }
-                    ,{
+                        "name": "alt_text_mission",
+                        "label": "Alt Text (Mision Image)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
+                    },
+                    {
                         "name": "vission_title",
                         "label": "Vission Title",
                         "type": "text"
@@ -738,14 +739,14 @@
                         "name": "visson_image",
                         "label": "Vission Image",
                         "type": "image",
-                        "size" : 80,
+                        "size": 80,
                         "info": "Recommended 600 x 600 px (ratio 1:1) and recommended file size 80 KB"
                     },
                     {
-                      "name": "alt_text_vission",
-                      "label": "Alt Text (Vission Image)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_vission",
+                        "label": "Alt Text (Vission Image)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -839,27 +840,27 @@
                                 "name": "image1",
                                 "label": "Image 1",
                                 "type": "image",
-                                "size" : 70,
+                                "size": 70,
                                 "info": "Recommended 630 x 420 px (ratio 3:2) and recommended file size 70 KB"
                             },
                             {
-                              "name": "alt_text1",
-                              "label": "Alt Text (Image1)",
-                              "type": "text",
-                              "placeholder": "ex: alt text image"
+                                "name": "alt_text1",
+                                "label": "Alt Text (Image1)",
+                                "type": "text",
+                                "placeholder": "ex: alt text image"
                             },
                             {
                                 "name": "image2",
                                 "label": "Image 2",
                                 "type": "image",
-                                "size" : 70,
+                                "size": 70,
                                 "info": "Recommended 630 x 420 px (ratio 3:2) and recommended file size 70 KB"
                             },
                             {
-                              "name": "alt_text2",
-                              "label": "Alt Text (Image2)",
-                              "type": "text",
-                              "placeholder": "ex: alt text image"
+                                "name": "alt_text2",
+                                "label": "Alt Text (Image2)",
+                                "type": "text",
+                                "placeholder": "ex: alt text image"
                             }
                         ]
                     }
@@ -918,16 +919,16 @@
         "label": "Page About - Management & Structure",
         "description": "",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -970,27 +971,27 @@
                         "name": "image_mobile",
                         "label": "Image Mobile",
                         "type": "image",
-                        "size" : 100,
+                        "size": 100,
                         "info": "Recommended 540 x 960 px (ratio 9:16) and recommended file size 100 KB"
                     },
                     {
-                      "name": "alt_text_image_mobile",
-                      "label": "Alt Text (Image Mobile)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
                         "label": "Image desktop",
                         "type": "image",
-                        "size" : 220,
+                        "size": 220,
                         "info": "Recommended 2160 x 1080 px (ratio 2:1) and recommended file size 220 KB"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -1075,10 +1076,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text_image_organization",
-                      "label": "Alt Text (Image Organization)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_organization",
+                        "label": "Alt Text (Image Organization)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "organization_updated_date",
@@ -1096,10 +1097,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text_image_corperate",
-                      "label": "Alt Text (Image Corperate)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_corperate",
+                        "label": "Alt Text (Image Corperate)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "corperate_updated_date",
@@ -1143,16 +1144,16 @@
         "slug": "/about/awards-and-recognition",
         "description": "",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -1195,27 +1196,27 @@
                         "name": "image_mobile",
                         "label": "Image Mobile",
                         "type": "image",
-                        "size" : 100,
+                        "size": 100,
                         "info": "Recommended 540 x 960 px (ratio 9:16) and recommended file size 100 KB"
                     },
                     {
-                      "name": "alt_text_image_mobile",
-                      "label": "Alt Text (Image Mobile)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
                         "label": "Image desktop",
                         "type": "image",
-                        "size" : 220,
+                        "size": 220,
                         "info": "Recommended 2160 x 1080 px (ratio 2:1) and recommended file size 220 KB"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -1263,14 +1264,14 @@
                                 "name": "image",
                                 "label": "Image",
                                 "type": "image",
-                                "size" : 60,
+                                "size": 60,
                                 "info": "Recommended 450 x 450 px (ratio 1:1) and recommended file size 60 KB"
                             },
                             {
-                              "name": "alt_text",
-                              "label": "Alt Text",
-                              "type": "text",
-                              "placeholder": "ex: alt text image"
+                                "name": "alt_text",
+                                "label": "Alt Text",
+                                "type": "text",
+                                "placeholder": "ex: alt text image"
                             }
                         ]
                     }
@@ -1320,14 +1321,14 @@
                                 "name": "image",
                                 "label": "Image",
                                 "type": "image",
-                                "size" : 60,
+                                "size": 60,
                                 "info": "Recommended 450 x 450 px (ratio 1:1) and recommended file size 60 KB"
                             },
                             {
-                              "name": "alt_text",
-                              "label": "Alt Text",
-                              "type": "text",
-                              "placeholder": "ex: alt text image"
+                                "name": "alt_text",
+                                "label": "Alt Text",
+                                "type": "text",
+                                "placeholder": "ex: alt text image"
                             }
                         ]
                     }
@@ -1358,16 +1359,16 @@
         "label": "Business Solution - Overview",
         "description": "",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -1410,27 +1411,27 @@
                         "name": "image_mobile",
                         "label": "Image Mobile",
                         "type": "image",
-                        "size" : 100,
+                        "size": 100,
                         "info": "Recommended 540 x 960 px (ratio 9:16) and recommended file size 100 KB"
                     },
                     {
-                      "name": "alt_text_image_mobile",
-                      "label": "Alt Text (Image Mobile)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
                         "label": "Image desktop",
                         "type": "image",
-                        "size" : 220,
+                        "size": 220,
                         "info": "Recommended 2160 x 1080 px (ratio 2:1) and recommended file size 220 KB"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -1515,14 +1516,14 @@
                                 "name": "image",
                                 "label": "Image",
                                 "type": "image",
-                                "size" : 50,
+                                "size": 50,
                                 "info": "Recommended 450 x 225 px (ratio 2:1) and recommended file size 50 KB"
                             },
                             {
-                              "name": "alt_text",
-                              "label": "Alt Text",
-                              "type": "text",
-                              "placeholder": "ex: alt text image"
+                                "name": "alt_text",
+                                "label": "Alt Text",
+                                "type": "text",
+                                "placeholder": "ex: alt text image"
                             },
                             {
                                 "name": "logo",
@@ -1603,16 +1604,16 @@
         "description": "",
         "is_document": true,
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -1645,27 +1646,27 @@
                         "name": "image_mobile",
                         "label": "Image Mobile",
                         "type": "image",
-                        "size" : 100,
+                        "size": 100,
                         "info": "Recommended 540 x 960 px (ratio 9:16) and recommended file size 100 KB"
                     },
                     {
-                      "name": "alt_text_image_mobile",
-                      "label": "Alt Text (Image Mobile)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
                         "label": "Image desktop",
                         "type": "image",
-                        "size" : 220,
+                        "size": 220,
                         "info": "Recommended 2160 x 1080 px (ratio 2:1) and recommended file size 220 KB"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -1774,27 +1775,27 @@
                         "name": "big_image",
                         "label": "Flow 1",
                         "type": "image",
-                        "size" : 210,
+                        "size": 210,
                         "info": "Recommended 1800 x 1350 px (ratio 4:3) and recommended file size 210 KB"
                     },
                     {
-                      "name": "alt_text_big_image",
-                      "label": "Alt Text (Big Image)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_big_image",
+                        "label": "Alt Text (Big Image)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "big_image2",
                         "label": "Flow 2",
                         "type": "image",
-                        "size" : 210,
+                        "size": 210,
                         "info": "Recommended 1800 x 1350 px (ratio 4:3) and recommended file size 210 KB"
                     },
                     {
-                      "name": "alt_text_big_image2",
-                      "label": "Alt Text (Big Image 2)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_big_image2",
+                        "label": "Alt Text (Big Image 2)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -1857,19 +1858,20 @@
                                 "name": "image",
                                 "label": "Image",
                                 "type": "image",
-                                "size" : 60,
+                                "size": 60,
                                 "info": "Recommended 450 x 450 px (ratio 1:1) and recommended file size 60 KB"
                             },
                             {
-                              "name": "alt_text",
-                              "label": "Alt Text",
-                              "type": "text",
-                              "placeholder": "ex: alt text image"
+                                "name": "alt_text",
+                                "label": "Alt Text",
+                                "type": "text",
+                                "placeholder": "ex: alt text image"
                             }
                         ]
                     }
                 ]
-            },{
+            },
+            {
                 "keyName": "document",
                 "label": "Document",
                 "is_document": true,
@@ -1937,16 +1939,16 @@
         "slug": "/sustainability",
         "description": "",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -1989,27 +1991,27 @@
                         "name": "image_mobile",
                         "label": "Image Mobile",
                         "type": "image",
-                        "size" : 100,
+                        "size": 100,
                         "info": "Recommended 540 x 960 px (ratio 9:16) and recommended file size 100 KB"
                     },
                     {
-                      "name": "alt_text_image_mobile",
-                      "label": "Alt Text (Image Mobile)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
                         "label": "Image desktop",
                         "type": "image",
-                        "size" : 220,
+                        "size": 220,
                         "info": "Recommended 2160 x 1080 px (ratio 2:1) and recommended file size 220 KB"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -2042,14 +2044,14 @@
                         "name": "image",
                         "label": "Image",
                         "type": "image",
-                        "size" : 80,
+                        "size": 80,
                         "info": "Recommended 600 x 600 px (ratio 1:1) and recommended file size 80 KB"
                     },
                     {
-                      "name": "alt_text",
-                      "label": "Alt Text",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text",
+                        "label": "Alt Text",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -2104,14 +2106,14 @@
                         "name": "image",
                         "label": "Image",
                         "type": "image",
-                        "size" : 100,
+                        "size": 100,
                         "info": "Recommended 750 x 750 px (ratio 1:1) and recommended file size 100 KB"
                     },
                     {
-                      "name": "alt_text",
-                      "label": "Alt Text",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text",
+                        "label": "Alt Text",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "framework",
@@ -2191,7 +2193,7 @@
                                 "name": "logo",
                                 "label": "Logo",
                                 "type": "image",
-                                "size" : 10,
+                                "size": 10,
                                 "info": "Recommended height 81 px (free aspect ratio) and recommended file size 10 KB"
                             },
                             {
@@ -2210,8 +2212,7 @@
                                 "type": "textarea"
                             }
                         ]
-                    }
-                    ,
+                    },
                     {
                         "name": "eecognition",
                         "label": "Recognition",
@@ -2241,9 +2242,10 @@
                                 "name": "logo",
                                 "label": "Logo",
                                 "type": "image",
-                                "size" : 30,
+                                "size": 30,
                                 "info": "Recommended 225 x 225 px (ratio 1:1) and recommended file size 30 KB"
-                            },{
+                            },
+                            {
                                 "name": "description",
                                 "label": "Description",
                                 "type": "textarea"
@@ -2287,7 +2289,6 @@
                         "label": "Logo - Title",
                         "type": "text"
                     },
-
                     {
                         "name": "small_title",
                         "label": "Logo - Small Title",
@@ -2320,16 +2321,16 @@
         "label": "Page Sustainability - Environtment",
         "description": "",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -2372,27 +2373,27 @@
                         "name": "image_mobile",
                         "label": "Image Mobile",
                         "type": "image",
-                        "size" : 100,
+                        "size": 100,
                         "info": "Recommended 540 x 960 px (ratio 9:16) and recommended file size 100 KB"
                     },
                     {
-                      "name": "alt_text_image_mobile",
-                      "label": "Alt Text (Image Mobile)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
                         "label": "Image desktop",
                         "type": "image",
-                        "size" : 220,
+                        "size": 220,
                         "info": "Recommended 2160 x 1080 px (ratio 2:1) and recommended file size 220 KB"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -2435,7 +2436,7 @@
                                 "name": "icon",
                                 "label": "Icon",
                                 "type": "image",
-                                "size" : 10,
+                                "size": 10,
                                 "info": "Recommended 100 x 100 px (ratio 1:1) and recommended file size 10 KB"
                             },
                             {
@@ -2511,7 +2512,7 @@
                                 "name": "icon",
                                 "label": "Icon",
                                 "type": "image",
-                                "size" : 10,
+                                "size": 10,
                                 "info": "Recommended 100 x 100 px (ratio 1:1) and recommended file size 10 KB"
                             },
                             {
@@ -2567,14 +2568,14 @@
                         "name": "image",
                         "label": "Image",
                         "type": "image",
-                        "size" : 110,
+                        "size": 110,
                         "info": "Recommended 675 x 900 px (ratio 3:4) and recommended file size 110 KB"
                     },
                     {
-                      "name": "alt_text",
-                      "label": "Alt Text",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text",
+                        "label": "Alt Text",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -2622,7 +2623,7 @@
                         "name": "logo",
                         "label": "Logo",
                         "type": "image",
-                        "size" : 30,
+                        "size": 30,
                         "info": "Recommended 195 x 195 px (ratio 1:1) and recommended file size 30 KB"
                     }
                 ]
@@ -2661,7 +2662,7 @@
                                 "name": "icon",
                                 "label": "Icon",
                                 "type": "image",
-                                "size" : 10,
+                                "size": 10,
                                 "info": "Recommended 100 x 100 px (ratio 1:1) and recommended file size 10 KB"
                             },
                             {
@@ -2719,10 +2720,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text",
-                      "label": "Alt Text",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text",
+                        "label": "Alt Text",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "list_poin",
@@ -2733,7 +2734,7 @@
                                 "name": "icon",
                                 "label": "Icon",
                                 "type": "image",
-                                "size" : 10,
+                                "size": 10,
                                 "info": "Recommended 100 x 100 px (ratio 1:1) and recommended file size 10 KB"
                             },
                             {
@@ -2775,16 +2776,16 @@
         "label": "Page Sustainability - Social",
         "description": "",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -2827,27 +2828,27 @@
                         "name": "image_mobile",
                         "label": "Image Mobile",
                         "type": "image",
-                        "size" : 100,
+                        "size": 100,
                         "info": "Recommended 540 x 960 px (ratio 9:16) and recommended file size 100 KB"
                     },
                     {
-                      "name": "alt_text_image_mobile",
-                      "label": "Alt Text (Image Mobile)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
                         "label": "Image desktop",
                         "type": "image",
-                        "size" : 220,
+                        "size": 220,
                         "info": "Recommended 2160 x 1080 px (ratio 2:1) and recommended file size 220 KB"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -2900,7 +2901,7 @@
                                 "name": "icon",
                                 "label": "icon",
                                 "type": "image",
-                                "size" : 10,
+                                "size": 10,
                                 "info": "Recommended 100 x 100 px (ratio 1:1) and recommended file size 10 KB"
                             },
                             {
@@ -3150,10 +3151,10 @@
                                 "type": "image"
                             },
                             {
-                              "name": "alt_text",
-                              "label": "Alt Text",
-                              "type": "text",
-                              "placeholder": "ex: alt text image"
+                                "name": "alt_text",
+                                "label": "Alt Text",
+                                "type": "text",
+                                "placeholder": "ex: alt text image"
                             },
                             {
                                 "name": "title",
@@ -3213,7 +3214,7 @@
                                 "name": "icon",
                                 "label": "Icon",
                                 "type": "image",
-                                "size" : 10,
+                                "size": 10,
                                 "info": "Recommended 100 x 100 px (ratio 1:1) and recommended file size 10 KB"
                             },
                             {
@@ -3255,16 +3256,16 @@
         "label": "Page Sustainability - Governance",
         "description": "",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -3304,10 +3305,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text_image_mobile",
-                      "label": "Alt Text (Image Mobile)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
@@ -3315,10 +3316,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -3358,10 +3359,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text",
-                      "label": "Alt Text",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text",
+                        "label": "Alt Text",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "document_type",
@@ -3425,10 +3426,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text",
-                      "label": "Alt Text",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text",
+                        "label": "Alt Text",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "list",
@@ -3534,10 +3535,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text",
-                      "label": "Alt Text",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text",
+                        "label": "Alt Text",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "small_label",
@@ -3702,7 +3703,8 @@
                         ]
                     }
                 ]
-            }, {
+            },
+            {
                 "keyName": "image_text2",
                 "label": "Governance Performance",
                 "section": "3",
@@ -3738,10 +3740,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text",
-                      "label": "Alt Text",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text",
+                        "label": "Alt Text",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -3771,16 +3773,16 @@
         "description": "",
         "is_document_category": true,
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -3820,10 +3822,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text_image_mobile",
-                      "label": "Alt Text (Image Mobile)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
@@ -3831,10 +3833,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -3887,16 +3889,16 @@
         "label": "Page Investor - Overview",
         "description": "",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -3941,10 +3943,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text_image_mobile",
-                      "label": "Alt Text (Image Mobile)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
@@ -3952,10 +3954,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -4123,24 +4125,23 @@
                 ]
             }
         ]
-    }
-    ,
+    },
     {
         "name": "investor_stock",
         "slug": "/investor/stocks-and-bonds",
         "label": "Page Investor - Stock",
         "description": "",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -4175,10 +4176,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text_image_mobile",
-                      "label": "Alt Text (Image Mobile)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
@@ -4186,10 +4187,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -4285,16 +4286,16 @@
         "description": "",
         "is_document_category": true,
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -4329,10 +4330,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text_image_mobile",
-                      "label": "Alt Text (Image Mobile)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
@@ -4340,10 +4341,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -4397,16 +4398,16 @@
         "is_document_category": true,
         "description": "",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -4441,10 +4442,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text_image_mobile",
-                      "label": "Alt Text (Image Mobile)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
@@ -4452,10 +4453,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -4508,16 +4509,16 @@
         "label": "Disclaminer",
         "description": "",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -4611,16 +4612,16 @@
         "is_document": true,
         "description": "",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -4663,27 +4664,27 @@
                         "name": "image_mobile",
                         "label": "Image Mobile",
                         "type": "image",
-                        "size" : 100,
+                        "size": 100,
                         "info": "Recommended 540 x 960 px (ratio 9:16) and recommended file size 100 KB"
                     },
                     {
-                      "name": "alt_text_image_mobile",
-                      "label": "Alt Text (Image Mobile)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
                         "label": "Image desktop",
                         "type": "image",
-                        "size" : 220,
+                        "size": 220,
                         "info": "Recommended 2160 x 1080 px (ratio 2:1) and recommended file size 220 KB"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -4722,14 +4723,14 @@
                         "name": "image",
                         "label": "Image",
                         "type": "image",
-                        "size" : 60,
+                        "size": 60,
                         "info": "Recommended 450 x 450 px (ratio 1:1) and recommended file size 60 KB"
                     },
                     {
-                      "name": "alt_text",
-                      "label": "Alt Text",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text",
+                        "label": "Alt Text",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "name",
@@ -4787,14 +4788,14 @@
                         "name": "image",
                         "label": "Image",
                         "type": "image",
-                        "size" : 100,
+                        "size": 100,
                         "info": "Recommended 900 x 600 px (ratio 3:2) and recommended file size 100 KB"
                     },
                     {
-                      "name": "alt_text",
-                      "label": "Alt Text",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text",
+                        "label": "Alt Text",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "file_title",
@@ -4907,7 +4908,7 @@
                                         "name": "picture",
                                         "label": "Profile Picture",
                                         "type": "image",
-                                        "size" : 60,
+                                        "size": 60,
                                         "info": "Recommended 450 x 450 px (ratio 1:1) and recommended file size 60 KB"
                                     }
                                 ]
@@ -4950,14 +4951,14 @@
                         "name": "image",
                         "label": "Image",
                         "type": "image",
-                        "size" : 80,
+                        "size": 80,
                         "info": "Recommended 920 x 518 and recommended file size 80 KB"
                     },
                     {
-                      "name": "alt_text",
-                      "label": "Alt Text",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text",
+                        "label": "Alt Text",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "file_title",
@@ -5178,16 +5179,16 @@
         "label": "Whistleblowing",
         "description": "",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -5225,14 +5226,14 @@
                         "name": "image_desktop",
                         "label": "Image",
                         "type": "image",
-                        "size" : 140,
+                        "size": 140,
                         "info": "Recommended 840 x 1245 px (ratio 2:3) and recommended file size 140 KB"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -5261,16 +5262,16 @@
         "label": "Contact Us",
         "description": "",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -5298,14 +5299,14 @@
                         "name": "image_desktop",
                         "label": "Image",
                         "type": "image",
-                        "size" : 140,
+                        "size": 140,
                         "info": "Recommended 840 x 1245 px (ratio 2:3) and recommended file size 140 KB"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "title",
@@ -5434,16 +5435,16 @@
         "slug": "/privacy-policy",
         "label": "Privacy policy",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "description": "This page is mandatory for every website.",
@@ -5489,16 +5490,16 @@
         "slug": "/terms-condition",
         "label": "Terms & conditions",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "description": "This page is mandatory for every website.",
@@ -5545,19 +5546,20 @@
         "label": "Cookies Consent",
         "multilanguage": "true",
         "description": "This is homepage template where all the home components are stored here.",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
-            "components": [{
+        "components": [
+            {
                 "keyName": "small_popup",
                 "label": "Popup Cookies Consent",
                 "section": "3",
@@ -5642,14 +5644,14 @@
     },
     {
         "name": "general_site",
-        "slug" : "/general-site",
+        "slug": "/general-site",
         "label": "General Site",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             }
         ],
         "description": "This is homepage template where all the home components are stored here.",
@@ -5685,16 +5687,16 @@
         "slug": "/event",
         "label": "Event",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "description": "",
@@ -5925,6 +5927,563 @@
                         "name": "description",
                         "label": "Description",
                         "type": "editor"
+                    }
+                ]
+            },
+            {
+                "keyName": "seo_meta",
+                "label": "Seo Meta",
+                "section": "1",
+                "fields": [
+                    {
+                        "name": "meta_title",
+                        "label": "Meta Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "meta_desc",
+                        "label": "Meta Description",
+                        "type": "textarea"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "circular-economy-and-partnership",
+        "label": "Circular Economy & Partnership",
+        "slug": "sustainability/circular-economy-and-partnership",
+        "multilanguage": "true",
+        "lang_option": [
+            {
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
+            },
+            {
+                "name": "English",
+                "value": "en",
+                "master": "false"
+            }
+        ],
+        "description": "Page for Circular Economy & Partnership",
+        "components": [
+            {
+                "keyName": "banner",
+                "label": "Banner",
+                "section": "1",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "small_title",
+                        "label": "Small Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "type": "textarea"
+                    },
+                    {
+                        "name": "image_mobile",
+                        "label": "Image Mobile",
+                        "type": "image"
+                    },
+                    {
+                        "name": "image_desktop",
+                        "label": "Image Desktop",
+                        "type": "image"
+                    }
+                ]
+            },
+            {
+                "keyName": "content_left_right",
+                "label": "Content Left Right",
+                "section": "1",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "type": "editor"
+                    },
+                    {
+                        "name": "image",
+                        "label": "Image",
+                        "type": "image"
+                    }
+                ]
+            },
+            {
+                "keyName": "environmental_performance",
+                "label": "Environmental Performance",
+                "section": "2",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "type": "editor"
+                    },
+                    {
+                        "name": "numbers",
+                        "label": "Numbers",
+                        "type": "repeater",
+                        "list": [
+                            {
+                                "name": "number",
+                                "label": "Number",
+                                "type": "text"
+                            },
+                            {
+                                "name": "title",
+                                "label": "Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "small_title",
+                                "label": "Small Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "icon",
+                                "label": "Icon",
+                                "type": "image"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "keyName": "policy_performance",
+                "label": "Tab: Policy Performance",
+                "section": "3",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "type": "editor"
+                    },
+                    {
+                        "name": "numbers",
+                        "label": "Numbers",
+                        "type": "repeater",
+                        "list": [
+                            {
+                                "name": "number",
+                                "label": "Number",
+                                "type": "text"
+                            },
+                            {
+                                "name": "title",
+                                "label": "Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "small_title",
+                                "label": "Small Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "icon",
+                                "label": "Icon",
+                                "type": "image"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "keyName": "policy_items",
+                "label": "Tab: Policy Items",
+                "section": "3",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "items",
+                        "label": "Items",
+                        "type": "repeater",
+                        "list": [
+                            {
+                                "name": "title",
+                                "label": "Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "description",
+                                "label": "Description",
+                                "type": "textarea"
+                            },
+                            {
+                                "name": "image",
+                                "label": "Image",
+                                "type": "image"
+                            },
+                            {
+                                "name": "cta_label",
+                                "label": "CTA Label",
+                                "type": "text"
+                            },
+                            {
+                                "name": "cta_url",
+                                "label": "CTA URL",
+                                "type": "url"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "keyName": "end_to_end_performance",
+                "label": "Tab: End-to-End Performance",
+                "section": "4",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "type": "editor"
+                    },
+                    {
+                        "name": "numbers",
+                        "label": "Numbers",
+                        "type": "repeater",
+                        "list": [
+                            {
+                                "name": "number",
+                                "label": "Number",
+                                "type": "text"
+                            },
+                            {
+                                "name": "title",
+                                "label": "Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "small_title",
+                                "label": "Small Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "icon",
+                                "label": "Icon",
+                                "type": "image"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "keyName": "end_to_end_items",
+                "label": "Tab: End-to-End Items",
+                "section": "4",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "items",
+                        "label": "Items",
+                        "type": "repeater",
+                        "list": [
+                            {
+                                "name": "title",
+                                "label": "Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "description",
+                                "label": "Description",
+                                "type": "textarea"
+                            },
+                            {
+                                "name": "image",
+                                "label": "Image",
+                                "type": "image"
+                            },
+                            {
+                                "name": "cta_label",
+                                "label": "CTA Label",
+                                "type": "text"
+                            },
+                            {
+                                "name": "cta_url",
+                                "label": "CTA URL",
+                                "type": "url"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "keyName": "technology_performance",
+                "label": "Tab: Technology Performance",
+                "section": "5",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "type": "editor"
+                    },
+                    {
+                        "name": "numbers",
+                        "label": "Numbers",
+                        "type": "repeater",
+                        "list": [
+                            {
+                                "name": "number",
+                                "label": "Number",
+                                "type": "text"
+                            },
+                            {
+                                "name": "title",
+                                "label": "Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "small_title",
+                                "label": "Small Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "icon",
+                                "label": "Icon",
+                                "type": "image"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "keyName": "technology_items",
+                "label": "Tab: Technology Items",
+                "section": "5",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "items",
+                        "label": "Items",
+                        "type": "repeater",
+                        "list": [
+                            {
+                                "name": "title",
+                                "label": "Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "description",
+                                "label": "Description",
+                                "type": "textarea"
+                            },
+                            {
+                                "name": "image",
+                                "label": "Image",
+                                "type": "image"
+                            },
+                            {
+                                "name": "cta_label",
+                                "label": "CTA Label",
+                                "type": "text"
+                            },
+                            {
+                                "name": "cta_url",
+                                "label": "CTA URL",
+                                "type": "url"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "keyName": "content_left_right_2",
+                "label": "Content Left Right 2",
+                "section": "6",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "type": "editor"
+                    },
+                    {
+                        "name": "image",
+                        "label": "Image",
+                        "type": "image"
                     }
                 ]
             },
