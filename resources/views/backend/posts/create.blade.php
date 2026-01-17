@@ -197,6 +197,9 @@
                                                                                            class="form-control form-control-solid">
                                                                                 </div>
                                                                             </div>
+                                                                            <div class="mt-3">
+                                                                                <button type="button" class="btn btn-sm btn-light-danger clear-banner-btn">Clear Banner Config in this Position</button>
+                                                                            </div>
                                                                         </div>
                                                                     @endforeach
                                                                 </div>
@@ -251,6 +254,15 @@
             }
 
         }
+    });
+</script>
+@endpush
+@push('scripts')
+<script>
+    $(document).on('click', '.clear-banner-btn', function() {
+        var container = $(this).closest('.tab-pane');
+        container.find('select').val('').trigger('change');
+        container.find('input[type="datetime-local"]').val('');
     });
 </script>
 @endpush

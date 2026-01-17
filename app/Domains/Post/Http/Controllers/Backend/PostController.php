@@ -446,4 +446,60 @@ class PostController extends BackendController
         }
         return true;
     }
+
+    private function syncBannerActive(Post $post, array $bannerActiveData)
+    {
+        // Get all existing active banners for this post
+        $existingBanners = $post->activeBanners()->get();
+        // Create a collection of IDs to keep track of what to delete
+        $existingIds = $existingBanners->pluck('id')->toArray();
+        $keepIds = [];
+
+        foreach ($bannerActiveData as $lang => $locations) {
+            foreach ($locations as $location => $data) {
+                // If group_id is empty, skip (meaning it was cleared or not set)
+                if (empty($data['group_id'])) {
+                    continue;
+                }
+
+                $activeBanner = $post->activeBanners()->where('language', $lang)->where('location', $location)->first();
+
+                if ($activeBanner) {
+                    $activeBanner->banner_group_id = $data['group_id'];
+                    $activeBanner->start_date = $data['start_date'] ?? null;
+                    $activeBanner->end_date = $data['end_date'] ?? null;
+                    $activeBanner->save();
+                    $keepIds[] = $activeBanner->id;
+                } else {
+                    $newBanner = $post->activeBanners()->create([
+                        'language' => $lang,
+                        'location' => $location,
+                        'banner_group_id' => $data['group_id'],
+                        'start_date' => $data['start_date'] ?? null,
+                        'end_date' => $data['end_date'] ?? null,
+                    ]);
+                    $keepIds[] = $newBanner->id;
+                }
+            }
+        }
+
+        // Delete banners that are no longer present in the request (unless we want to keep them if they weren't in the form?)
+        // The form sends all locations, so if it's missing or empty in the loop, it should probably be removed.
+        // However, the loop above skips empty group_ids.
+        // So we should verify which ones to delete.
+
+        // Actually, to handle "clearing", we should check if an existing record exists for a lang/location, and if the request has empty group_id for that lang/location, we delete it.
+
+        foreach ($existingBanners as $banner) {
+            // Check if this banner's lang/location is in the request with a valid group_id
+            $inRequest = false;
+            if (isset($bannerActiveData[$banner->language][$banner->location]['group_id']) && !empty($bannerActiveData[$banner->language][$banner->location]['group_id'])) {
+                $inRequest = true;
+            }
+
+            if (!$inRequest) {
+                $banner->delete();
+            }
+        }
+    }
 }

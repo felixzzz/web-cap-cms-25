@@ -213,6 +213,9 @@
                                                                                        value="{{ $activeBanner && $activeBanner->end_date ? $activeBanner->end_date->format('Y-m-d\TH:i') : '' }}">
                                                                             </div>
                                                                         </div>
+                                                                        <div class="mt-3">
+                                                                            <button type="button" style="font-size: 10px!important; padding: 0px 5px!important;" class="btn btn-sm btn-light-danger clear-banner-btn">Clear Banner Config in this Position</button>
+                                                                        </div>
                                                                     </div>
                                                                 @endforeach
                                                             </div>
@@ -274,4 +277,13 @@
         $('#divPublishAt').show();
         @endif
     </script>
+@endpush
+@push('scripts')
+<script>
+    $(document).on('click', '.clear-banner-btn', function() {
+        var container = $(this).closest('.tab-pane');
+        container.find('select').val('').trigger('change');
+        container.find('input[type="datetime-local"]').val('');
+    });
+</script>
 @endpush
