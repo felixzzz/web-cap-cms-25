@@ -146,7 +146,7 @@
                                                             ])
                                                         @endforeach
 
-                                                        @if($type['type'] == 'news')
+                                                        @if($type['type'] == 'news' || $type['type'] == 'blog')
                                                             <div class="separator my-10"></div>
                                                             <h3 class="text-dark fw-bolder mb-5">Banner Configuration</h3>
                                                             
