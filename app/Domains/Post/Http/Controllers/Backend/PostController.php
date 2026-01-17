@@ -5,6 +5,8 @@ namespace App\Domains\Post\Http\Controllers\Backend;
 use App\Domains\Post\Http\Requests\StorePostRequest;
 use App\Domains\Post\Models\Post;
 use App\Domains\Post\Models\PostType;
+use App\Models\BannerGroup;
+use App\Models\BannerActive;
 use App\Domains\Post\Services\ComponentService;
 use App\Domains\Post\Services\PostMetaService;
 use App\Domains\Post\Services\PostService;
@@ -15,6 +17,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
+use Exception;
 use Spatie\Tags\Tag;
 
 class PostController extends BackendController
@@ -41,11 +45,11 @@ class PostController extends BackendController
         // setup rules validation
         $this->rules = [
             'type' => [],
-            'title' => ['required','max:200'],
+            'title' => ['required', 'max:200'],
             'slug' => 'max:100',
             'slug_en' => 'max:100',
-            'title_en' => ['nullable','max:200'],
-            'excerpt' => ['nullable','max:255'],
+            'title_en' => ['nullable', 'max:200'],
+            'excerpt' => ['nullable', 'max:255'],
             'content' => ['nullable'],
             'tags' => ['nullable'],
             'tags_id' => ['nullable'],
@@ -59,7 +63,7 @@ class PostController extends BackendController
             'meta_description' => ['nullable'],
             'featured' => ['nullable'],
             'status' => ['nullable'],
-            'published_at' => ['nullable','date'],
+            'published_at' => ['nullable', 'date'],
             'post_type' => ['nullable']
         ];
     }
@@ -78,12 +82,13 @@ class PostController extends BackendController
         $type = $this->extract_post_type($type);
         list($template, $components) = $this->getTemplates($type['type']);
         $template = $this->getTemplates($type['type']);
-        $template['multilanguage'] = $template[2]['multilanguage'] ;
-        $template['lang_option'] = $template[3]['lang_option'] ;
+        $template['multilanguage'] = $template[2]['multilanguage'];
+        $template['lang_option'] = $template[3]['lang_option'];
         $categories = $this->getCategories($type['type']);
         $post = new Post();
-        $pages = Post::select('id','title','slug')
-            ->where('pages_dynamic','yes')->get();
+        $pages = Post::select('id', 'title', 'slug')
+            ->where('pages_dynamic', 'yes')->get();
+        $bannerGroups = BannerGroup::withCount('banners')->get();
         $tagDatas = Tag::all();
         $tags = $tagDatas->map(function ($tag) {
             return $tag->getTranslation('name', 'en');
@@ -102,7 +107,9 @@ class PostController extends BackendController
                 'post',
                 'tags',
                 'tags_id',
-                'pages'
+                'tags_id',
+                'pages',
+                'bannerGroups'
             )
         );
     }
@@ -120,9 +127,10 @@ class PostController extends BackendController
         $post = (new PostService())->create_post_handler($requestValidated, $type['type']);
 
         $this->postMetaService->updatePageMetaV2($post, $request->all());
+        $this->syncBannerActive($post, $request->input('banner_active', []));
 
         if ($post->status == Post::STATUS_SCHEDULE) {
-            if($request->get('published_at')){
+            if ($request->get('published_at')) {
                 $publishedAt = Carbon::parse($request->get('published_at'));
             } else {
                 $publishedAt = now()->addHour();
@@ -141,11 +149,11 @@ class PostController extends BackendController
         $type = $this->extract_post_type($post->type);
         list($template, $components) = $this->getTemplates($type['type']);
         $template = $this->getTemplates($type['type']);
-        $template['multilanguage'] = $template[2]['multilanguage'] ;
-        $template['lang_option'] = $template[3]['lang_option'] ;
+        $template['multilanguage'] = $template[2]['multilanguage'];
+        $template['lang_option'] = $template[3]['lang_option'];
         $meta = $post->meta->groupBy('section');
-        $pages = Post::select('id','title','slug')->where('pages_dynamic','yes')->get();
-
+        $pages = Post::select('id', 'title', 'slug')->where('pages_dynamic', 'yes')->get();
+        $bannerGroups = BannerGroup::withCount('banners')->get();
         $valueMeta = [];
         foreach ($meta as $keyName => $fields) {
             $data = new \stdClass();
@@ -178,8 +186,10 @@ class PostController extends BackendController
                 'components',
                 'tags',
                 'tags_id',
+                'tags_id',
                 'type',
-                'pages'
+                'pages',
+                'bannerGroups'
             )
         )->withMeta($valueMeta);
     }
@@ -198,9 +208,10 @@ class PostController extends BackendController
         try {
             $post = (new PostService())->update_post_handler($post, $requestValidated);
             $this->postMetaService->updatePageMetaV2($post, $request->all());
+            $this->syncBannerActive($post, $request->input('banner_active', []));
 
             if ($post->status == Post::STATUS_SCHEDULE) {
-                if($request->get('published_at')){
+                if ($request->get('published_at')) {
                     $publishedAt = now()->diffInMinutes($request->get('published_at'));
                 } else {
                     $publishedAt = now()->addHour();
@@ -270,9 +281,10 @@ class PostController extends BackendController
 
         $type = $post->type;
 
-        if (! $post->delete() ) {
+        if (!$post->delete()) {
             throw new GeneralException('There was a problem deleting this post. Please try again.');
-        };
+        }
+        ;
 
         return redirect()->route('admin.post.index', $type)->withFlashSuccess(
             __('Page ' . $post->title . ' was successfully deleted.')
@@ -303,7 +315,7 @@ class PostController extends BackendController
 
         // Gate::authorize("admin.access.news.delete");
 
-        if (! $deletedPost->restore()) {
+        if (!$deletedPost->restore()) {
             throw new GeneralException(__('There was a problem restoring this post. Please try again.'));
         }
 

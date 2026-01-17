@@ -156,8 +156,72 @@
                                                             'lang_option' => $template['lang_option'],
                                                         ])
                                                     @endforeach
+
+                                                    @if($type['type'] == 'news')
+                                                        <div class="separator my-10"></div>
+                                                        <h3 class="text-dark fw-bolder mb-5">Banner Configuration</h3>
+                                                        
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="nav flex-column nav-pills me-3" id="v-pills-tab-{{$lang_code}}" role="tablist" aria-orientation="vertical">
+                                                                @foreach(['left', 'right', 'center', 'bottom'] as $location)
+                                                                    <button class="nav-link {{$loop->first && $location == 'left' ? 'active' : ''}}" 
+                                                                            id="v-pills-{{$location}}-{{$lang_code}}-tab" 
+                                                                            data-bs-toggle="pill" 
+                                                                            data-bs-target="#v-pills-{{$location}}-{{$lang_code}}" 
+                                                                            type="button" role="tab" 
+                                                                            aria-controls="v-pills-{{$location}}-{{$lang_code}}" 
+                                                                            aria-selected="{{$loop->first ? 'true' : 'false'}}">
+                                                                        {{ ucfirst($location) }}
+                                                                    </button>
+                                                                @endforeach
+                                                            </div>
+                                                            <div class="tab-content flex-grow-1" id="v-pills-tabContent-{{$lang_code}}">
+                                                                @foreach(['left', 'right', 'center', 'bottom'] as $location)
+                                                                    @php
+                                                                        $activeBanner = $post->activeBanners->where('location', $location)->where('language', $lang_code)->first();
+                                                                    @endphp
+                                                                    <div class="tab-pane fade {{$loop->first && $location == 'left' ? 'show active' : ''}}" 
+                                                                         id="v-pills-{{$location}}-{{$lang_code}}" 
+                                                                         role="tabpanel" 
+                                                                         aria-labelledby="v-pills-{{$location}}-{{$lang_code}}-tab">
+                                                                        
+                                                                        <div class="mb-5">
+                                                                            <label class="form-label">Banner Group</label>
+                                                                            <select name="banner_active[{{$lang_code}}][{{$location}}][group_id]" class="form-select form-select-solid">
+                                                                                <option value="">Select Banner Group</option>
+                                                                                @foreach($bannerGroups as $group)
+                                                                                    <option value="{{ $group->id }}" {{ $activeBanner && $activeBanner->banner_group_id == $group->id ? 'selected' : '' }}>
+                                                                                        {{ $group->title }} ({{ $group->banners_count }} banners)
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+
+                                                                        <div class="row">
+                                                                            <div class="col-md-6 mb-5">
+                                                                                <label class="form-label">Start Date</label>
+                                                                                <input type="datetime-local" 
+                                                                                       name="banner_active[{{$lang_code}}][{{$location}}][start_date]" 
+                                                                                       class="form-control form-control-solid"
+                                                                                       value="{{ $activeBanner && $activeBanner->start_date ? $activeBanner->start_date->format('Y-m-d\TH:i') : '' }}">
+                                                                            </div>
+                                                                            <div class="col-md-6 mb-5">
+                                                                                <label class="form-label">End Date</label>
+                                                                                <input type="datetime-local" 
+                                                                                       name="banner_active[{{$lang_code}}][{{$location}}][end_date]" 
+                                                                                       class="form-control form-control-solid"
+                                                                                       value="{{ $activeBanner && $activeBanner->end_date ? $activeBanner->end_date->format('Y-m-d\TH:i') : '' }}">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                                 </div>
                                             @endforeach
+
+
                                         </div>
                                     @else
                                         @foreach ($components as $component)
