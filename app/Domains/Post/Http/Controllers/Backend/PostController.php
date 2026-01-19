@@ -481,7 +481,6 @@ class PostController extends BackendController
         }
 
         // Delete banners that are no longer present in the request (unless we want to keep them if they weren't in the form?)
-
         foreach ($existingBanners as $banner) {
             // Check if this banner's lang/location is in the request with a valid group_id
             $inRequest = false;
