@@ -449,10 +449,7 @@ class PostController extends BackendController
 
     private function syncBannerActive(Post $post, array $bannerActiveData)
     {
-        // Get all existing active banners for this post
         $existingBanners = $post->activeBanners()->get();
-        // Create a collection of IDs to keep track of what to delete
-        $existingIds = $existingBanners->pluck('id')->toArray();
         $keepIds = [];
 
         foreach ($bannerActiveData as $lang => $locations) {
@@ -484,11 +481,6 @@ class PostController extends BackendController
         }
 
         // Delete banners that are no longer present in the request (unless we want to keep them if they weren't in the form?)
-        // The form sends all locations, so if it's missing or empty in the loop, it should probably be removed.
-        // However, the loop above skips empty group_ids.
-        // So we should verify which ones to delete.
-
-        // Actually, to handle "clearing", we should check if an existing record exists for a lang/location, and if the request has empty group_id for that lang/location, we delete it.
 
         foreach ($existingBanners as $banner) {
             // Check if this banner's lang/location is in the request with a valid group_id
