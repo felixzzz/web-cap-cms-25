@@ -135,7 +135,7 @@ class PostMetaService extends BaseService
             } else {
                 // When value is null set meta to empty string or [] for repeater
 
-                if (! $update_flag) {
+                if (!$update_flag) {
                     continue; // On create no need update null value
                 }
 
@@ -151,7 +151,7 @@ class PostMetaService extends BaseService
                     json_decode($meta->value);
                     if (
                         json_last_error() === JSON_ERROR_NONE &&
-                        ! is_numeric($meta->value) // To avoid number treated as json
+                        !is_numeric($meta->value) // To avoid number treated as json
                     ) {
                         $meta->value = '[]';
                     } else {
@@ -217,6 +217,7 @@ class PostMetaService extends BaseService
         unset($data['featured_image']);
         unset($data['featured_image_remove']);
         unset($data['page']);
+        unset($data['banner_active']);
         $data = array_diff_key($data, array_flip($post->getFillable()));
         $ret = $this->loopInsertPageMetaV2($post, $data, true);
         return $ret;
@@ -226,35 +227,35 @@ class PostMetaService extends BaseService
     {
         $ret = [];
         foreach ($data as $keyName => $fields) {
-//            try {
+            //            try {
             foreach ($fields as $keyMeta => $value) {
                 if (isJson($value)) {
                     $lastWord = explode("_", $keyMeta);
                     if ($keyName != 'core_values' && end($lastWord) == 'en') {
                         $data = new \stdClass();
                         $metaData = json_decode($value, true);
-                       
+
                         foreach ($metaData as $key => $item) {
-                            $keysToSearch = ['image', 'logo', 'picture', 'thumbnail_image', 'image_mobile', 'image_desktop', 'mision_image', 'visson_image', 'image1', 'image2','icon'];
+                            $keysToSearch = ['image', 'logo', 'picture', 'thumbnail_image', 'image_mobile', 'image_desktop', 'mision_image', 'visson_image', 'image1', 'image2', 'icon'];
                             if (is_array($item)) {
                                 $filteredArray = array_filter($item, function ($key) use ($keysToSearch) {
                                     return in_array($key, $keysToSearch);
                                 }, ARRAY_FILTER_USE_KEY);
-                    
+
                                 foreach ($filteredArray as $filteredKey => $filteredValue) {
                                     $keyMetaUpdated = implode("_", array_merge(array_slice(explode("_", $keyMeta), 0, -1), ['id']));
-                                    
+
                                     $metaDataId = $this->model::where('post_id', $post->id)
                                         ->where('key', $keyMetaUpdated)
                                         ->where('section', $keyName)
                                         ->first();
-                                    
+
                                     if ($metaDataId) {
                                         $metaId = json_decode($metaDataId->value, true);
                                         foreach ($metaId as $keyId => $itemid) {
                                             // $wordToCheck = 'images/post';
                                             // if(isset($itemid[$filteredKey])  && strpos($itemid[$filteredKey], $wordToCheck) !== false){
-                                                $metaData[$keyId][$filteredKey] = $metaId[$keyId][$filteredKey];
+                                            $metaData[$keyId][$filteredKey] = $metaId[$keyId][$filteredKey];
                                             // }
                                         }
                                     }
@@ -283,7 +284,7 @@ class PostMetaService extends BaseService
                     $this->model::create($insertData);
                 }
             }
-//            } catch (\Exception $exception){
+            //            } catch (\Exception $exception){
 //                dd($fields);
 //            }
         }
