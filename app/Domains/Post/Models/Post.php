@@ -79,8 +79,22 @@ class Post extends Model implements HasMedia
     ];
 
     protected $appends = [
-        'template'
+        'template',
+        'is_filled_en',
+        'is_filled_id'
     ];
+
+    public function getIsFilledEnAttribute()
+    {
+        // Consider filled if title_en is not empty
+        return !empty($this->title_en);
+    }
+
+    public function getIsFilledIdAttribute()
+    {
+        // Consider filled if title is not empty (ID is default 'title' column)
+        return !empty($this->title);
+    }
 
     public function isAdmin(): bool
     {
@@ -95,7 +109,7 @@ class Post extends Model implements HasMedia
         return null;
     }
 
-    public function getSlugOptions() : SlugOptions
+    public function getSlugOptions(): SlugOptions
     {
         $options = SlugOptions::create()->saveSlugsTo('slug');
 
@@ -124,27 +138,33 @@ class Post extends Model implements HasMedia
             ->singleFile();
     }
 
-    public function posttype(){
+    public function posttype()
+    {
         return $this->belongsTo(PostType::class);
     }
 
-    public function children(){
-        return $this->hasMany( Post::class, 'parent', 'id' );
+    public function children()
+    {
+        return $this->hasMany(Post::class, 'parent', 'id');
     }
 
-    public function parent(){
-        return $this->hasOne( Post::class, 'id', 'parent' );
+    public function parent()
+    {
+        return $this->hasOne(Post::class, 'id', 'parent');
     }
 
-    public function parent_data(){
-        return $this->hasOne( Post::class, 'id', 'parent' );
+    public function parent_data()
+    {
+        return $this->hasOne(Post::class, 'id', 'parent');
     }
 
-    public function category(){
+    public function category()
+    {
         return $this->belongsToMany(Category::class, 'post_category');
     }
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 

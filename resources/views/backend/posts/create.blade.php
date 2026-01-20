@@ -18,10 +18,10 @@
                         <div class="card card-flush p-3">
                             <div class="card-body p-3">
                                 @if($type['type'] != 'managements')
-                                <x-forms.text-input name="title" label="Title" required="{{ $required }}" placeholder="The title of post" text=""/>
-                                <x-forms.text-input name="slug" label="URL/Slug ID" required="{{ $required }}" placeholder="The url of post" text=""/>
-                                <x-forms.text-input name="title_en" label="Title EN" required="{{ $required }}" placeholder="The title of post" text=""/>
-                                <x-forms.text-input name="slug_en" label="URL/Slug EN" required="{{ $required }}" placeholder="The url of post" text=""/>
+                                <x-forms.text-input name="title" label="Title" required="0" placeholder="The title of post" text=""/>
+                                <x-forms.text-input name="slug" label="URL/Slug ID" required="0" placeholder="The url of post" text=""/>
+                                <x-forms.text-input name="title_en" label="Title EN" required="0" placeholder="The title of post" text=""/>
+                                <x-forms.text-input name="slug_en" label="URL/Slug EN" required="0" placeholder="The url of post" text=""/>
                                 @if($type['type'] != 'blog')
                                 <div class="d-flex gap-4">
                                     @if ($type['is_category'])
