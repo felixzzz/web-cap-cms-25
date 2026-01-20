@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::prefix('upload')->group(function () {
     Route::match(['delete', 'post'], '/filepond', [UploadController::class, 'filepond'])->name('ajax.filepond');
+    Route::match(['delete', 'post'], '/filepond-local', [UploadController::class, 'filepondLocal'])->name('ajax.filepond.local');
 });
 
 Route::prefix('posts')->group(function () {

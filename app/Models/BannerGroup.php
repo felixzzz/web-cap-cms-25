@@ -22,7 +22,7 @@ class BannerGroup extends Model
         'banners' => 'array',
     ];
 
-    public function banners()
+    public function items()
     {
         return $this->hasMany(Banner::class, 'banner_group_id');
     }

@@ -28,6 +28,24 @@ class UploadController extends Controller
         return $arr;
     }
 
+    public function filepondLocal(FilepondRequest $request)
+    {
+        $arr = '';
+        if (count($request->file()) > 0) {
+            foreach ($request->file() as $key => $value) {
+                $create = TemporaryUpload::create([
+                    'filename' => $request->file($key)->getClientOriginalName(),
+                ]);
+                if ($create) {
+                    $create->addMediaFromRequest($key)
+                        ->toMediaCollection('default', 'public');
+                    $arr = $create->id;
+                }
+            }
+        }
+        return $arr;
+    }
+
     public function storeImage(Request $request)
     {
         if ($request->hasFile('upload')) {
@@ -42,7 +60,7 @@ class UploadController extends Controller
             $url = Storage::url($path);
 
             // $url = asset('media/' . $fileName);
-            return response()->json(['uploaded'=> 1, 'url' => $url]);
+            return response()->json(['uploaded' => 1, 'url' => $url]);
         }
     }
 }

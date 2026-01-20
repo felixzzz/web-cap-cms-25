@@ -143,7 +143,6 @@
                                                                 'lang' => $lang_code,
                                                                 'lang_option' => $template['lang_option'],
                                                             ])
-                                                            ])
                                                         @endforeach
 
                                                         @if($type['type'] == 'news' || $type['type'] == 'blog')
