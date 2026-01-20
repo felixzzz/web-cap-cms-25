@@ -52,11 +52,18 @@
             const endDate = document.getElementById('embed_end_date').value;
 
             if (!groupId) {
-                alert('Please select a banner group');
+                Swal.fire({
+                    text: "Please select a banner group",
+                    icon: "warning",
+                    buttonsStyling: false,
+                    confirmButtonText: "Ok, got it!",
+                    customClass: {
+                        confirmButton: "btn btn-primary"
+                    }
+                });
                 return;
             }
 
-            // AJAX call to store
             const formData = new FormData();
             formData.append('banner_group_id', groupId);
             if (startDate) formData.append('start_date', startDate);
@@ -70,21 +77,43 @@
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-                .then(response => response.json())
+                .then(response => {
+
+                    return response.text().then(text => {
+                        console.log('Fetch response text:', text);
+                        try {
+                            return JSON.parse(text);
+                        } catch (e) {
+                            console.error('JSON Parse Error:', e);
+                            throw new Error('Invalid JSON response');
+                        }
+                    });
+                })
                 .then(data => {
+
                     if (data.success) {
-                        const shortcode = `###banner###${data.id}###banner###`;
 
                         if (activeEditor) {
                             activeEditor.model.change(writer => {
-                                const insertPosition = activeEditor.model.document.selection.getFirstPosition();
-                                writer.insertText(shortcode, insertPosition);
+                                const bannerElement = writer.createElement('embeddedBanner', {
+                                    id: data.id,
+                                    title: data.group_title,
+                                    startDate: data.start_date,
+                                    endDate: data.end_date
+                                });
+
+                                // Insert at current selection
+                                activeEditor.model.insertContent(bannerElement, activeEditor.model.document.selection);
                             });
 
                             // Close modal
                             const modalEl = document.getElementById('bannerEmbedModal');
-                            const modal = bootstrap.Modal.getInstance(modalEl);
-                            modal.hide();
+                            if (window.jQuery) {
+                                window.jQuery('#bannerEmbedModal').modal('hide');
+                            } else {
+                                const modal = bootstrap.Modal.getInstance(modalEl);
+                                if (modal) modal.hide();
+                            }
 
                             // Clear form
                             document.getElementById('bannerEmbedForm').reset();
@@ -92,12 +121,28 @@
                             console.error("No active editor found");
                         }
                     } else {
-                        alert('Error saving banner configuration');
+                        Swal.fire({
+                            text: 'Error saving banner configuration: ' + (data.message || 'Unknown error'),
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn btn-primary"
+                            }
+                        });
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('An error occurred');
+                    Swal.fire({
+                        text: 'An error occurred: ' + error.message,
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "Ok, got it!",
+                        customClass: {
+                            confirmButton: "btn btn-primary"
+                        }
+                    });
                 });
         });
     });

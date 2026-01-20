@@ -198,4 +198,30 @@ class BannerGroupController extends Controller
         }
         return $image;
     }
+
+    public function storeActiveEmbedded(Request $request)
+    {
+        $data = $request->validate([
+            'banner_group_id' => 'required|exists:banner_groups,id',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+        ]);
+
+        $bannerActive = \App\Models\BannerActive::create([
+            'banner_group_id' => $data['banner_group_id'],
+            'location' => 'embedded', // Special location for embedded banners
+            'start_date' => $data['start_date'] ?? null,
+            'end_date' => $data['end_date'] ?? null,
+            'language' => app()->getLocale(), // active locale
+            'post_id' => null, // Embedded banners might be tied to content, but here we just create the record
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'id' => $bannerActive->id,
+            'group_title' => $bannerActive->bannerGroup->title,
+            'start_date' => $bannerActive->start_date ? $bannerActive->start_date->format('Y-m-d H:i') : 'No Start Date',
+            'end_date' => $bannerActive->end_date ? $bannerActive->end_date->format('Y-m-d H:i') : 'No End Date',
+        ]);
+    }
 }

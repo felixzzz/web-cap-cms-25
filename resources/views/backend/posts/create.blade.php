@@ -231,6 +231,7 @@
             </div>
         </div>
     </form>
+    @include('backend.posts.partials.banner-embed-modal')
 @endsection
 
 @push('scripts')

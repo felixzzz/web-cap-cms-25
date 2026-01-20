@@ -15,6 +15,8 @@ Route::group([
                 ->push(__('Banner Groups'), route('admin.banner.index'));
         });
 
+    Route::post('active/embedded', [BannerGroupController::class, 'storeActiveEmbedded'])->name('active.embedded');
+
     Route::get('/create', [BannerGroupController::class, 'create'])
         ->name('create')
         ->breadcrumbs(function (Trail $trail) {
