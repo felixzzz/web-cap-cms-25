@@ -66,7 +66,7 @@ class BannerGroupController extends Controller
 
             if (!empty($banners)) {
                 foreach ($banners as $index => $bannerData) {
-                    $group->banners()->create([
+                    $group->items()->create([
                         'order' => $index,
                         'title' => $bannerData['title'] ?? null,
                         'description' => $bannerData['description'] ?? null,
@@ -115,8 +115,8 @@ class BannerGroupController extends Controller
         ];
 
         // Prepare banners for repeater
-        $banner_group->load('banners');
-        $banners = $banner_group->banners()->orderBy('order')->get()->map(function ($banner) {
+        $banner_group->load('items');
+        $banners = $banner_group->items()->orderBy('order')->get()->map(function ($banner) {
             return [
                 'title' => $banner->title,
                 'description' => $banner->description,
@@ -151,11 +151,11 @@ class BannerGroupController extends Controller
             $banner_group->update($data);
 
             // Delete existing banners and recreate (simplest strategy for reordering)
-            $banner_group->banners()->delete();
+            $banner_group->items()->delete();
 
             if (!empty($banners)) {
                 foreach ($banners as $index => $bannerData) {
-                    $banner_group->banners()->create([
+                    $banner_group->items()->create([
                         'order' => $index,
                         'title' => $bannerData['title'] ?? null,
                         'description' => $bannerData['description'] ?? null,

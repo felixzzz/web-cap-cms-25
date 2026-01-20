@@ -88,7 +88,7 @@ class PostController extends BackendController
         $post = new Post();
         $pages = Post::select('id', 'title', 'slug')
             ->where('pages_dynamic', 'yes')->get();
-        $bannerGroups = BannerGroup::withCount('banners')->get();
+        $bannerGroups = BannerGroup::withCount('items')->get();
         $tagDatas = Tag::all();
         $tags = $tagDatas->map(function ($tag) {
             return $tag->getTranslation('name', 'en');
@@ -153,7 +153,7 @@ class PostController extends BackendController
         $template['lang_option'] = $template[3]['lang_option'];
         $meta = $post->meta->groupBy('section');
         $pages = Post::select('id', 'title', 'slug')->where('pages_dynamic', 'yes')->get();
-        $bannerGroups = BannerGroup::withCount('banners')->get();
+        $bannerGroups = BannerGroup::withCount('items')->get();
         $valueMeta = [];
         foreach ($meta as $keyName => $fields) {
             $data = new \stdClass();

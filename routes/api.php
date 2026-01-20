@@ -38,4 +38,5 @@ Route::get('/documents/categories', [\App\Http\Controllers\Api\SubmissionControl
 Route::post('/documents/post-by-session', [\App\Http\Controllers\Api\SubmissionController::class, 'documentBySession']);
 Route::get('/documents/pending/{sessionId}', [\App\Http\Controllers\Api\SubmissionController::class, 'getPendingDocumentBySession']);
 Route::post('/documents/bulk-download', [\App\Http\Controllers\Api\SubmissionController::class, 'bulkDocumentDownload']);
+Route::get('/banner/{slug}', [\App\Http\Controllers\Api\BannerController::class, 'getBannersByPostSlug']);
 
