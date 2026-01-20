@@ -39,4 +39,5 @@ Route::post('/documents/post-by-session', [\App\Http\Controllers\Api\SubmissionC
 Route::get('/documents/pending/{sessionId}', [\App\Http\Controllers\Api\SubmissionController::class, 'getPendingDocumentBySession']);
 Route::post('/documents/bulk-download', [\App\Http\Controllers\Api\SubmissionController::class, 'bulkDocumentDownload']);
 Route::get('/banner/{slug}', [\App\Http\Controllers\Api\BannerController::class, 'getBannersByPostSlug']);
+Route::get('/banner-active/{id}', [\App\Http\Controllers\Api\BannerController::class, 'getBannerActiveById']);
 

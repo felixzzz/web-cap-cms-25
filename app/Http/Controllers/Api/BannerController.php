@@ -72,4 +72,37 @@ class BannerController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Get active banner by ID and return its banner group items.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getBannerActiveById($id)
+    {
+        try {
+            $activeBanner = BannerActive::with(['bannerGroup.items'])
+                ->findOrFail($id);
+
+            $banners = [];
+            if ($activeBanner->bannerGroup && $activeBanner->bannerGroup->items) {
+                $banners = $activeBanner->bannerGroup->items;
+            }
+
+            return response()->json($banners);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Not Found',
+                'message' => 'Banner Active not found.'
+            ], 404);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error fetching banner active: " . $e->getMessage());
+            return response()->json([
+                'error' => 'Server Error',
+                'message' => 'An error occurred while fetching banner active.'
+            ], 500);
+        }
+    }
 }
