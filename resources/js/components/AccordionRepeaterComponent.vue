@@ -595,7 +595,7 @@ export default {
                                     
                                     let options = {
                                         server: {
-                                            url: '/upload/filepond',
+                                            url: '/ajax/upload/filepond-local',
                                             headers: {
                                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                                             }
