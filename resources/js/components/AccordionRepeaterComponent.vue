@@ -62,11 +62,15 @@
                                     </div>
                                     <div v-else-if="
                                         col.type === 'editor' ||
-                                        col.type === 'editor_simple'
+                                        col.type === 'editor_simple' ||
+                                        col.type === 'code'
                                     ">
-                                        <span v-html="list[col.name]
-                                                ? list[col.name]
-                                                : '-'
+                                        <div v-if="col.type === 'code'" class="bg-dark text-white p-3 rounded"
+                                            style="font-family: monospace; white-space: pre-wrap;">{{ list[col.name] ||
+                                                '-' }}</div>
+                                        <span v-else v-html="list[col.name]
+                                            ? list[col.name]
+                                            : '-'
                                             "></span>
                                     </div>
                                     <div v-else>
@@ -177,6 +181,16 @@
                                 <template v-if="col.type == 'editor_simple'">
                                     <div :id="aliascomponent + '_' + col.name"></div>
                                 </template>
+                                <template v-if="col.type == 'code'">
+                                    <div class="code-editor-container">
+                                        <div class="line-numbers" :id="'line-numbers-' + col.name">
+                                            <span v-for="n in (lineNumbers[col.name] || 1)" :key="n">{{ n }}</span>
+                                        </div>
+                                        <textarea class="form-control code-textarea" v-model="formModal[col.name]"
+                                            @input="updateLineNumbers(col.name)" @scroll="syncScroll($event, col.name)"
+                                            rows="10" placeholder="Enter HTML code here..."></textarea>
+                                    </div>
+                                </template>
                             </div>
                         </div>
                     </div>
@@ -247,9 +261,28 @@ export default {
             products: [],
             subsidiary_list: [],
             allFilePonds: {},
+            lineNumbers: {},
         };
     },
     mounted() {
+        if (!this.editor_fields && this.field && this.field.list) {
+            this.editor_fields = [];
+            this.field.list.forEach(col => {
+                if (col.type === 'editor') {
+                    this.editor_fields.push(col.name);
+                }
+            });
+        }
+
+        if (!this.editor_simple_fields && this.field && this.field.list) {
+            this.editor_simple_fields = [];
+            this.field.list.forEach(col => {
+                if (col.type === 'editor_simple') {
+                    this.editor_simple_fields.push(col.name);
+                }
+            });
+        }
+
         this.fetchProducts();
         this.generateFormModal();
         if (this.value) {
@@ -648,6 +681,17 @@ export default {
             self.formModal[name] = "";
             self.imageSrc = "";
         },
+        updateLineNumbers(fieldName) {
+            const content = this.formModal[fieldName] || "";
+            const lines = content.split("\n").length;
+            this.$set(this.lineNumbers, fieldName, lines);
+        },
+        syncScroll(event, fieldName) {
+            const lineNumbers = document.getElementById('line-numbers-' + fieldName);
+            if (lineNumbers) {
+                lineNumbers.scrollTop = event.target.scrollTop;
+            }
+        },
     },
 };
 </script>
@@ -660,5 +704,45 @@ export default {
 
 .stop-propagation {
     cursor: pointer;
+}
+
+.code-editor-container {
+    display: flex;
+    border: 1px solid #ced4da;
+    border-radius: 0.475rem;
+    overflow: hidden;
+}
+
+.line-numbers {
+    background-color: #f5f8fa;
+    border-right: 1px solid #ced4da;
+    padding: 0.75rem 0.5rem;
+    text-align: right;
+    font-family: monospace;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #a1a5b7;
+    user-select: none;
+    overflow: hidden;
+    min-width: 3rem;
+}
+
+.line-numbers span {
+    display: block;
+}
+
+.code-textarea {
+    border: none !important;
+    border-radius: 0 !important;
+    font-family: monospace;
+    font-size: 1rem;
+    line-height: 1.5;
+    resize: none;
+    white-space: pre;
+    overflow-x: auto;
+}
+
+.code-textarea:focus {
+    box-shadow: none !important;
 }
 </style>
