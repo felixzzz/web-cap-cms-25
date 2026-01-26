@@ -18,20 +18,15 @@ class HomeBannerController extends Controller
      */
     public function edit()
     {
-        // Get the home page
+
         $homePage = Post::where('site_url', '/')->first();
 
         if (!$homePage) {
             return redirect()->back()->withFlashDanger('Home page not found.');
         }
 
-        // Get all banner groups with item counts
         $bannerGroups = BannerGroup::withCount('items')->get();
-
-        // Define the positions for home page banners
         $positions = ['navbar', 'journey-growth', 'financial-reports'];
-
-        // Define language options
         $languages = [
             ['name' => 'Indonesian', 'value' => 'id'],
             ['name' => 'English', 'value' => 'en']
@@ -45,7 +40,6 @@ class HomeBannerController extends Controller
      */
     public function update(Request $request)
     {
-        // Get the home page
         $homePage = Post::where('site_url', '/')->first();
 
         if (!$homePage) {
@@ -55,7 +49,6 @@ class HomeBannerController extends Controller
         DB::beginTransaction();
 
         try {
-            // Sync banner active records
             $this->syncBannerActive($homePage, $request->input('banner_active', []));
 
             DB::commit();
@@ -81,7 +74,6 @@ class HomeBannerController extends Controller
 
         foreach ($bannerActiveData as $lang => $locations) {
             foreach ($locations as $location => $data) {
-                // If group_id is empty, skip (meaning it was cleared or not set)
                 if (empty($data['group_id'])) {
                     continue;
                 }
@@ -110,9 +102,7 @@ class HomeBannerController extends Controller
             }
         }
 
-        // Delete banners that are no longer present in the request
         foreach ($existingBanners as $banner) {
-            // Check if this banner's lang/location is in the request with a valid group_id
             $inRequest = false;
             if (
                 isset($bannerActiveData[$banner->language][$banner->location]['group_id'])

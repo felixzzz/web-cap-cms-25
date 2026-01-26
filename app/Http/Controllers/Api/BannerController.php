@@ -115,13 +115,9 @@ class BannerController extends Controller
     public function getHomeBanners(Request $request)
     {
         try {
-            // Get the home page
             $homePage = Post::where('site_url', '/')->firstOrFail();
 
-            // Get language from request, default to 'id'
             $lang = $request->input('lang', 'id');
-
-            // Fetch active banners for home page
             $activeBanners = BannerActive::where('post_id', $homePage->id)
                 ->where('language', $lang)
                 ->with(['bannerGroup.items'])
