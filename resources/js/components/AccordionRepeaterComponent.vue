@@ -5,121 +5,72 @@
                 {{ field.label }}
             </div>
 
-            <input
-                type="hidden"
-                v-bind:name="component"
-                :value="JSON.stringify(lists)"
-            />
+            <input type="hidden" v-bind:name="component" :value="JSON.stringify(lists)" />
             <div class="card-toolbar">
-                <button
-                    type="button"
-                    class="btn btn-sm btn-icon btn-primary"
-                    @click="openModal"
-                >
+                <button type="button" class="btn btn-sm btn-icon btn-primary" @click="openModal">
                     <i class="fa fa-plus"></i>
                 </button>
             </div>
         </div>
 
         <div class="card-body">
-            <draggable
-                v-model="lists"
-                @end="onDragEnd"
-                :key="lists.length"
-                handle=".drag-handle"
-                class="accordion"
-                id="accordionRepeater"
-            >
-                <div
-                    class="accordion-item"
-                    v-for="(list, no) in lists"
-                    :key="no"
-                >
+            <draggable v-model="lists" @end="onDragEnd" :key="lists.length" handle=".drag-handle" class="accordion"
+                id="accordionRepeater">
+                <div class="accordion-item" v-for="(list, no) in lists" :key="no">
                     <h2 class="accordion-header" :id="'heading' + no">
-                        <button
-                            class="accordion-button collapsed d-flex align-items-center"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            :data-bs-target="'#collapse' + no"
-                            aria-expanded="false"
-                            :aria-controls="'collapse' + no"
-                        >
-                            <span
-                                class="drag-handle me-3 stop-propagation"
-                                style="cursor: move"
-                                @click.stop
-                            >
+                        <button class="accordion-button collapsed d-flex align-items-center" type="button"
+                            data-bs-toggle="collapse" :data-bs-target="'#collapse' + no" aria-expanded="false"
+                            :aria-controls="'collapse' + no">
+                            <span class="drag-handle me-3 stop-propagation" style="cursor: move" @click.stop>
                                 <i class="fas fa-bars"></i>
                             </span>
                             <span class="flex-grow-1">
                                 {{ list.title || "Item " + (no + 1) }}
                             </span>
-                            <span
-                                class="ms-auto me-3 stop-propagation"
-                                @click.stop
-                            >
-                                <a
-                                    href="javascript:;"
-                                    class="btn btn-sm btn-icon btn-light-primary me-2"
-                                    @click="editList(list, no)"
-                                >
+                            <span class="ms-auto me-3 stop-propagation" @click.stop>
+                                <a href="javascript:;" class="btn btn-sm btn-icon btn-light-primary me-2"
+                                    @click="editList(list, no)">
                                     <i class="fa fa-edit"></i>
                                 </a>
-                                <a
-                                    href="javascript:;"
-                                    class="btn btn-sm btn-icon btn-light-danger"
-                                    @click="removeList(list, no)"
-                                >
+                                <a href="javascript:;" class="btn btn-sm btn-icon btn-light-danger"
+                                    @click="removeList(list, no)">
                                     <i class="fa fa-trash"></i>
                                 </a>
                             </span>
                         </button>
                     </h2>
-                    <div
-                        :id="'collapse' + no"
-                        class="accordion-collapse collapse"
-                        :aria-labelledby="'heading' + no"
-                        data-bs-parent="#accordionRepeater"
-                    >
+                    <div :id="'collapse' + no" class="accordion-collapse collapse" :aria-labelledby="'heading' + no"
+                        data-bs-parent="#accordionRepeater">
                         <div class="accordion-body">
                             <div class="row align-items-center">
-                                <div
-                                    class="col-md-3"
-                                    v-for="col in field.list"
-                                    :key="col.name"
-                                >
-                                    <label class="fw-bold text-muted">{{
-                                        col.label
-                                    }}</label>
-                                    <div v-if="col.type === 'image'">
-                                        <img
-                                            v-if="list[col.name]"
-                                            :src="url + '/' + list[col.name]"
-                                            style="height: 50px"
-                                            class="rounded"
-                                        />
-                                        <span v-else class="text-gray-400"
-                                            >No Image</span
-                                        >
+                                <div class="col-md-3" v-for="col in field.list" :key="col.name">
+                                    <label class="fw-bold text-muted">
+                                        {{ col.label }}
+                                        <span v-if="col.required" class="text-danger">*</span>
+                                    </label>
+                                    <div v-if="col.type === 'image' || col.type === 'video'">
+                                        <template v-if="list[col.name]">
+                                            <template v-if="isNaN(list[col.name])">
+                                                <img v-if="col.type === 'image'" :src="url + '/' + list[col.name]"
+                                                    style="height: 50px" class="rounded" />
+                                                <video v-else :src="url + '/' + list[col.name]" style="height: 50px"
+                                                    class="rounded"></video>
+                                            </template>
+                                            <span v-else class="badge badge-light-success">New Upload</span>
+                                        </template>
+                                        <span v-else class="text-gray-400">No Media</span>
                                     </div>
-                                    <div
-                                        v-else-if="
-                                            col.type === 'editor' ||
-                                            col.type === 'editor_simple'
-                                        "
-                                    >
-                                        <span
-                                            v-html="
-                                                list[col.name]
-                                                    ? list[col.name]
-                                                    : '-'
-                                            "
-                                        ></span>
+                                    <div v-else-if="
+                                        col.type === 'editor' ||
+                                        col.type === 'editor_simple'
+                                    ">
+                                        <span v-html="list[col.name]
+                                                ? list[col.name]
+                                                : '-'
+                                            "></span>
                                     </div>
                                     <div v-else>
-                                        <span
-                                            class="text-dark fw-bolder text-hover-primary mb-1 fs-6"
-                                        >
+                                        <span class="text-dark fw-bolder text-hover-primary mb-1 fs-6">
                                             {{
                                                 list[col.name]
                                                     ? list[col.name]
@@ -135,107 +86,52 @@
             </draggable>
         </div>
 
-        <div
-            class="modal fade"
-            tabindex="-1"
-            :class="{ show: showModal }"
-            :style="showModal ? 'display: block' : ''"
-        >
-            <div
-                class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"
-            >
+        <div class="modal fade" tabindex="-1" :class="{ show: showModal }" :style="showModal ? 'display: block' : ''">
+            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">
                             {{ modeEdit ? "Edit" : "Add" }} {{ field.label }}
                         </h5>
-                        <div
-                            class="btn btn-icon btn-sm btn-active-light-primary ms-2"
-                            @click="showModal = false"
-                        >
+                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" @click="showModal = false">
                             <span class="svg-icon svg-icon-2x">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                >
-                                    <rect
-                                        opacity="0.5"
-                                        x="6"
-                                        y="17.3137"
-                                        width="16"
-                                        height="2"
-                                        rx="1"
-                                        transform="rotate(-45 6 17.3137)"
-                                        fill="black"
-                                    />
-                                    <rect
-                                        x="7.41422"
-                                        y="6"
-                                        width="16"
-                                        height="2"
-                                        rx="1"
-                                        transform="rotate(45 7.41422 6)"
-                                        fill="black"
-                                    />
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none">
+                                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
+                                        transform="rotate(-45 6 17.3137)" fill="black" />
+                                    <rect x="7.41422" y="6" width="16" height="2" rx="1"
+                                        transform="rotate(45 7.41422 6)" fill="black" />
                                 </svg>
                             </span>
                         </div>
                     </div>
 
                     <div class="modal-body">
-                        <div
-                            class="form-group row mb-5"
-                            v-for="col in field.list"
-                            v-bind:key="col.name"
-                        >
-                            <label class="col-md-3 col-form-label">{{
-                                col.label
-                            }}</label>
+                        <div class="form-group row mb-5" v-for="col in field.list" v-bind:key="col.name">
+                            <label class="col-md-3 col-form-label">
+                                {{ col.label }}
+                                <span v-if="col.required" class="text-danger">*</span>
+                            </label>
                             <div class="col-md-9">
                                 <template v-if="col.type == 'text'">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        v-model="formModal[col.name]"
-                                    />
+                                    <input type="text" class="form-control" v-model="formModal[col.name]" />
                                 </template>
                                 <template v-if="col.type == 'number'">
-                                    <input
-                                        type="number"
-                                        class="form-control"
-                                        v-model="formModal[col.name]"
-                                    />
+                                    <input type="number" class="form-control" v-model="formModal[col.name]" />
                                 </template>
                                 <template v-if="col.type == 'date'">
-                                    <input
-                                        type="date"
-                                        class="form-control"
-                                        v-model="formModal[col.name]"
-                                    />
+                                    <input type="date" class="form-control" v-model="formModal[col.name]" />
                                 </template>
                                 <template v-if="col.type == 'textarea'">
-                                    <textarea
-                                        class="form-control"
-                                        rows="3"
-                                        v-model="formModal[col.name]"
-                                    ></textarea>
+                                    <textarea class="form-control" rows="3" v-model="formModal[col.name]"></textarea>
                                 </template>
                                 <template v-if="col.type == 'select'">
-                                    <select
-                                        class="form-select"
-                                        v-model="formModal[col.name]"
-                                    >
+                                    <select class="form-select" v-model="formModal[col.name]">
                                         <option value="">
                                             Select {{ col.label }}
                                         </option>
-                                        <option
-                                            v-for="option in col.options"
-                                            v-bind:key="option.value"
-                                            :value="option.value"
-                                        >
+                                        <option v-for="option in col.options" v-bind:key="option.value"
+                                            :value="option.value">
                                             {{ option.label }}
                                         </option>
                                     </select>
@@ -244,8 +140,9 @@
                                     <div class="mb-3" v-if="formModal[col.name] && isNaN(formModal[col.name])">
                                         <label class="form-label d-block">Current Image:</label>
                                         <div class="position-relative d-inline-block">
-                                            <img :src="url + '/' + formModal[col.name]" alt="image" style="max-height: 100px; max-width: 100%;" class="rounded border" />
-                                            <button type="button" 
+                                            <img :src="url + '/' + formModal[col.name]" alt="image"
+                                                style="max-height: 100px; max-width: 100%;" class="rounded border" />
+                                            <button type="button"
                                                 class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow position-absolute top-0 end-0 translate-middle-y translate-middle-x"
                                                 @click="removeImage(null, col.name)">
                                                 <i class="bi bi-x fs-2"></i>
@@ -254,16 +151,16 @@
                                     </div>
                                     <input type="file"
                                         :id="(aliascomponent || component) + '_' + col.name + '_filepond'"
-                                        class="filepond"
-                                        :name="col.name" 
-                                    />
+                                        class="filepond" :name="col.name" />
                                 </template>
                                 <template v-if="col.type == 'video'">
                                     <div class="mb-3" v-if="formModal[col.name] && isNaN(formModal[col.name])">
                                         <label class="form-label d-block">Current Video:</label>
                                         <div class="position-relative d-inline-block">
-                                            <video :src="url + '/' + formModal[col.name]" controls style="max-height: 150px; max-width: 100%;" class="rounded border"></video>
-                                            <button type="button" 
+                                            <video :src="url + '/' + formModal[col.name]" controls
+                                                style="max-height: 150px; max-width: 100%;"
+                                                class="rounded border"></video>
+                                            <button type="button"
                                                 class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow position-absolute top-0 end-0 translate-middle-y translate-middle-x"
                                                 @click="removeImage(null, col.name)">
                                                 <i class="bi bi-x fs-2"></i>
@@ -272,37 +169,23 @@
                                     </div>
                                     <input type="file"
                                         :id="(aliascomponent || component) + '_' + col.name + '_filepond' + '_video'"
-                                        class="filepond"
-                                        :name="col.name" 
-                                    />
+                                        class="filepond" :name="col.name" />
                                 </template>
                                 <template v-if="col.type == 'editor'">
-                                    <div
-                                        :id="aliascomponent + '_' + col.name"
-                                    ></div>
+                                    <div :id="aliascomponent + '_' + col.name"></div>
                                 </template>
                                 <template v-if="col.type == 'editor_simple'">
-                                    <div
-                                        :id="aliascomponent + '_' + col.name"
-                                    ></div>
+                                    <div :id="aliascomponent + '_' + col.name"></div>
                                 </template>
                             </div>
                         </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button
-                            type="button"
-                            class="btn btn-light"
-                            @click="showModal = false"
-                        >
+                        <button type="button" class="btn btn-light" @click="showModal = false">
                             Cancel
                         </button>
-                        <button
-                            type="button"
-                            class="btn btn-primary"
-                            @click="modeEdit ? updateList() : submitList()"
-                        >
+                        <button type="button" class="btn btn-primary" @click="modeEdit ? updateList() : submitList()">
                             Save
                         </button>
                     </div>
@@ -583,7 +466,7 @@ export default {
                         if (col.type === 'image' || col.type === 'video') {
                             let compName = (this.aliascomponent || this.component) + '_' + col.name + '_filepond';
                             if (col.type === 'video') compName += '_video';
-                            
+
                             const el = document.getElementById(compName);
                             if (el) {
                                 if (this.allFilePonds[col.name]) {
@@ -592,7 +475,7 @@ export default {
                                     if (window.FilePondPluginFileValidateType) FilePond.registerPlugin(FilePondPluginFileValidateType);
                                     if (window.FilePondPluginImagePreview) FilePond.registerPlugin(FilePondPluginImagePreview);
                                     if (window.FilePondPluginFileValidateSize) FilePond.registerPlugin(FilePondPluginFileValidateSize);
-                                    
+
                                     let options = {
                                         server: {
                                             url: '/ajax/upload/filepond-local',
@@ -622,7 +505,7 @@ export default {
                                             this.formModal[col.name] = "";
                                         }
                                     });
-                                    
+
                                     this.allFilePonds[col.name] = pond;
                                 }
                             }
@@ -649,6 +532,19 @@ export default {
         },
         submitList() {
             this.prepareDataEditor();
+            // Validation
+            if (this.field && this.field.list) {
+                for (let col of this.field.list) {
+                    if (col.required && !this.formModal[col.name]) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            text: `${col.label} is required!`,
+                        });
+                        return;
+                    }
+                }
+            }
             if (this.subsidiary_list?.length) {
                 this.formModal.subsidiary_list = this.subsidiary_list;
             }
@@ -683,6 +579,19 @@ export default {
         },
         updateList() {
             this.prepareDataEditor();
+            // Validation
+            if (this.field && this.field.list) {
+                for (let col of this.field.list) {
+                    if (col.required && !this.formModal[col.name]) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            text: `${col.label} is required!`,
+                        });
+                        return;
+                    }
+                }
+            }
             if (this.subsidiary_list?.length) {
                 this.formModal.subsidiary_list = this.subsidiary_list;
             }
@@ -702,8 +611,8 @@ export default {
                     `Sorry, you can only upload ${this.allowableImageTypes
                         .join(", ")
                         .toUpperCase()} images or ${this.allowableDocsTypes
-                        .join(", ")
-                        .toUpperCase()} document.`
+                            .join(", ")
+                            .toUpperCase()} document.`
                 );
                 return false;
             }

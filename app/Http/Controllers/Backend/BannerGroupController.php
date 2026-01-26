@@ -31,6 +31,8 @@ class BannerGroupController extends Controller
                         ['value' => '4/3', 'label' => '4:3'],
                         ['value' => '1/1', 'label' => '1:1'],
                         ['value' => '16/9', 'label' => '16:9'],
+                        ['value' => '21/5', 'label' => '21:5 (Ultrawide)'],
+                        ['value' => '21/4', 'label' => '21:4 (Ultrawide)'],
                         ['value' => '3/4', 'label' => '3:4 (Portrait)'],
                         ['value' => '9/16', 'label' => '9:16 (Portrait)'],
                     ]
@@ -38,7 +40,7 @@ class BannerGroupController extends Controller
                 ['type' => 'image', 'name' => 'image', 'label' => 'Image', 'info' => 'Upload main image'],
                 ['type' => 'video', 'name' => 'video', 'label' => 'Video', 'info' => 'Upload video (Max 2MB)'],
                 ['type' => 'textarea', 'name' => 'html_content', 'label' => 'HTML Content'],
-                ['type' => 'text', 'name' => 'cta_url', 'label' => 'CTA URL'],
+                ['type' => 'text', 'name' => 'cta_url', 'label' => 'CTA URL', 'required' => true],
                 ['type' => 'text', 'name' => 'cta_label', 'label' => 'CTA Label'],
                 ['type' => 'text', 'name' => 'cta_gtm', 'label' => 'CTA GTM'],
             ]
@@ -101,6 +103,8 @@ class BannerGroupController extends Controller
                         ['value' => '1/1', 'label' => '1:1'],
                         ['value' => '4/3', 'label' => '4:3'],
                         ['value' => '16/9', 'label' => '16:9'],
+                        ['value' => '21/5', 'label' => '21:5 (Ultrawide)'],
+                        ['value' => '21/4', 'label' => '21:4 (Ultrawide)'],
                         ['value' => '3/4', 'label' => '3:4 (Portrait)'],
                         ['value' => '9/16', 'label' => '9:16 (Portrait)'],
                     ]
@@ -108,7 +112,7 @@ class BannerGroupController extends Controller
                 ['type' => 'image', 'name' => 'image', 'label' => 'Image', 'info' => 'Upload main image'],
                 ['type' => 'video', 'name' => 'video', 'label' => 'Video', 'info' => 'Upload video (Max 2MB)'],
                 ['type' => 'textarea', 'name' => 'html_content', 'label' => 'HTML Content'],
-                ['type' => 'text', 'name' => 'cta_url', 'label' => 'CTA URL'],
+                ['type' => 'text', 'name' => 'cta_url', 'label' => 'CTA URL', 'required' => true],
                 ['type' => 'text', 'name' => 'cta_label', 'label' => 'CTA Label'],
                 ['type' => 'text', 'name' => 'cta_gtm', 'label' => 'CTA GTM'],
             ]
