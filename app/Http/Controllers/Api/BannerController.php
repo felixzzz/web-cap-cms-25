@@ -124,7 +124,6 @@ class BannerController extends Controller
                 ->get();
 
             $response = [
-                'navbar' => [],
                 'journey-growth' => [],
                 'financial-reports' => []
             ];

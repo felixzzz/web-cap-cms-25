@@ -22,17 +22,31 @@
     <div class="separator mb-3 opacity-75"></div>
 
     <div class="menu-item px-3">
-        <a href="{{ route('admin.banner.edit', $model) }}" class="menu-link px-3">
+        <a href="{{ $model->position == 'pages' ? route('admin.banner.pages.edit', $model) : route('admin.banner.edit', $model) }}"
+            class="menu-link px-3">
             @lang('Edit')
         </a>
     </div>
     <div class="menu-item px-3">
-        <a href="#" class="menu-link px-3" wire:click="$emit('openBannerEmbed', {{ $model->id }})">
-            @lang('Embed')
-        </a>
+        @if ($model->position == 'home')
+            <a href="#" class="menu-link px-3" wire:click="$emit('openBannerHomeEmbed', {{ $model->id }})">
+                @lang('Embed') (home)
+            </a>
+        @elseif ($model->position == 'pages')
+            <a href="#" class="menu-link px-3" wire:click="$emit('openBannerPagesEmbed', {{ $model->id }})">
+                @lang('Embed')
+            </a>
+        @else
+            <a href="#" class="menu-link px-3"
+                wire:click="$emit('openBannerEmbed', {{ $model->id }}, '{{ $model->position }}')">
+                @lang('Embed') (article)
+            </a>
+        @endif
     </div>
     <div class="separator mb-3 opacity-75"></div>
     <div class="menu-item px-3 pb-3">
-        <x-utils.delete-button :href="route('admin.banner.destroy', $model)" :text="('Delete')" />
+        <x-utils.delete-button :href="$model->position == 'pages'
+            ? route('admin.banner.pages.destroy', $model)
+            : route('admin.banner.destroy', $model)" :text="'Delete'" />
     </div>
 </div>
