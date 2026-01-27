@@ -78,7 +78,7 @@
                                                                 role="tab" 
                                                                 aria-controls="v-pills-{{ $position }}-{{ $lang_code }}" 
                                                                 aria-selected="{{ $loop->first ? 'true' : 'false' }}">
-                                                            {{ ucwords(str_replace('-', ' ', $position)) }}  
+                                                            {{ ucwords(str_replace('-', ' ', $position)) }}
                                                         </button>
                                                     @endforeach
                                                 </div>
