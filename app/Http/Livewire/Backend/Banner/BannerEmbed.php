@@ -21,6 +21,8 @@ class BannerEmbed extends Component
     public $startDate;
     public $endDate;
 
+    public $isHideInMobile = false;
+
     // listeners moved below
 
     public function updatedIsAllSelected($value)
@@ -152,6 +154,7 @@ class BannerEmbed extends Component
         
         $this->startDate = null;
         $this->endDate = null;
+        $this->isHideInMobile = false;
         $this->dispatchBrowserEvent('open-banner-embed-modal');
     }
 
@@ -190,6 +193,7 @@ class BannerEmbed extends Component
                     'location' => $this->location,
                     'start_date' => $this->startDate,
                     'end_date' => $this->endDate,
+                    'is_hide_in_mobile' => $this->isHideInMobile,
                 ]
             );
         }

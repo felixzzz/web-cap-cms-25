@@ -1,7 +1,7 @@
 <div>
     <div class="modal fade" id="kt_modal_banner_active_list" tabindex="-1" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog modal-dialog-centered mw-1000px">
-            <div class="modal-content">
+            <div class="modal-content mh-650px overflow-scroll">
                 <div class="modal-header">
                     <h2 class="fw-bold">Embedded Posts: <span
                             class="badge badge-light-primary fs-4">{{ $bannerGroupTitle }}</span></h2>
@@ -18,42 +18,43 @@
                     </div>
                 </div>
 
-
-
-
                 <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
                     @if ($isEditing)
                         <div class="mb-5">
                             <h3 class="mb-4">Edit Active Banner</h3>
                             <div class="row mb-3">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <label class="form-label required">Position</label>
-                                    <select class="form-select" wire:model.defer="editingLocation">
+                                    <select class="form-select" wire:model="editingLocation">
                                         <option value="">Select Position</option>
                                         @if ($position == 'home')
                                             <option value="journey-growth">Journey Growth</option>
                                             <option value="financial-report">Financial Report</option>
-                                        @else
+                                        @elseif ($position == 'article')
                                             <option value="center">Center</option>
                                             <option value="left">Left</option>
                                             <option value="right">Right</option>
                                             <option value="bottom">Bottom</option>
+                                        @else
+                                            <option value="navbar">Navbar</option>
+                                            <option value="footer">Footer</option>
                                         @endif
                                     </select>
                                     @error('editingLocation')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
+
+                                    @if (in_array($editingLocation, ['left', 'right']))
+                                        <div class="form-check form-check-custom form-check-solid mt-4">
+                                            <input class="form-check-input" type="checkbox"
+                                                wire:model.defer="editingHideInMobile" id="editing_hide_in_mobile" />
+                                            <label class="form-check-label" for="editing_hide_in_mobile">
+                                                Hide in Mobile
+                                            </label>
+                                        </div>
+                                    @endif
                                 </div>
-                                <div class="col-md-6">
-                                    <label class="form-label required">Language</label>
-                                    <select class="form-select" wire:model.defer="editingLanguage">
-                                        <option value="id">ID</option>
-                                        <option value="en">EN</option>
-                                    </select>
-                                    @error('editingLanguage')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
+
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-6">
@@ -72,15 +73,117 @@
                                     @enderror
                                 </div>
                             </div>
+                            <!-- Post Selection Section (Not for Home) -->
+                            @if ($position != 'home')
+                                <div class="mb-5">
+                                    <h4 class="fw-bold fs-6 mb-3">Select Post</h4>
+
+                                    <div class="row mb-5">
+                                        <!-- Filter Language -->
+                                        <div class="col-md-6">
+                                            <label class="form-label fs-7 fw-bold mb-2">Filter Language:</label>
+                                            <div class="d-flex flex-wrap">
+                                                <div
+                                                    class="form-check form-check-custom form-check-sm form-check-solid me-3">
+                                                    <input class="form-check-input" type="radio" value="all"
+                                                        id="filter_lang_all" wire:model="filterLang" />
+                                                    <label class="form-check-label fs-7"
+                                                        for="filter_lang_all">All</label>
+                                                </div>
+                                                <div
+                                                    class="form-check form-check-custom form-check-sm form-check-solid me-3">
+                                                    <input class="form-check-input" type="radio" value="id"
+                                                        id="filter_lang_id" wire:model="filterLang" />
+                                                    <label class="form-check-label fs-7" for="filter_lang_id">ID</label>
+                                                </div>
+                                                <div
+                                                    class="form-check form-check-custom form-check-sm form-check-solid">
+                                                    <input class="form-check-input" type="radio" value="en"
+                                                        id="filter_lang_en" wire:model="filterLang" />
+                                                    <label class="form-check-label fs-7" for="filter_lang_en">EN</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Filter Type (Only for Articles) -->
+                                        @if ($position != 'pages' && $position != 'home')
+                                            <div class="col-md-6">
+                                                <label class="form-label fs-7 fw-bold mb-2">Filter Type:</label>
+                                                <div class="d-flex flex-wrap">
+                                                    <div
+                                                        class="form-check form-check-custom form-check-sm form-check-solid me-3">
+                                                        <input class="form-check-input" type="radio" value="all"
+                                                            id="filter_type_all" wire:model="filterType" />
+                                                        <label class="form-check-label fs-7"
+                                                            for="filter_type_all">All</label>
+                                                    </div>
+                                                    <div
+                                                        class="form-check form-check-custom form-check-sm form-check-solid me-3">
+                                                        <input class="form-check-input" type="radio" value="news"
+                                                            id="filter_type_news" wire:model="filterType" />
+                                                        <label class="form-check-label fs-7"
+                                                            for="filter_type_news">News</label>
+                                                    </div>
+                                                    <div
+                                                        class="form-check form-check-custom form-check-sm form-check-solid">
+                                                        <input class="form-check-input" type="radio" value="blog"
+                                                            id="filter_type_blog" wire:model="filterType" />
+                                                        <label class="form-check-label fs-7"
+                                                            for="filter_type_blog">Blog</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+
+                                    <input type="text" class="form-control form-control-solid mb-3"
+                                        placeholder="Search posts..." wire:model.debounce.500ms="search" />
+
+                                    <div class="mh-300px scroll-y p-3 p-lg-5 bg-light rounded">
+                                        @forelse($posts as $post)
+                                            <div class="d-flex align-items-center mb-5">
+                                                <label
+                                                    class="form-check form-check-custom w-100 form-check-solid me-3 border-bottom bg-white p-2">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="editingPostId" value="{{ $post['id'] }}"
+                                                        wire:model="editingPostId" />
+                                                    <span class="form-check-label fw-bold text-gray-800">
+                                                        <div class="mb-1">
+                                                            @if ($post['lang'] == 'en')
+                                                                <span class="badge badge-light-danger me-2">EN</span>
+                                                            @else
+                                                                <span class="badge badge-light-primary me-2">ID</span>
+                                                            @endif
+                                                            {{ $post['title'] }}
+                                                        </div>
+                                                        <span class="text-muted fw-semibold d-block fs-7 mt-1">
+                                                            <span class="text-capitalize">{{ $post['type'] }}</span> -
+                                                            {{ \Carbon\Carbon::parse($post['created_at'])->format('d M Y H:i') }}
+                                                        </span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        @empty
+                                            <div class="text-center text-muted p-5">No posts found</div>
+                                        @endforelse
+                                    </div>
+                                    @error('editingPostId')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            @endif
                             <div class="d-flex justify-content-end gap-2 mt-4">
-                                <button type="button" class="btn btn-secondary" wire:click="cancelEdit">Cancel</button>
-                                <button type="button" class="btn btn-primary" wire:click="update">Save Changes</button>
+                                <button type="button" class="btn btn-secondary"
+                                    wire:click="cancelEdit">Cancel</button>
+                                <button type="button" class="btn btn-primary" wire:click="update">Save
+                                    Changes</button>
                             </div>
                         </div>
                     @else
                         @if (count($selected) > 0)
                             <div class="d-flex justify-content-end mb-4">
-                                <button type="button" class="btn btn-danger btn-sm" onclick="confirmDeleteSelected()">
+                                <button type="button" class="btn btn-danger btn-sm"
+                                    onclick="confirmDeleteSelected()">
                                     Delete Selected ({{ count($selected) }})
                                 </button>
                             </div>
@@ -131,7 +234,11 @@
                                                     {{ $active->post ? ($active->language == 'en' ? $active->post->title_en : $active->post->title) : 'Unknown Post' }}
                                                 </div>
                                                 <span
-                                                    class="text-muted fw-semibold text-muted d-block fs-7">{{ $active->post ? $active->post->type : '-' }}</span>
+                                                    class="text-muted fw-semibold text-muted d-block fs-7 text-capitalize">{{ $active->post ? $active->post->type : '-' }}</span>
+                                                <span class="text-muted fw-semibold text-muted d-block fs-7"></span>
+                                                @if ($active->is_hide_in_mobile)
+                                                    <span class="badge badge-primary mt-1">Hide in Mobile</span>
+                                                @endif
                                             </td>
                                             <td>
                                                 @if ($active->language == 'en')
@@ -193,7 +300,8 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="7" class="text-center text-muted">No embedded posts found.
+                                            <td colspan="7" class="text-center text-muted">No embedded posts
+                                                found.
                                             </td>
                                         </tr>
                                     @endforelse

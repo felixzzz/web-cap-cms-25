@@ -81,6 +81,16 @@
                                 @error('location')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
+
+                                @if (in_array($location, ['left', 'right']))
+                                    <div class="form-check form-check-custom form-check-solid mt-4">
+                                        <input class="form-check-input" type="checkbox" wire:model="isHideInMobile"
+                                            id="hide_in_mobile" />
+                                        <label class="form-check-label" for="hide_in_mobile">
+                                            Hide in Mobile
+                                        </label>
+                                    </div>
+                                @endif
                             </div>
 
                             <div class="row mb-5">
