@@ -32,7 +32,7 @@
                             <div class="card-body p-5">
                                 <p class="text-muted mb-5">
                                     Configure banner groups for different positions on the home page. 
-                                    Available positions: <strong>Navbar</strong>, <strong>Journey Growth</strong>, and <strong>Financial Reports</strong>.
+                                    Available positions: <strong>Navbar</strong>, <strong>Journey Growth</strong>, <strong>Financial Reports</strong>, and <strong>Footer</strong>.
                                 </p>
 
                                 <!-- Language Tabs -->
@@ -96,7 +96,12 @@
                                                              id="v-pills-{{ $position }}-{{ $lang_code }}" 
                                                              role="tabpanel" 
                                                              aria-labelledby="v-pills-{{ $position }}-{{ $lang_code }}-tab">
-                                                            
+                                                             <div class="d-flex justify-content-end align-items-center gap-2">
+                                                                 @if(in_array($position, ['navbar', 'footer']))
+                                                                 <i class="fas fa-question-circle ms-2" data-bs-toggle="tooltip" title="This position will apply to all pages"></i>
+                                                                 <span>Information about this position</span>
+                                                                 @endif
+                                                            </div>
                                                             <div class="mb-5">
                                                                 <label class="form-label">Banner Group</label>
                                                                 <select name="banner_active[{{ $lang_code }}][{{ $position }}][group_id]" 

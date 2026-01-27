@@ -105,6 +105,7 @@ class BannerGroupController extends Controller
                         ['value' => '16/9', 'label' => '16:9'],
                         ['value' => '21/5', 'label' => '21:5 (Ultrawide)'],
                         ['value' => '21/4', 'label' => '21:4 (Ultrawide)'],
+                        ['value' => '21/3', 'label' => '21:3 (Ultrawide)'],
                         ['value' => '3/4', 'label' => '3:4 (Portrait)'],
                         ['value' => '9/16', 'label' => '9:16 (Portrait)'],
                     ]
@@ -194,7 +195,15 @@ class BannerGroupController extends Controller
                     $filename = $media->file_name;
                     $uniqueFilename = time() . '_' . $filename;
                     $destPath = 'images/banners/' . $uniqueFilename;
-                    Storage::disk('public')->put($destPath, file_get_contents($media->getPath()));
+
+                    // Use stream to safely copy file from source (potentially S3) to destination
+                    // This handles large files and remote files correctly unlike file_get_contents
+                    $stream = $media->stream();
+                    Storage::disk('public')->put($destPath, $stream);
+                    if (is_resource($stream)) {
+                        fclose($stream);
+                    }
+
                     $temp->delete();
                     return $destPath;
                 }
