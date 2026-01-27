@@ -78,7 +78,7 @@
                                                                 role="tab" 
                                                                 aria-controls="v-pills-{{ $position }}-{{ $lang_code }}" 
                                                                 aria-selected="{{ $loop->first ? 'true' : 'false' }}">
-                                                            {{ ucwords(str_replace('-', ' ', $position)) }}
+                                                            {{ ucwords(str_replace('-', ' ', $position)) }}  
                                                         </button>
                                                     @endforeach
                                                 </div>
@@ -96,7 +96,12 @@
                                                              id="v-pills-{{ $position }}-{{ $lang_code }}" 
                                                              role="tabpanel" 
                                                              aria-labelledby="v-pills-{{ $position }}-{{ $lang_code }}-tab">
-                                                            
+                                                             <div class="d-flex justify-content-end align-items-center gap-2">
+                                                                 @if(in_array($position, ['navbar', 'footer']))
+                                                                 <i class="fas fa-question-circle ms-2" data-bs-toggle="tooltip" title="This position will apply to all pages"></i>
+                                                                 <span>Information about this position</span>
+                                                                 @endif
+                                                            </div>
                                                             <div class="mb-5">
                                                                 <label class="form-label">Banner Group</label>
                                                                 <select name="banner_active[{{ $lang_code }}][{{ $position }}][group_id]" 
