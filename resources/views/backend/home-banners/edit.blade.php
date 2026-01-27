@@ -32,7 +32,7 @@
                             <div class="card-body p-5">
                                 <p class="text-muted mb-5">
                                     Configure banner groups for different positions on the home page. 
-                                    Available positions: <strong>Navbar</strong>, <strong>Journey Growth</strong>, and <strong>Financial Reports</strong>.
+                                    Available positions: <strong>Navbar</strong>, <strong>Journey Growth</strong>, <strong>Financial Reports</strong>, and <strong>Footer</strong>.
                                 </p>
 
                                 <!-- Language Tabs -->
