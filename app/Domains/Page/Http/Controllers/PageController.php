@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
+use App\Models\BannerActive;
+use App\Models\BannerGroup;
+
 
 class PageController extends Controller
 {
@@ -26,8 +29,8 @@ class PageController extends Controller
         $this->postMetaService = $postMetaService;
         $this->rules = [
             'type' => ['required'],
-            'title' => ['required','max:100'],
-            'excerpt' => ['nullable','max:255'],
+            'title' => ['required', 'max:100'],
+            'excerpt' => ['nullable', 'max:255'],
             'content' => ['nullable'],
             'featured_image' => ['nullable'],
             'featured_image_remove' => ['nullable'],
@@ -38,7 +41,7 @@ class PageController extends Controller
             'meta_description' => ['nullable'],
             'featured' => ['nullable'],
             'status' => ['nullable'],
-            'published_at' => ['nullable','date'],
+            'published_at' => ['nullable', 'date'],
             'parent' => ['nullable', 'exists:posts,id']
         ];
     }
@@ -52,8 +55,7 @@ class PageController extends Controller
     public function create(Request $request)
     {
         $checkExist = Post::where('type', 'page')->where('template', $request->template)->first();
-        if($checkExist)
-        {
+        if ($checkExist) {
             throw new GeneralException('The page have has already created.');
         }
         $template = $this->page_templates()->where('name', $request->template)->first();
@@ -69,14 +71,14 @@ class PageController extends Controller
     public function store(Request $request)
     {
         $template = $this->page_templates()->where('name', $request->template)->first();
-        
+
         $componentRule = $this->componentService->getComponentRules($template['components']);
-        if(isset($template['multilanguage']) && $template['multilanguage'] == 'true'){
+        if (isset($template['multilanguage']) && $template['multilanguage'] == 'true') {
             $componentRule = $this->componentService->getComponentRulesLanguage($template['components'], $template);
-        }else{
+        } else {
             $componentRule = $this->componentService->getComponentRules($template['components']);
         }
-       
+
         $rules = array_merge($this->rules, $componentRule);
         $requestValidated = Validator::make($request->all(), $rules)->validate();
         $request['template'] = $request->template;
@@ -88,7 +90,7 @@ class PageController extends Controller
                 }
             }
             $create->updateMeta('template', $request->template);
-            if (count($template['components']) > 0 ) {
+            if (count($template['components']) > 0) {
                 $this->postMetaService->updatePageMetaV2($create, $request->all());
             }
         }
@@ -124,15 +126,31 @@ class PageController extends Controller
             }
             $location = $post->getMeta('location');
             $parents = Post::where('type', 'page')->where('id', '!=', $post->id)->pluck('id', 'title');
-            return view('backend.page.edit', compact('template', 'components', 'post', 'parents', 'location'))->withMeta($valueMeta);
+
+            $bannerGroups = [];
+            $homeBanners = [];
+            if ($post->slug == 'home' || $post->site_url == '/') {
+                $bannerGroups = BannerGroup::whereIn('position', ['pages', 'home'])->get();
+                $homeBanners = BannerActive::where('post_id', $post->id)
+                    ->whereIn('location', ['journey-growth', 'financial-report', 'financial-reports'])
+                    ->get()
+                    ->map(function ($banner) {
+                        if ($banner->location == 'financial-report')
+                            $banner->location = 'financial-reports';
+                        return $banner;
+                    })
+                    ->groupBy('location');
+            }
+
+            return view('backend.page.edit', compact('template', 'components', 'post', 'parents', 'location', 'bannerGroups', 'homeBanners'))->withMeta($valueMeta);
         }
         return back()->withFlashSuccess('The page have invalid format pages.');
     }
-    public function editbyTemplate(Request $request, $template)
+    public function editbyTemplate(Request $request, $templateName)
     {
-        $template = $this->page_templates()->where('name', $template)->first();
-        $post = Post::where('type', 'page')->where('template',$template)->orderBy('id', 'desc')->first();
-        if(!$post){
+        $template = $this->page_templates()->where('name', $templateName)->first();
+        $post = Post::where('type', 'page')->where('template', $templateName)->orderBy('id', 'desc')->first();
+        if (!$post) {
             $request->merge(['template' => $template['name']]); // Use merge to add or update the request data
             return $this->create($request);
         }
@@ -149,7 +167,23 @@ class PageController extends Controller
             }
             $location = $post->getMeta('location');
             $parents = Post::where('type', 'page')->where('id', '!=', $post->id)->pluck('id', 'title');
-            return view('backend.page.edit', compact('template', 'components', 'post', 'parents', 'location'))->withMeta($valueMeta);
+
+            $bannerGroups = [];
+            $homeBanners = [];
+            if ($post->slug == 'home' || $post->site_url == '/') {
+                $bannerGroups = BannerGroup::whereIn('position', ['pages', 'home'])->get();
+                $homeBanners = BannerActive::where('post_id', $post->id)
+                    ->whereIn('location', ['journey-growth', 'financial-report', 'financial-reports'])
+                    ->get()
+                    ->map(function ($banner) {
+                        if ($banner->location == 'financial-report')
+                            $banner->location = 'financial-reports';
+                        return $banner;
+                    })
+                    ->groupBy('location');
+            }
+
+            return view('backend.page.edit', compact('template', 'components', 'post', 'parents', 'location', 'bannerGroups', 'homeBanners'))->withMeta($valueMeta);
         }
         return back()->withFlashSuccess('The page have invalid format pages.');
     }
@@ -172,6 +206,36 @@ class PageController extends Controller
             }
 
             $this->postMetaService->updatePageMetaV2($post, $request->all());
+
+            if ($post->slug == 'home' || $post->site_url == '/') {
+                if ($request->has('home_banners')) {
+                    foreach ($request->home_banners as $lang => $positions) {
+                        if (is_array($positions) && !isset($positions['banner_group_id'])) {
+                            foreach ($positions as $location => $data) {
+                                if (!empty($data['banner_group_id'])) {
+                                    BannerActive::updateOrCreate(
+                                        ['post_id' => $post->id, 'location' => $location, 'language' => $lang],
+                                        ['banner_group_id' => $data['banner_group_id'], 'start_date' => $data['start_date'], 'end_date' => $data['end_date']]
+                                    );
+                                } else {
+                                    BannerActive::where('post_id', $post->id)->where('location', $location)->where('language', $lang)->delete();
+                                }
+                            }
+                        } else {
+                            $location = $lang;
+                            $data = $positions;
+                            if (!empty($data['banner_group_id'])) {
+                                BannerActive::updateOrCreate(
+                                    ['post_id' => $post->id, 'location' => $location, 'language' => 'id'],
+                                    ['banner_group_id' => $data['banner_group_id'], 'start_date' => $data['start_date'], 'end_date' => $data['end_date']]
+                                );
+                            } else {
+                                BannerActive::where('post_id', $post->id)->where('location', $location)->delete();
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         $components = $template['components'];
@@ -186,8 +250,24 @@ class PageController extends Controller
         }
         $location = $post->getMeta('location');
         $parents = Post::where('type', 'page')->where('id', '!=', $post->id)->pluck('id', 'title');
+
+        $bannerGroups = [];
+        $homeBanners = [];
+        if ($post->slug == 'home' || $post->site_url == '/') {
+            $bannerGroups = BannerGroup::whereIn('position', ['pages', 'home'])->get();
+            $homeBanners = BannerActive::where('post_id', $post->id)
+                ->whereIn('location', ['journey-growth', 'financial-report', 'financial-reports'])
+                ->get()
+                ->map(function ($banner) {
+                    if ($banner->location == 'financial-report')
+                        $banner->location = 'financial-reports';
+                    return $banner;
+                })
+                ->groupBy('location');
+        }
+
         session()->flash('success', __('Page was successfully updated.'));
-        return view('backend.page.edit', compact('template', 'components', 'post', 'parents', 'location'))->withMeta($valueMeta)->withFlashSuccess(__('Page was successfully updated.'));
+        return view('backend.page.edit', compact('template', 'components', 'post', 'parents', 'location', 'bannerGroups', 'homeBanners'))->withMeta($valueMeta)->withFlashSuccess(__('Page was successfully updated.'));
     }
 
     public function delete(Post $post)
@@ -196,9 +276,10 @@ class PageController extends Controller
 
         $type = $post->type;
 
-        if (! $post->delete() ) {
+        if (!$post->delete()) {
             throw new GeneralException('There was a problem deleting this post. Please try again.');
-        };
+        }
+        ;
         session()->flash('success', __('Page was successfully deleted.'));
 
         return redirect()->route('admin.page')->withFlashSuccess(__('Page was deleted successfully.'));
@@ -218,7 +299,7 @@ class PageController extends Controller
 
         Gate::authorize("admin.access.page.delete");
 
-        if (! $deletedPost->restore()) {
+        if (!$deletedPost->restore()) {
             throw new GeneralException(__('There was a problem restoring this post. Please try again.'));
         }
 

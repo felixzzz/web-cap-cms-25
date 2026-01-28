@@ -120,6 +120,57 @@
                                                         'lang' => $lang_code,
                                                         'lang_option' => $template['lang_option'],
                                                     ])
+
+                                                    @php
+                                                        $bannerMap = [
+                                                            'financial_report' => 'financial-reports',
+                                                            'financial_reports' => 'financial-reports',
+                                                            'business_solution' => 'journey-growth',
+                                                        ];
+                                                        $pos = $bannerMap[$component['keyName']] ?? null;
+                                                    @endphp
+
+                                                    @if ($pos && ($post->slug == 'home' || $post->site_url == '/'))
+                                                        @php
+                                                            $active = isset($homeBanners[$pos]) ? $homeBanners[$pos]->where('language', $lang_code)->first() : null;
+                                                        @endphp
+                                                        <div class="form-group row border-top pt-5 mt-5 {{ $pos }}-banner-config">
+                                                            <label class="col-md-2 col-form-label fw-bold text-capitalize">
+                                                                Banner {{ str_replace('-', ' ', $pos) }}
+                                                            </label>
+                                                            <div class="col-md-10">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <label class="form-label">Banner Group</label>
+                                                                        <select name="home_banners[{{ $lang_code }}][{{ $pos }}][banner_group_id]"
+                                                                            class="form-select form-select-solid">
+                                                                            <option value="">-- Select Banner Group --</option>
+                                                                            @foreach ($bannerGroups as $bg)
+                                                                                <option value="{{ $bg->id }}"
+                                                                                    {{ optional($active)->banner_group_id == $bg->id ? 'selected' : '' }}>
+                                                                                    {{ $bg->title }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label class="form-label">Start Date</label>
+                                                                        <input type="datetime-local"
+                                                                            name="home_banners[{{ $lang_code }}][{{ $pos }}][start_date]"
+                                                                            class="form-control form-control-solid"
+                                                                            value="{{ $active && $active->start_date ? $active->start_date->format('Y-m-d\TH:i') : '' }}">
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <label class="form-label">End Date</label>
+                                                                        <input type="datetime-local"
+                                                                            name="home_banners[{{ $lang_code }}][{{ $pos }}][end_date]"
+                                                                            class="form-control form-control-solid"
+                                                                            value="{{ $active && $active->end_date ? $active->end_date->format('Y-m-d\TH:i') : '' }}">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                                 @endforeach
                                             </div>
                                         @endforeach
@@ -131,6 +182,57 @@
                                             'loopIndex' => $loop->index,
                                             'postId' => $post->id,
                                         ])
+
+                                        @php
+                                            $bannerMap = [
+                                                'financial_report' => 'financial-reports',
+                                                'financial_reports' => 'financial-reports',
+                                                'business_solution' => 'journey-growth',
+                                            ];
+                                            $pos = $bannerMap[$component['keyName']] ?? null;
+                                        @endphp
+
+                                        @if ($pos && ($post->slug == 'home' || $post->site_url == '/'))
+                                            @php
+                                                $active = isset($homeBanners[$pos]) ? $homeBanners[$pos]->where('language', 'id')->first() : null;
+                                            @endphp
+                                            <div class="form-group row border-top pt-5 mt-5 {{ $pos }}-banner-config">
+                                                <label class="col-md-2 col-form-label fw-bold text-capitalize">
+                                                    Banner {{ str_replace('-', ' ', $pos) }}
+                                                </label>
+                                                <div class="col-md-10">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Banner Group</label>
+                                                            <select name="home_banners[id][{{ $pos }}][banner_group_id]"
+                                                                class="form-select form-select-solid">
+                                                                <option value="">-- Select Banner Group --</option>
+                                                                @foreach ($bannerGroups as $bg)
+                                                                    <option value="{{ $bg->id }}"
+                                                                        {{ optional($active)->banner_group_id == $bg->id ? 'selected' : '' }}>
+                                                                        {{ $bg->title }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">Start Date</label>
+                                                            <input type="datetime-local"
+                                                                name="home_banners[id][{{ $pos }}][start_date]"
+                                                                class="form-control form-control-solid"
+                                                                value="{{ $active && $active->start_date ? $active->start_date->format('Y-m-d\TH:i') : '' }}">
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label class="form-label">End Date</label>
+                                                            <input type="datetime-local"
+                                                                name="home_banners[id][{{ $pos }}][end_date]"
+                                                                class="form-control form-control-solid"
+                                                                value="{{ $active && $active->end_date ? $active->end_date->format('Y-m-d\TH:i') : '' }}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
                                     @endforeach
                                 @endif
                             </div>
@@ -148,7 +250,8 @@
                     <x-forms.textarea-input name="excerpt" label="Excerpt" required="1" placeholder="Summary of post"
                         text="" value="{{ $post->excerpt }}" />
                 @endif
-                <button class="btn btn-primary">Update Page</button>
+                
+                <button class="btn btn-primary" id="btnSubmit">Update Page</button>
             </x-slot>
         </x-backend.card>
 
