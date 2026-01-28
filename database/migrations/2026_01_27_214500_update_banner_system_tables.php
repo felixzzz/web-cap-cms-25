@@ -13,8 +13,18 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('banner_groups', function (Blueprint $table) {
-            $table->string('position')->default('article')->after('title');
-            $table->dropColumn(['slug', 'banners', 'bulk_position']);
+            if (!Schema::hasColumn('banner_groups', 'position')) {
+                $table->string('position')->default('article')->after('title');
+            }
+            if (Schema::hasColumn('banner_groups', 'slug')) {
+                $table->dropColumn('slug');
+            }
+            if (Schema::hasColumn('banner_groups', 'banners')) {
+                $table->dropColumn('banners');
+            }
+            if (Schema::hasColumn('banner_groups', 'bulk_position')) {
+                $table->dropColumn('bulk_position');
+            }
         });
 
         Schema::table('banner_active', function (Blueprint $table) {
