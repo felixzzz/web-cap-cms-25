@@ -60,7 +60,7 @@ class BannerEmbed extends Component
         if ($this->postType == 'news') {
             $types = ['news'];
         } elseif ($this->postType == 'blog') {
-            $types = ['blog']; // Assuming blog type is 'blog'
+            $types = ['blog'];
         }
 
         $query = Post::whereIn('type', $types);
@@ -121,23 +121,14 @@ class BannerEmbed extends Component
     }
 
     public $position = 'article';
-    public $start_date; // fix property naming consistency
-    public $end_date;   // fix property naming consistency
-    // Homepage specific
+    public $start_date;
+    public $end_date;
     public $homepageSlots = [
         'journey-growth' => 'Journey Growth',
         'financial-report' => 'Financial Report',
     ];
 
     protected $listeners = ['openBannerEmbed' => 'openModal', 'forceSaveHomepage' => 'forceSaveHomepage'];
-
-    // ... existing updatedIsAllSelected ...
-
-    // ... existing mount ...
-
-    // ... existing updatedSearch/Language/PostType ...
-
-    // ... existing loadPosts ...
 
     public function openModal($bannerGroupId, $position = 'article')
     {
@@ -151,7 +142,7 @@ class BannerEmbed extends Component
         if ($this->position === 'home') {
             $this->location = 'journey-growth'; // Default slot for home
         }
-        
+
         $this->startDate = null;
         $this->endDate = null;
         $this->isHideInMobile = false;
@@ -161,8 +152,8 @@ class BannerEmbed extends Component
     public function save()
     {
         if ($this->position === 'home') {
-             $this->saveHomepage();
-             return;
+            $this->saveHomepage();
+            return;
         }
 
         $this->validate([
@@ -174,7 +165,7 @@ class BannerEmbed extends Component
         ]);
 
         foreach ($this->selectedPosts as $compositeId) {
-             // ... existing save logic ...
+            // ... existing save logic ...
             // Parse composite ID (e.g. "10_en")
             $parts = explode('_', $compositeId);
             if (count($parts) < 2)
@@ -213,8 +204,8 @@ class BannerEmbed extends Component
         $homePost = Post::where('site_url', '/')->first();
 
         if (!$homePost) {
-             $this->dispatchBrowserEvent('swal-error', ['title' => 'Error', 'text' => 'Homepage post not found (site_url = "/").']);
-             return;
+            $this->dispatchBrowserEvent('swal-error', ['title' => 'Error', 'text' => 'Homepage post not found (site_url = "/").']);
+            return;
         }
 
         // Check for existing active banner in this slot with same language
@@ -236,16 +227,16 @@ class BannerEmbed extends Component
 
     public function forceSaveHomepage()
     {
-         $homePost = Post::where('site_url', '/')->first();
-         if ($homePost) {
-             // Delete existing
-             BannerActive::where('post_id', $homePost->id)
+        $homePost = Post::where('site_url', '/')->first();
+        if ($homePost) {
+            // Delete existing
+            BannerActive::where('post_id', $homePost->id)
                 ->where('location', $this->location)
                 ->where('language', $this->language)
                 ->delete();
-             
-             $this->createHomepageBanner($homePost->id);
-         }
+
+            $this->createHomepageBanner($homePost->id);
+        }
     }
 
     protected function createHomepageBanner($postId)
