@@ -127,20 +127,16 @@ class PageController extends Controller
             $location = $post->getMeta('location');
             $parents = Post::where('type', 'page')->where('id', '!=', $post->id)->pluck('id', 'title');
 
-            $bannerGroups = [];
-            $homeBanners = [];
-            if ($post->slug == 'home' || $post->site_url == '/') {
-                $bannerGroups = BannerGroup::whereIn('position', ['pages', 'home'])->get();
-                $homeBanners = BannerActive::where('post_id', $post->id)
-                    ->whereIn('location', ['journey-growth', 'financial-report', 'financial-reports'])
-                    ->get()
-                    ->map(function ($banner) {
-                        if ($banner->location == 'financial-report')
-                            $banner->location = 'financial-reports';
-                        return $banner;
-                    })
-                    ->groupBy('location');
-            }
+            $bannerGroups = BannerGroup::whereIn('position', ['pages', 'home'])->get();
+            $homeBanners = BannerActive::where('post_id', $post->id)
+                ->whereIn('location', ['journey-growth', 'financial-report', 'financial-reports', 'navbar', 'footer'])
+                ->get()
+                ->map(function ($banner) {
+                    if ($banner->location == 'financial-report')
+                        $banner->location = 'financial-reports';
+                    return $banner;
+                })
+                ->groupBy('location');
 
             return view('backend.page.edit', compact('template', 'components', 'post', 'parents', 'location', 'bannerGroups', 'homeBanners'))->withMeta($valueMeta);
         }
@@ -168,20 +164,16 @@ class PageController extends Controller
             $location = $post->getMeta('location');
             $parents = Post::where('type', 'page')->where('id', '!=', $post->id)->pluck('id', 'title');
 
-            $bannerGroups = [];
-            $homeBanners = [];
-            if ($post->slug == 'home' || $post->site_url == '/') {
-                $bannerGroups = BannerGroup::whereIn('position', ['pages', 'home'])->get();
-                $homeBanners = BannerActive::where('post_id', $post->id)
-                    ->whereIn('location', ['journey-growth', 'financial-report', 'financial-reports'])
-                    ->get()
-                    ->map(function ($banner) {
-                        if ($banner->location == 'financial-report')
-                            $banner->location = 'financial-reports';
-                        return $banner;
-                    })
-                    ->groupBy('location');
-            }
+            $bannerGroups = BannerGroup::whereIn('position', ['pages', 'home'])->get();
+            $homeBanners = BannerActive::where('post_id', $post->id)
+                ->whereIn('location', ['journey-growth', 'financial-report', 'financial-reports', 'navbar', 'footer'])
+                ->get()
+                ->map(function ($banner) {
+                    if ($banner->location == 'financial-report')
+                        $banner->location = 'financial-reports';
+                    return $banner;
+                })
+                ->groupBy('location');
 
             return view('backend.page.edit', compact('template', 'components', 'post', 'parents', 'location', 'bannerGroups', 'homeBanners'))->withMeta($valueMeta);
         }
@@ -207,31 +199,29 @@ class PageController extends Controller
 
             $this->postMetaService->updatePageMetaV2($post, $request->all());
 
-            if ($post->slug == 'home' || $post->site_url == '/') {
-                if ($request->has('home_banners')) {
-                    foreach ($request->home_banners as $lang => $positions) {
-                        if (is_array($positions) && !isset($positions['banner_group_id'])) {
-                            foreach ($positions as $location => $data) {
-                                if (!empty($data['banner_group_id'])) {
-                                    BannerActive::updateOrCreate(
-                                        ['post_id' => $post->id, 'location' => $location, 'language' => $lang],
-                                        ['banner_group_id' => $data['banner_group_id'], 'start_date' => $data['start_date'], 'end_date' => $data['end_date']]
-                                    );
-                                } else {
-                                    BannerActive::where('post_id', $post->id)->where('location', $location)->where('language', $lang)->delete();
-                                }
-                            }
-                        } else {
-                            $location = $lang;
-                            $data = $positions;
+            if ($request->has('home_banners')) {
+                foreach ($request->home_banners as $lang => $positions) {
+                    if (is_array($positions) && !isset($positions['banner_group_id'])) {
+                        foreach ($positions as $location => $data) {
                             if (!empty($data['banner_group_id'])) {
                                 BannerActive::updateOrCreate(
-                                    ['post_id' => $post->id, 'location' => $location, 'language' => 'id'],
+                                    ['post_id' => $post->id, 'location' => $location, 'language' => $lang],
                                     ['banner_group_id' => $data['banner_group_id'], 'start_date' => $data['start_date'], 'end_date' => $data['end_date']]
                                 );
                             } else {
-                                BannerActive::where('post_id', $post->id)->where('location', $location)->delete();
+                                BannerActive::where('post_id', $post->id)->where('location', $location)->where('language', $lang)->delete();
                             }
+                        }
+                    } else {
+                        $location = $lang;
+                        $data = $positions;
+                        if (!empty($data['banner_group_id'])) {
+                            BannerActive::updateOrCreate(
+                                ['post_id' => $post->id, 'location' => $location, 'language' => 'id'],
+                                ['banner_group_id' => $data['banner_group_id'], 'start_date' => $data['start_date'], 'end_date' => $data['end_date']]
+                            );
+                        } else {
+                            BannerActive::where('post_id', $post->id)->where('location', $location)->delete();
                         }
                     }
                 }

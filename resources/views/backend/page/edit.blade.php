@@ -112,6 +112,33 @@
                                             <div class="tab-pane fade @if ($loop->first) show active @endif"
                                                 id="{{ $lang_code }}" role="tabpanel"
                                                 aria-labelledby="{{ $lang_code }}-tab">
+                                                @php
+                                                    $activeNav = isset($homeBanners['navbar']) ? $homeBanners['navbar']->where('language', $lang_code)->first() : null;
+                                                @endphp
+                                                <div class="form-group row border-bottom pb-5 mb-5 navbar-banner-config">
+                                                    <label class="col-md-2 col-form-label fw-bold text-capitalize">Banner Navbar</label>
+                                                    <div class="col-md-10">
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <label class="form-label">Banner Group</label>
+                                                                <select name="home_banners[{{ $lang_code }}][navbar][banner_group_id]" class="form-select form-select-solid">
+                                                                    <option value="">-- Select Banner Group --</option>
+                                                                    @foreach ($bannerGroups as $bg)
+                                                                        <option value="{{ $bg->id }}" {{ optional($activeNav)->banner_group_id == $bg->id ? 'selected' : '' }}>{{ $bg->title }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label">Start Date</label>
+                                                                <input type="datetime-local" name="home_banners[{{ $lang_code }}][navbar][start_date]" class="form-control form-control-solid" value="{{ $activeNav && $activeNav->start_date ? $activeNav->start_date->format('Y-m-d\TH:i') : '' }}">
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label">End Date</label>
+                                                                <input type="datetime-local" name="home_banners[{{ $lang_code }}][navbar][end_date]" class="form-control form-control-solid" value="{{ $activeNav && $activeNav->end_date ? $activeNav->end_date->format('Y-m-d\TH:i') : '' }}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 @foreach ($components as $component)
                                                     @include('components.backend.component-wrapper-v2', [
                                                         'component' => $component,
@@ -130,7 +157,7 @@
                                                         $pos = $bannerMap[$component['keyName']] ?? null;
                                                     @endphp
 
-                                                    @if ($pos && ($post->slug == 'home' || $post->site_url == '/'))
+                                                    @if ($pos)
                                                         @php
                                                             $active = isset($homeBanners[$pos]) ? $homeBanners[$pos]->where('language', $lang_code)->first() : null;
                                                         @endphp
@@ -172,10 +199,65 @@
                                                         </div>
                                                     @endif
                                                 @endforeach
+                                                @php
+                                                    $activeFoot = isset($homeBanners['footer']) ? $homeBanners['footer']->where('language', $lang_code)->first() : null;
+                                                @endphp
+                                                <div class="form-group row border-top pt-5 mt-5 footer-banner-config">
+                                                    <label class="col-md-2 col-form-label fw-bold text-capitalize">Banner Footer</label>
+                                                    <div class="col-md-10">
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <label class="form-label">Banner Group</label>
+                                                                <select name="home_banners[{{ $lang_code }}][footer][banner_group_id]" class="form-select form-select-solid">
+                                                                    <option value="">-- Select Banner Group --</option>
+                                                                    @foreach ($bannerGroups as $bg)
+                                                                        <option value="{{ $bg->id }}" {{ optional($activeFoot)->banner_group_id == $bg->id ? 'selected' : '' }}>{{ $bg->title }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label">Start Date</label>
+                                                                <input type="datetime-local" name="home_banners[{{ $lang_code }}][footer][start_date]" class="form-control form-control-solid" value="{{ $activeFoot && $activeFoot->start_date ? $activeFoot->start_date->format('Y-m-d\TH:i') : '' }}">
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label">End Date</label>
+                                                                <input type="datetime-local" name="home_banners[{{ $lang_code }}][footer][end_date]" class="form-control form-control-solid" value="{{ $activeFoot && $activeFoot->end_date ? $activeFoot->end_date->format('Y-m-d\TH:i') : '' }}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         @endforeach
                                     </div>
                                 @else
+                                    @php
+                                        $activeNav = isset($homeBanners['navbar']) ? $homeBanners['navbar']->where('language', 'id')->first() : null;
+                                    @endphp
+                                    <div class="form-group row border-bottom pb-5 mb-5 navbar-banner-config">
+                                        <label class="col-md-2 col-form-label fw-bold text-capitalize">Banner Navbar</label>
+                                        <div class="col-md-10">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <label class="form-label">Banner Group</label>
+                                                    <select name="home_banners[id][navbar][banner_group_id]" class="form-select form-select-solid">
+                                                        <option value="">-- Select Banner Group --</option>
+                                                        @foreach ($bannerGroups as $bg)
+                                                            <option value="{{ $bg->id }}" {{ optional($activeNav)->banner_group_id == $bg->id ? 'selected' : '' }}>{{ $bg->title }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label">Start Date</label>
+                                                    <input type="datetime-local" name="home_banners[id][navbar][start_date]" class="form-control form-control-solid" value="{{ $activeNav && $activeNav->start_date ? $activeNav->start_date->format('Y-m-d\TH:i') : '' }}">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label">End Date</label>
+                                                    <input type="datetime-local" name="home_banners[id][navbar][end_date]" class="form-control form-control-solid" value="{{ $activeNav && $activeNav->end_date ? $activeNav->end_date->format('Y-m-d\TH:i') : '' }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     @foreach ($components as $component)
                                         @include('components.backend.component-wrapper-v2', [
                                             'component' => $component,
@@ -192,7 +274,7 @@
                                             $pos = $bannerMap[$component['keyName']] ?? null;
                                         @endphp
 
-                                        @if ($pos && ($post->slug == 'home' || $post->site_url == '/'))
+                                        @if ($pos)
                                             @php
                                                 $active = isset($homeBanners[$pos]) ? $homeBanners[$pos]->where('language', 'id')->first() : null;
                                             @endphp
@@ -234,6 +316,33 @@
                                             </div>
                                         @endif
                                     @endforeach
+                                    @php
+                                        $activeFoot = isset($homeBanners['footer']) ? $homeBanners['footer']->where('language', 'id')->first() : null;
+                                    @endphp
+                                    <div class="form-group row border-top pt-5 mt-5 footer-banner-config">
+                                        <label class="col-md-2 col-form-label fw-bold text-capitalize">Banner Footer</label>
+                                        <div class="col-md-10">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <label class="form-label">Banner Group</label>
+                                                    <select name="home_banners[id][footer][banner_group_id]" class="form-select form-select-solid">
+                                                        <option value="">-- Select Banner Group --</option>
+                                                        @foreach ($bannerGroups as $bg)
+                                                            <option value="{{ $bg->id }}" {{ optional($activeFoot)->banner_group_id == $bg->id ? 'selected' : '' }}>{{ $bg->title }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label">Start Date</label>
+                                                    <input type="datetime-local" name="home_banners[id][footer][start_date]" class="form-control form-control-solid" value="{{ $activeFoot && $activeFoot->start_date ? $activeFoot->start_date->format('Y-m-d\TH:i') : '' }}">
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label class="form-label">End Date</label>
+                                                    <input type="datetime-local" name="home_banners[id][footer][end_date]" class="form-control form-control-solid" value="{{ $activeFoot && $activeFoot->end_date ? $activeFoot->end_date->format('Y-m-d\TH:i') : '' }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 @endif
                             </div>
                         </div>
