@@ -26,7 +26,7 @@ class HomeBannerController extends Controller
         }
 
         $bannerGroups = BannerGroup::withCount('items')->get();
-        $positions = ['navbar', 'journey-growth', 'financial-reports'];
+        $positions = ['navbar', 'journey-growth', 'financial-reports', 'footer'];
         $languages = [
             ['name' => 'Indonesian', 'value' => 'id'],
             ['name' => 'English', 'value' => 'en']
