@@ -30,13 +30,13 @@ class BannerController extends Controller
             $now = now();
             $activeBanners = BannerActive::where('post_id', $post->id)
                 ->where('language', $lang)
-                ->where(function($query) use ($now) {
+                ->where(function ($query) use ($now) {
                     $query->where('start_date', '<=', $now)
-                          ->orWhereNull('start_date');
+                        ->orWhereNull('start_date');
                 })
-                ->where(function($query) use ($now) {
+                ->where(function ($query) use ($now) {
                     $query->where('end_date', '>=', $now)
-                          ->orWhereNull('end_date');
+                        ->orWhereNull('end_date');
                 })
                 ->with(['bannerGroup.items'])
                 ->get();
@@ -59,6 +59,8 @@ class BannerController extends Controller
                     if ($activeBanner->bannerGroup) {
                         if ($activeBanner->bannerGroup->items) {
                             foreach ($activeBanner->bannerGroup->items as $banner) {
+                                // Inject is_hide_in_mobile from the active banner configuration
+                                $banner->is_hide_in_mobile = (bool) ($activeBanner->is_hide_in_mobile ?? false);
                                 $response[$location][] = $banner;
                             }
                         }
@@ -97,6 +99,9 @@ class BannerController extends Controller
             $banners = [];
             if ($activeBanner->bannerGroup && $activeBanner->bannerGroup->items) {
                 $banners = $activeBanner->bannerGroup->items;
+                foreach ($banners as $banner) {
+                    $banner->is_hide_in_mobile = (bool) ($activeBanner->is_hide_in_mobile ?? false);
+                }
             }
 
             return response()->json($banners);
@@ -130,13 +135,13 @@ class BannerController extends Controller
             $now = now();
             $activeBanners = BannerActive::where('post_id', $homePage->id)
                 ->where('language', $lang)
-                ->where(function($query) use ($now) {
+                ->where(function ($query) use ($now) {
                     $query->where('start_date', '<=', $now)
-                          ->orWhereNull('start_date');
+                        ->orWhereNull('start_date');
                 })
-                ->where(function($query) use ($now) {
+                ->where(function ($query) use ($now) {
                     $query->where('end_date', '>=', $now)
-                          ->orWhereNull('end_date');
+                        ->orWhereNull('end_date');
                 })
                 ->with(['bannerGroup.items'])
                 ->get();
@@ -157,6 +162,7 @@ class BannerController extends Controller
                     if ($activeBanner->bannerGroup) {
                         if ($activeBanner->bannerGroup->items) {
                             foreach ($activeBanner->bannerGroup->items as $banner) {
+                                $banner->is_hide_in_mobile = (bool) ($activeBanner->is_hide_in_mobile ?? false);
                                 $response[$location][] = $banner;
                             }
                         }
@@ -204,13 +210,13 @@ class BannerController extends Controller
             $now = now();
             $activeBanners = BannerActive::where('post_id', $post->id)
                 ->where('language', $lang)
-                ->where(function($query) use ($now) {
+                ->where(function ($query) use ($now) {
                     $query->where('start_date', '<=', $now)
-                          ->orWhereNull('start_date');
+                        ->orWhereNull('start_date');
                 })
-                ->where(function($query) use ($now) {
+                ->where(function ($query) use ($now) {
                     $query->where('end_date', '>=', $now)
-                          ->orWhereNull('end_date');
+                        ->orWhereNull('end_date');
                 })
                 ->with(['bannerGroup.items'])
                 ->get();
@@ -231,6 +237,7 @@ class BannerController extends Controller
                     if ($activeBanner->bannerGroup) {
                         if ($activeBanner->bannerGroup->items) {
                             foreach ($activeBanner->bannerGroup->items as $banner) {
+                                $banner->is_hide_in_mobile = (bool) ($activeBanner->is_hide_in_mobile ?? false);
                                 $response[$location][] = $banner;
                             }
                         }
