@@ -25,7 +25,7 @@
                                     </div>
                                     <x-forms.text-input name="title" label="Title" required="1"
                                         placeholder="Banner Group Title" :value="$banner_group->title" />
-                                    <accordion-repeater-component url="{{ config('app.url') . '/storage' }}"
+                                    <accordion-repeater-component url="{{ config('filesystems.disks.s3.url') }}"
                                         :field="{{ json_encode($field) }}" value="{{ json_encode($banners) }}"
                                         component="banners">
                                     </accordion-repeater-component>

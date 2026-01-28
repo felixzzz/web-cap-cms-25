@@ -223,7 +223,7 @@ class BannerGroupController extends Controller
                     // Use stream to safely copy file from source (potentially S3) to destination
                     // This handles large files and remote files correctly unlike file_get_contents
                     $stream = $media->stream();
-                    Storage::disk('public')->put($destPath, $stream);
+                    Storage::disk('s3')->put($destPath, $stream);
                     if (is_resource($stream)) {
                         fclose($stream);
                     }
@@ -290,12 +290,12 @@ class BannerGroupController extends Controller
     public function updateActiveEmbedded(Request $request, $id)
     {
         $banner = \App\Models\BannerActive::findOrFail($id);
-        
+
         $data = $request->validate([
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date',
         ]);
-        
+
         $banner->update([
             'start_date' => $data['start_date'] ?? null,
             'end_date' => $data['end_date'] ?? null,
