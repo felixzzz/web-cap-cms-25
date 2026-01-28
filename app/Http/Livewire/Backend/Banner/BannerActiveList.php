@@ -78,7 +78,9 @@ class BannerActiveList extends Component
         if ($this->search) {
              $query->where(function ($q) {
                  $q->where('title', 'like', '%' . $this->search . '%')
-                     ->orWhere('title_en', 'like', '%' . $this->search . '%');
+                     ->orWhere('title_en', 'like', '%' . $this->search . '%')
+                     ->orWhere('slug', 'like', '%' . $this->search . '%')
+                     ->orWhere('slug_en', 'like', '%' . $this->search . '%');
              });
         }
 
@@ -88,22 +90,24 @@ class BannerActiveList extends Component
 
         foreach ($rawPosts as $post) {
              // ID Language
-             if (($this->filterLang == 'all' || $this->filterLang == 'id') && $post->title) {
+             if ($this->filterLang == 'all' || $this->filterLang == 'id') {
                  $transformedPosts->push([
                      'id' => $post->id . '_id', // Composite ID
                      'original_id' => $post->id,
-                     'title' => $post->title,
+                     'title' => $post->title ?? 'No Title (ID)',
+                     'slug' => $post->slug,
                      'type' => $post->type,
                      'lang' => 'id',
                      'created_at' => $post->created_at,
                  ]);
              }
              // EN Language
-             if (($this->filterLang == 'all' || $this->filterLang == 'en') && $post->title_en) {
+             if ($this->filterLang == 'all' || $this->filterLang == 'en') {
                  $transformedPosts->push([
                     'id' => $post->id . '_en', // Composite ID
                     'original_id' => $post->id,
-                     'title' => $post->title_en,
+                     'title' => $post->title_en ?? $post->title ?? 'No Title (EN)',
+                     'slug' => $post->slug_en ?? $post->slug,
                      'type' => $post->type,
                      'lang' => 'en',
                      'created_at' => $post->created_at,

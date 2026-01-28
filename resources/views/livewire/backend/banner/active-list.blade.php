@@ -231,7 +231,7 @@
                                             </td>
                                             <td>
                                                 <div class="text-dark fw-bold fs-6">
-                                                    {{ $active->post ? ($active->language == 'en' ? $active->post->title_en : $active->post->title) : 'Unknown Post' }}
+                                                    {{ $active->post ? ($active->language == 'en' ? $active->post->title_en ?? $active->post->title : $active->post->title) : 'Unknown Post' }}
                                                 </div>
                                                 <span
                                                     class="text-muted fw-semibold text-muted d-block fs-7 text-capitalize">{{ $active->post ? $active->post->type : '-' }}</span>

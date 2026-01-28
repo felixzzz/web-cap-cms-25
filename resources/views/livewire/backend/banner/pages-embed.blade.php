@@ -95,6 +95,7 @@
                                                         <span class="badge badge-light-primary me-2">ID</span>
                                                     @endif
                                                     {{ $post['title'] }}
+                                                    <span class="text-muted fs-7 ms-2">({{ $post['slug'] }})</span>
                                                 </div>
                                             </span>
                                         </label>

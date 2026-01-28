@@ -58,7 +58,9 @@ class BannerPagesEmbed extends Component
         if ($this->search) {
             $query->where(function ($q) {
                 $q->where('title', 'like', '%' . $this->search . '%')
-                    ->orWhere('title_en', 'like', '%' . $this->search . '%');
+                    ->orWhere('title_en', 'like', '%' . $this->search . '%')
+                    ->orWhere('slug', 'like', '%' . $this->search . '%')
+                    ->orWhere('slug_en', 'like', '%' . $this->search . '%');
             });
         }
 
@@ -70,28 +72,26 @@ class BannerPagesEmbed extends Component
 
         foreach ($rawPosts as $post) {
             // ID Language
-            if ($post->title) {
-                $transformedPosts->push([
-                    'id' => $post->id . '_id',
-                    'original_id' => $post->id,
-                    'title' => $post->title,
-                    'type' => $post->type,
-                    'created_at' => $post->created_at,
-                    'lang' => 'id'
-                ]);
-            }
+            $transformedPosts->push([
+                'id' => $post->id . '_id',
+                'original_id' => $post->id,
+                'title' => $post->title ?? 'No Title (ID)',
+                'slug' => $post->slug,
+                'type' => $post->type,
+                'created_at' => $post->created_at,
+                'lang' => 'id'
+            ]);
 
             // EN Language
-            if ($post->title_en) {
-                $transformedPosts->push([
-                    'id' => $post->id . '_en',
-                    'original_id' => $post->id,
-                    'title' => $post->title_en,
-                    'type' => $post->type,
-                    'created_at' => $post->created_at,
-                    'lang' => 'en'
-                ]);
-            }
+            $transformedPosts->push([
+                'id' => $post->id . '_en',
+                'original_id' => $post->id,
+                'title' => $post->title_en ?? $post->title ?? 'No Title (EN)',
+                'slug' => $post->slug_en ?? $post->slug,
+                'type' => $post->type,
+                'created_at' => $post->created_at,
+                'lang' => 'en'
+            ]);
         }
 
         if ($this->language == 'en') {

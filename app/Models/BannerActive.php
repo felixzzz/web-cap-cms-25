@@ -15,6 +15,7 @@ class BannerActive extends Model
     protected $fillable = [
         'banner_group_id',
         'post_id',
+
         'location',
         'start_date',
         'end_date',

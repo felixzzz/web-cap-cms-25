@@ -41,4 +41,5 @@ Route::post('/documents/bulk-download', [\App\Http\Controllers\Api\SubmissionCon
 Route::get('/banner/{slug}', [\App\Http\Controllers\Api\BannerController::class, 'getBannersByPostSlug']);
 Route::get('/banner-active/{id}', [\App\Http\Controllers\Api\BannerController::class, 'getBannerActiveById']);
 Route::get('/home-banners', [\App\Http\Controllers\Api\BannerController::class, 'getHomeBanners']);
+Route::get('/banner-page', [\App\Http\Controllers\Api\BannerController::class, 'getPageBanners']);
 
