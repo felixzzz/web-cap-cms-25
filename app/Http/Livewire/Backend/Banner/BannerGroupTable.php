@@ -16,9 +16,13 @@ class BannerGroupTable extends DataTableComponent
 
     protected $model = BannerGroup::class;
 
+    public $position = 'article';
+
     public function builder(): Builder
     {
         return BannerGroup::query()
+            ->select('banner_groups.*')
+            ->where('position', $this->position)
             ->with(['activeBanners', 'posts']);
     }
 

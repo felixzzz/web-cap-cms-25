@@ -10,13 +10,17 @@ use Illuminate\Support\Facades\Storage;
 
 class BannerGroupController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('backend.banner.index');
+        $position = $request->route()->parameter('position') ?? $request->input('position', 'article');
+        $bannerGroups = BannerGroup::where('position', $position)->get();
+
+        return view('backend.banner.index', compact('bannerGroups', 'position'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        $position = $request->route()->parameter('position') ?? $request->input('position', 'article');
         $field = [
             'label' => 'Banner Items',
             'name' => 'banners',
@@ -46,7 +50,7 @@ class BannerGroupController extends Controller
             ]
         ];
 
-        return view('backend.banner.create', compact('field'));
+        return view('backend.banner.create', compact('field', 'position'));
     }
 
     public function store(Request $request)
@@ -54,7 +58,8 @@ class BannerGroupController extends Controller
         $data = $request->validate([
             'title' => 'required',
             'banners' => 'nullable',
-            'bulk_position' => 'nullable'
+            'bulk_position' => 'nullable',
+            'position' => 'required|string|in:article,home,pages',
         ]);
 
         $banners = [];
@@ -84,7 +89,16 @@ class BannerGroupController extends Controller
             }
         });
 
-        return redirect()->route('admin.banner.index')->withFlashSuccess(__('Banner Group Created Successfully.'));
+        if ($data['position'] == 'home') {
+            $route = 'admin.banner.home.index';
+        } elseif ($data['position'] == 'pages') {
+            $route = 'admin.banner.pages.index';
+        } else {
+            $route = 'admin.banner.index';
+        }
+
+        return redirect()->route($route)
+            ->withFlashSuccess(__('Banner Group Created Successfully.'));
     }
 
     public function edit(BannerGroup $banner_group)
@@ -141,9 +155,10 @@ class BannerGroupController extends Controller
     public function update(Request $request, BannerGroup $banner_group)
     {
         $data = $request->validate([
-            'title' => 'required',
+            'title' => 'required|string|max:255',
             'banners' => 'nullable',
-            'bulk_position' => 'nullable'
+            'bulk_position' => 'nullable',
+            'position' => 'required|string|in:article,home,pages',
         ]);
 
         $banners = [];
@@ -176,7 +191,16 @@ class BannerGroupController extends Controller
             }
         });
 
-        return redirect()->route('admin.banner.index')->withFlashSuccess(__('Banner Group Updated Successfully.'));
+        if ($banner_group->position == 'home') {
+            $route = 'admin.banner.home.index';
+        } elseif ($banner_group->position == 'pages') {
+            $route = 'admin.banner.pages.index';
+        } else {
+            $route = 'admin.banner.index';
+        }
+
+        return redirect()->route($route)
+            ->withFlashSuccess(__('Banner Group Updated Successfully.'));
     }
 
     public function destroy(BannerGroup $banner_group)
@@ -199,7 +223,7 @@ class BannerGroupController extends Controller
                     // Use stream to safely copy file from source (potentially S3) to destination
                     // This handles large files and remote files correctly unlike file_get_contents
                     $stream = $media->stream();
-                    Storage::disk('public')->put($destPath, $stream);
+                    Storage::disk('s3')->put($destPath, $stream);
                     if (is_resource($stream)) {
                         fclose($stream);
                     }
@@ -236,5 +260,47 @@ class BannerGroupController extends Controller
             'start_date' => $bannerActive->start_date ? $bannerActive->start_date->format('Y-m-d H:i') : 'No Start Date',
             'end_date' => $bannerActive->end_date ? $bannerActive->end_date->format('Y-m-d H:i') : 'No End Date',
         ]);
+    }
+
+    public function listJson()
+    {
+        $groups = BannerGroup::withCount('items')->orderBy('title')->get();
+        return response()->json($groups);
+    }
+
+    public function listActiveEmbedded()
+    {
+        $activeBanners = \App\Models\BannerActive::where('location', 'embedded')
+            ->with('bannerGroup')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($banner) {
+                return [
+                    'id' => $banner->id,
+                    'group_title' => $banner->bannerGroup->title ?? 'Unknown Group',
+                    'start_date' => $banner->start_date ? $banner->start_date->format('Y-m-d H:i') : '',
+                    'end_date' => $banner->end_date ? $banner->end_date->format('Y-m-d H:i') : '',
+                    'status' => $banner->is_active ? 'Active' : 'Inactive',
+                ];
+            });
+
+        return response()->json($activeBanners);
+    }
+
+    public function updateActiveEmbedded(Request $request, $id)
+    {
+        $banner = \App\Models\BannerActive::findOrFail($id);
+
+        $data = $request->validate([
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+        ]);
+
+        $banner->update([
+            'start_date' => $data['start_date'] ?? null,
+            'end_date' => $data['end_date'] ?? null,
+        ]);
+
+        return response()->json(['success' => true]);
     }
 }

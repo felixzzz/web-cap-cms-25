@@ -21,7 +21,9 @@ class BannerEmbed extends Component
     public $startDate;
     public $endDate;
 
-    protected $listeners = ['openBannerEmbed' => 'openModal'];
+    public $isHideInMobile = false;
+
+    // listeners moved below
 
     public function updatedIsAllSelected($value)
     {
@@ -58,12 +60,14 @@ class BannerEmbed extends Component
         if ($this->postType == 'news') {
             $types = ['news'];
         } elseif ($this->postType == 'blog') {
-            $types = ['blog']; // Assuming blog type is 'blog'
+            $types = ['blog'];
         }
 
         $query = Post::whereIn('type', $types);
 
-        if ($this->postType == 'all') {
+        if ($this->position == 'pages') {
+            $query = Post::where('type', 'page');
+        } elseif ($this->postType == 'all') {
             $query = Post::whereIn('type', ['article', 'blog', 'news']);
         }
 
@@ -116,21 +120,42 @@ class BannerEmbed extends Component
         $this->posts = $transformedPosts->values()->toArray();
     }
 
-    public function openModal($bannerGroupId)
+    public $position = 'article';
+    public $start_date;
+    public $end_date;
+    public $homepageSlots = [
+        'journey-growth' => 'Journey Growth',
+        'financial-report' => 'Financial Report',
+    ];
+
+    protected $listeners = ['openBannerEmbed' => 'openModal', 'forceSaveHomepage' => 'forceSaveHomepage'];
+
+    public function openModal($bannerGroupId, $position = 'article')
     {
         $this->bannerGroupId = $bannerGroupId;
         $bannerGroup = BannerGroup::find($bannerGroupId);
         $this->bannerGroupTitle = $bannerGroup ? $bannerGroup->title : '';
+        $this->position = $position;
 
         $this->selectedPosts = [];
-        $this->location = 'center';
+        $this->location = 'center'; // Default loc
+        if ($this->position === 'home') {
+            $this->location = 'journey-growth'; // Default slot for home
+        }
+
         $this->startDate = null;
         $this->endDate = null;
+        $this->isHideInMobile = false;
         $this->dispatchBrowserEvent('open-banner-embed-modal');
     }
 
     public function save()
     {
+        if ($this->position === 'home') {
+            $this->saveHomepage();
+            return;
+        }
+
         $this->validate([
             'bannerGroupId' => 'required|exists:banner_groups,id',
             'selectedPosts' => 'required|array|min:1',
@@ -140,6 +165,7 @@ class BannerEmbed extends Component
         ]);
 
         foreach ($this->selectedPosts as $compositeId) {
+            // ... existing save logic ...
             // Parse composite ID (e.g. "10_en")
             $parts = explode('_', $compositeId);
             if (count($parts) < 2)
@@ -158,10 +184,77 @@ class BannerEmbed extends Component
                     'location' => $this->location,
                     'start_date' => $this->startDate,
                     'end_date' => $this->endDate,
+                    'is_hide_in_mobile' => $this->isHideInMobile,
                 ]
             );
         }
 
+        $this->closeAndRefresh();
+    }
+
+    public function saveHomepage()
+    {
+        $this->validate([
+            'location' => 'required|in:journey-growth,financial-report',
+            'startDate' => 'nullable|date',
+            'endDate' => 'nullable|date|after_or_equal:startDate',
+        ]);
+
+        // Find homepage post
+        $homePost = Post::where('site_url', '/')->first();
+
+        if (!$homePost) {
+            $this->dispatchBrowserEvent('swal-error', ['title' => 'Error', 'text' => 'Homepage post not found (site_url = "/").']);
+            return;
+        }
+
+        // Check for existing active banner in this slot with same language
+        $existing = BannerActive::where('post_id', $homePost->id)
+            ->where('location', $this->location)
+            ->where('language', $this->language)
+            ->first();
+
+        if ($existing) {
+            $this->dispatchBrowserEvent('confirm-homepage-replace', [
+                'existingId' => $existing->id,
+                'location' => $this->location
+            ]);
+            return;
+        }
+
+        $this->createHomepageBanner($homePost->id);
+    }
+
+    public function forceSaveHomepage()
+    {
+        $homePost = Post::where('site_url', '/')->first();
+        if ($homePost) {
+            // Delete existing
+            BannerActive::where('post_id', $homePost->id)
+                ->where('location', $this->location)
+                ->where('language', $this->language)
+                ->delete();
+
+            $this->createHomepageBanner($homePost->id);
+        }
+    }
+
+    protected function createHomepageBanner($postId)
+    {
+        BannerActive::create([
+            'banner_group_id' => $this->bannerGroupId,
+            'post_id' => $postId,
+            'language' => $this->language,
+            'location' => $this->location,
+            'start_date' => $this->startDate,
+            'end_date' => $this->endDate,
+        ]);
+
+        $this->closeAndRefresh();
+    }
+
+    protected function closeAndRefresh()
+    {
         $this->dispatchBrowserEvent('close-banner-embed-modal');
         $this->emit('refreshBannerGroupTable');
         $this->dispatchBrowserEvent('flash-message', ['message' => 'Banners embedded successfully!', 'type' => 'success']);

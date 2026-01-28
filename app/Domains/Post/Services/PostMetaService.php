@@ -218,6 +218,7 @@ class PostMetaService extends BaseService
         unset($data['featured_image_remove']);
         unset($data['page']);
         unset($data['banner_active']);
+        unset($data['home_banners']);
         $data = array_diff_key($data, array_flip($post->getFillable()));
         $ret = $this->loopInsertPageMetaV2($post, $data, true);
         return $ret;
