@@ -127,7 +127,8 @@ class PageController extends Controller
             $location = $post->getMeta('location');
             $parents = Post::where('type', 'page')->where('id', '!=', $post->id)->pluck('id', 'title');
 
-            $bannerGroups = BannerGroup::whereIn('position', ['pages', 'home'])->get();
+            $bannerGroups = BannerGroup::where('position', 'pages')->get();
+            $homeBannerGroups = BannerGroup::where('position', 'home')->get();
             $homeBanners = BannerActive::where('post_id', $post->id)
                 ->whereIn('location', ['journey-growth', 'financial-report', 'financial-reports', 'navbar', 'footer'])
                 ->get()
@@ -138,7 +139,7 @@ class PageController extends Controller
                 })
                 ->groupBy('location');
 
-            return view('backend.page.edit', compact('template', 'components', 'post', 'parents', 'location', 'bannerGroups', 'homeBanners'))->withMeta($valueMeta);
+            return view('backend.page.edit', compact('template', 'components', 'post', 'parents', 'location', 'bannerGroups', 'homeBannerGroups', 'homeBanners'))->withMeta($valueMeta);
         }
         return back()->withFlashSuccess('The page have invalid format pages.');
     }
@@ -164,7 +165,8 @@ class PageController extends Controller
             $location = $post->getMeta('location');
             $parents = Post::where('type', 'page')->where('id', '!=', $post->id)->pluck('id', 'title');
 
-            $bannerGroups = BannerGroup::whereIn('position', ['pages', 'home'])->get();
+            $bannerGroups = BannerGroup::where('position', 'pages')->get();
+            $homeBannerGroups = BannerGroup::where('position', 'home')->get();
             $homeBanners = BannerActive::where('post_id', $post->id)
                 ->whereIn('location', ['journey-growth', 'financial-report', 'financial-reports', 'navbar', 'footer'])
                 ->get()
@@ -175,7 +177,7 @@ class PageController extends Controller
                 })
                 ->groupBy('location');
 
-            return view('backend.page.edit', compact('template', 'components', 'post', 'parents', 'location', 'bannerGroups', 'homeBanners'))->withMeta($valueMeta);
+            return view('backend.page.edit', compact('template', 'components', 'post', 'parents', 'location', 'bannerGroups', 'homeBannerGroups', 'homeBanners'))->withMeta($valueMeta);
         }
         return back()->withFlashSuccess('The page have invalid format pages.');
     }
@@ -241,7 +243,8 @@ class PageController extends Controller
         $location = $post->getMeta('location');
         $parents = Post::where('type', 'page')->where('id', '!=', $post->id)->pluck('id', 'title');
 
-        $bannerGroups = BannerGroup::whereIn('position', ['pages', 'home'])->get();
+        $bannerGroups = BannerGroup::where('position', 'pages')->get();
+        $homeBannerGroups = BannerGroup::where('position', 'home')->get();
         $homeBanners = BannerActive::where('post_id', $post->id)
             ->whereIn('location', ['journey-growth', 'financial-report', 'financial-reports', 'navbar', 'footer'])
             ->get()
@@ -253,7 +256,7 @@ class PageController extends Controller
             ->groupBy('location');
 
         session()->flash('success', __('Page was successfully updated.'));
-        return view('backend.page.edit', compact('template', 'components', 'post', 'parents', 'location', 'bannerGroups', 'homeBanners'))->withMeta($valueMeta)->withFlashSuccess(__('Page was successfully updated.'));
+        return view('backend.page.edit', compact('template', 'components', 'post', 'parents', 'location', 'bannerGroups', 'homeBannerGroups', 'homeBanners'))->withMeta($valueMeta)->withFlashSuccess(__('Page was successfully updated.'));
     }
 
     public function delete(Post $post)

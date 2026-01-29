@@ -10,7 +10,9 @@
                     <form id="bannerEmbedForm">
                         <div class="mb-3">
                             <label for="embed_banner_group_id" class="form-label">Banner Group</label>
-                            <select class="form-select" id="embed_banner_group_id" required>
+                            <select class="form-select" id="embed_banner_group_id" required data-control="select2"
+                                data-placeholder="Select Banner Group" data-dropdown-parent="#bannerEmbedModal"
+                                style="width: 100%">
                                 <option value="">Loading...</option>
                             </select>
                         </div>
@@ -66,10 +68,8 @@
         let activeEditor = null;
         const bannerEmbedModal = document.getElementById('bannerEmbedModal');
 
-        // Fetch Banner Groups on Modal Open
         bannerEmbedModal.addEventListener('show.bs.modal', function () {
             fetchBannerGroups();
-            // fetchActiveBanners(); // Removed
         });
 
         // Listen for event to set active editor
@@ -81,19 +81,22 @@
             fetch("{{ route('admin.banner.list-json') }}")
                 .then(res => res.json())
                 .then(data => {
-                    const select = document.getElementById('embed_banner_group_id');
-                    select.innerHTML = '<option value="">Select Group</option>';
+                    const select = $('#embed_banner_group_id');
+                    select.empty();
+                    select.append('<option value="">Select Group</option>');
                     data.forEach(group => {
-                        const option = document.createElement('option');
-                        option.value = group.id;
-                        option.textContent = `${group.title} (${group.items_count || 0} banners)`;
-                        select.appendChild(option);
+                        select.append(new Option(`${group.title} (${group.items_count || 0} banners)`, group.id));
+                    });
+
+                    select.select2({
+                        width: '100%',
+                        dropdownParent: $('#bannerEmbedModal'),
+                        minimumResultsForSearch: 0
                     });
                 })
                 .catch(err => console.error("Error fetching groups:", err));
         }
 
-        // function fetchActiveBanners() { ... } - Removed or Kept but unused
 
         function fetchActiveBanners() {
             fetch("{{ route('admin.banner.active.list') }}")

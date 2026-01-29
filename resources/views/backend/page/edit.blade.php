@@ -115,13 +115,13 @@
                                                 @php
                                                     $activeNav = isset($homeBanners['navbar']) ? $homeBanners['navbar']->where('language', $lang_code)->first() : null;
                                                 @endphp
-                                                <div class="form-group row border-bottom pb-5 mb-5 navbar-banner-config">
-                                                    <label class="col-md-2 col-form-label fw-bold text-capitalize">Banner Navbar</label>
+                                                <div class="form-group pt-4 row border-bottom pb-5 mb-5 navbar-banner-config">
+                                                    <label class="col-md-2 col-form-label text-capitalize">Banner Navbar</label>
                                                     <div class="col-md-10">
                                                         <div class="row">
                                                             <div class="col-md-4">
                                                                 <label class="form-label">Banner Group</label>
-                                                                <select name="home_banners[{{ $lang_code }}][navbar][banner_group_id]" class="form-select form-select-solid">
+                                                                <select name="home_banners[{{ $lang_code }}][navbar][banner_group_id]" class="form-select form-select-solid banner-group-select" data-control="select2" data-placeholder="Select Banner Group">
                                                                     <option value="">-- Select Banner Group --</option>
                                                                     @foreach ($bannerGroups as $bg)
                                                                         <option value="{{ $bg->id }}" {{ optional($activeNav)->banner_group_id == $bg->id ? 'selected' : '' }}>{{ $bg->title }}</option>
@@ -162,7 +162,7 @@
                                                             $active = isset($homeBanners[$pos]) ? $homeBanners[$pos]->where('language', $lang_code)->first() : null;
                                                         @endphp
                                                         <div class="form-group row border-top pt-5 mt-5 {{ $pos }}-banner-config">
-                                                            <label class="col-md-2 col-form-label fw-bold text-capitalize">
+                                                            <label class="col-md-2 col-form-label text-capitalize">
                                                                 Banner {{ str_replace('-', ' ', $pos) }}
                                                             </label>
                                                             <div class="col-md-10">
@@ -170,9 +170,9 @@
                                                                     <div class="col-md-4">
                                                                         <label class="form-label">Banner Group</label>
                                                                         <select name="home_banners[{{ $lang_code }}][{{ $pos }}][banner_group_id]"
-                                                                            class="form-select form-select-solid">
+                                                                            class="form-select form-select-solid banner-group-select" data-control="select2" data-placeholder="Select Banner Group">
                                                                             <option value="">-- Select Banner Group --</option>
-                                                                            @foreach ($bannerGroups as $bg)
+                                                                            @foreach ($homeBannerGroups as $bg)
                                                                                 <option value="{{ $bg->id }}"
                                                                                     {{ optional($active)->banner_group_id == $bg->id ? 'selected' : '' }}>
                                                                                     {{ $bg->title }}
@@ -208,7 +208,7 @@
                                                         <div class="row">
                                                             <div class="col-md-4">
                                                                 <label class="form-label">Banner Group</label>
-                                                                <select name="home_banners[{{ $lang_code }}][footer][banner_group_id]" class="form-select form-select-solid">
+                                                                <select name="home_banners[{{ $lang_code }}][footer][banner_group_id]" class="form-select form-select-solid banner-group-select" data-control="select2" data-placeholder="Select Banner Group">
                                                                     <option value="">-- Select Banner Group --</option>
                                                                     @foreach ($bannerGroups as $bg)
                                                                         <option value="{{ $bg->id }}" {{ optional($activeFoot)->banner_group_id == $bg->id ? 'selected' : '' }}>{{ $bg->title }}</option>
@@ -239,7 +239,7 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <label class="form-label">Banner Group</label>
-                                                    <select name="home_banners[id][navbar][banner_group_id]" class="form-select form-select-solid">
+                                                    <select name="home_banners[id][navbar][banner_group_id]" class="form-select form-select-solid banner-group-select" data-control="select2" data-placeholder="Select Banner Group">
                                                         <option value="">-- Select Banner Group --</option>
                                                         @foreach ($bannerGroups as $bg)
                                                             <option value="{{ $bg->id }}" {{ optional($activeNav)->banner_group_id == $bg->id ? 'selected' : '' }}>{{ $bg->title }}</option>
@@ -287,9 +287,9 @@
                                                         <div class="col-md-4">
                                                             <label class="form-label">Banner Group</label>
                                                             <select name="home_banners[id][{{ $pos }}][banner_group_id]"
-                                                                class="form-select form-select-solid">
+                                                                class="form-select form-select-solid banner-group-select" data-control="select2" data-placeholder="Select Banner Group">
                                                                 <option value="">-- Select Banner Group --</option>
-                                                                @foreach ($bannerGroups as $bg)
+                                                                @foreach ($homeBannerGroups as $bg)
                                                                     <option value="{{ $bg->id }}"
                                                                         {{ optional($active)->banner_group_id == $bg->id ? 'selected' : '' }}>
                                                                         {{ $bg->title }}
@@ -325,7 +325,7 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <label class="form-label">Banner Group</label>
-                                                    <select name="home_banners[id][footer][banner_group_id]" class="form-select form-select-solid">
+                                                    <select name="home_banners[id][footer][banner_group_id]" class="form-select form-select-solid banner-group-select" data-control="select2" data-placeholder="Select Banner Group">
                                                         <option value="">-- Select Banner Group --</option>
                                                         @foreach ($bannerGroups as $bg)
                                                             <option value="{{ $bg->id }}" {{ optional($activeFoot)->banner_group_id == $bg->id ? 'selected' : '' }}>{{ $bg->title }}</option>
@@ -391,5 +391,30 @@
         @if ($post->status === $model::STATUS_SCHEDULE)
             $('#divPublishAt').show();
         @endif
+        
+        // Select2 initialization with tab fix
+        $(document).ready(function() {
+            // Initialize Select2 for all visible selects initially
+            $('.banner-group-select').select2({
+                width: '100%',
+                minimumResultsForSearch: 0 // Always show search
+            });
+
+            // specific fix for tabs: destroy and re-init on show
+            $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var targetId = $(e.target).data('bs-target'); // e.g. #id
+                var $target = $(targetId);
+                
+                $target.find('.banner-group-select').each(function() {
+                     if ($(this).data('select2')) {
+                        $(this).select2('destroy');
+                     }
+                     $(this).select2({
+                        width: '100%',
+                        minimumResultsForSearch: 0 // Always show search
+                     });
+                });
+            });
+        });
     </script>
 @endpush
