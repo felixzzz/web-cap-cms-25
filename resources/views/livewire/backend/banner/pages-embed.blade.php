@@ -4,7 +4,8 @@
             <div class="modal-content mh-650px overflow-scroll">
                 <div class="modal-header">
                     <h2 class="fw-bold">
-                        @lang('Embed Banner to Pages'): <span class="badge badge-light-primary fs-4">{{ $bannerGroupTitle }}</span>
+                        @lang('Embed Banner to Pages'): <span
+                            class="badge badge-light-primary fs-4">{{ $bannerGroupTitle }}</span>
                     </h2>
                     <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
                         <span class="svg-icon svg-icon-1">
@@ -12,8 +13,8 @@
                                 fill="none">
                                 <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
                                     transform="rotate(-45 6 17.3137)" fill="currentColor" />
-                                <rect x="7.41422" y="6" width="16" height="2" rx="1"
-                                    transform="rotate(45 7.41422 6)" fill="currentColor" />
+                                <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)"
+                                    fill="currentColor" />
                             </svg>
                         </span>
                     </div>
@@ -76,8 +77,8 @@
                                         <option value="id">ID</option>
                                         <option value="en">EN</option>
                                     </select>
-                                    <input type="text" class="form-control form-control-solid"
-                                        placeholder="Search..." wire:model.debounce.500ms="search">
+                                    <input type="text" class="form-control form-control-solid" placeholder="Search..."
+                                        wire:model.debounce.500ms="search">
                                 </div>
                             </div>
                             <div class="mh-300px scroll-y p-3 p-lg-5 bg-light rounded">
@@ -130,6 +131,22 @@
 
         window.addEventListener('close-banner-pages-embed-modal', event => {
             $('#bannerPagesEmbedModal').modal('hide');
+        });
+
+        window.addEventListener('swal:confirm-replace', event => {
+            Swal.fire({
+                title: 'Conflict Detected!',
+                text: "There are existing banners in the selected date range for " + event.detail.count + " posts. Do you want to replace them?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, replace them!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    @this.call('forceSave');
+                }
+            })
         });
     </script>
 </div>

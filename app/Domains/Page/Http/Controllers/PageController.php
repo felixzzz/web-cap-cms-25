@@ -241,20 +241,16 @@ class PageController extends Controller
         $location = $post->getMeta('location');
         $parents = Post::where('type', 'page')->where('id', '!=', $post->id)->pluck('id', 'title');
 
-        $bannerGroups = [];
-        $homeBanners = [];
-        if ($post->slug == 'home' || $post->site_url == '/') {
-            $bannerGroups = BannerGroup::whereIn('position', ['pages', 'home'])->get();
-            $homeBanners = BannerActive::where('post_id', $post->id)
-                ->whereIn('location', ['journey-growth', 'financial-report', 'financial-reports'])
-                ->get()
-                ->map(function ($banner) {
-                    if ($banner->location == 'financial-report')
-                        $banner->location = 'financial-reports';
-                    return $banner;
-                })
-                ->groupBy('location');
-        }
+        $bannerGroups = BannerGroup::whereIn('position', ['pages', 'home'])->get();
+        $homeBanners = BannerActive::where('post_id', $post->id)
+            ->whereIn('location', ['journey-growth', 'financial-report', 'financial-reports', 'navbar', 'footer'])
+            ->get()
+            ->map(function ($banner) {
+                if ($banner->location == 'financial-report')
+                    $banner->location = 'financial-reports';
+                return $banner;
+            })
+            ->groupBy('location');
 
         session()->flash('success', __('Page was successfully updated.'));
         return view('backend.page.edit', compact('template', 'components', 'post', 'parents', 'location', 'bannerGroups', 'homeBanners'))->withMeta($valueMeta)->withFlashSuccess(__('Page was successfully updated.'));

@@ -260,5 +260,21 @@
                 }
             })
         });
+
+        window.addEventListener('swal:confirm-replace', event => {
+            Swal.fire({
+                title: 'Conflict Detected!',
+                text: "There are existing banners in the selected date range for " + event.detail.count + " posts. Do you want to replace them?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, replace them!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    @this.call('forceSave');
+                }
+            })
+        });
     </script>
 </div>

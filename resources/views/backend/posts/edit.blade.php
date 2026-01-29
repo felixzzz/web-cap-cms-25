@@ -184,14 +184,16 @@
                                                                          id="v-pills-{{$location}}-{{$lang_code}}" 
                                                                          role="tabpanel" 
                                                                          aria-labelledby="v-pills-{{$location}}-{{$lang_code}}-tab">
-                                                                        
                                                                         <div class="mb-5">
                                                                             <label class="form-label">Banner Group</label>
-                                                                            <select name="banner_active[{{$lang_code}}][{{$location}}][group_id]" class="form-select form-select-solid">
+                                                                            <select name="banner_active[{{$lang_code}}][{{$location}}][group_id]" 
+                                                                                    class="form-select form-select-solid banner-group-select" 
+                                                                                    data-control="select2" 
+                                                                                    data-placeholder="Select Banner Group">
                                                                                 <option value="">Select Banner Group</option>
                                                                                 @foreach($bannerGroups as $group)
                                                                                     <option value="{{ $group->id }}" {{ $activeBanner && $activeBanner->banner_group_id == $group->id ? 'selected' : '' }}>
-                                                                                        {{ $group->title }} ({{ $group->banners_count }} banners)
+                                                                                        {{ $group->title }} ({{ $group->items_count }} banners)
                                                                                     </option>
                                                                                 @endforeach
                                                                             </select>
@@ -281,9 +283,33 @@
 @endpush
 @push('scripts')
 <script>
+    $(document).ready(function() {
+        // Initialize Select2 for all visible selects initially
+        $('.banner-group-select').select2({
+            width: '100%',
+            minimumResultsForSearch: 0 // Always show search
+        });
+
+        // specific fix for tabs: destroy and re-init on show
+        $('button[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
+            var targetId = $(e.target).data('bs-target'); // e.g. #v-pills-left-en
+            var $target = $(targetId);
+            
+            $target.find('.banner-group-select').each(function() {
+                 if ($(this).data('select2')) {
+                    $(this).select2('destroy');
+                 }
+                 $(this).select2({
+                    width: '100%',
+                    minimumResultsForSearch: 0 // Always show search
+                 });
+            });
+        });
+    });
+
     $(document).on('click', '.clear-banner-btn', function() {
         var container = $(this).closest('.tab-pane');
-        container.find('select').val('').trigger('change');
+        container.find('select').val(null).trigger('change'); // .val(null) works better for select2 clearing
         container.find('input[type="datetime-local"]').val('');
     });
 </script>

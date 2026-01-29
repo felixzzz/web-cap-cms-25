@@ -127,20 +127,104 @@ class BannerPagesEmbed extends Component
             'endDate' => 'nullable|date|after_or_equal:startDate',
         ]);
 
+        $conflictsCount = 0;
+
         foreach ($this->selectedPosts as $compositeId) {
             $parts = explode('_', $compositeId);
-            if (count($parts) < 2) continue;
+            if (count($parts) < 2)
+                continue;
 
             $postId = $parts[0];
             $lang = $parts[1];
 
-            BannerActive::updateOrCreate(
+            // Check for conflicts
+            $query = BannerActive::where('post_id', $postId)
+                ->where('language', $lang)
+                ->where('location', $this->location);
+
+            $start = $this->startDate;
+            $end = $this->endDate;
+
+            $query->where(function ($q) use ($start, $end) {
+                if ($end) {
+                    // If new banner ends at $end, it overlaps with existing if existing starts before $end
+                    // (and existing ends after $start, handled below)
+                    $q->where(function ($sub) use ($end) {
+                        $sub->whereNull('start_date')
+                            ->orWhere('start_date', '<=', $end);
+                    });
+                }
+
+                if ($start) {
+                    // If new banner starts at $start, it overlaps with existing if existing ends after $start
+                    $q->where(function ($sub) use ($start) {
+                        $sub->whereNull('end_date')
+                            ->orWhere('end_date', '>=', $start);
+                    });
+                }
+            });
+
+            if ($query->exists()) {
+                $conflictsCount++;
+            }
+        }
+
+        if ($conflictsCount > 0) {
+            $this->dispatchBrowserEvent('swal:confirm-replace', [
+                'count' => $conflictsCount,
+            ]);
+            return;
+        }
+
+        $this->performSave();
+    }
+
+    public function forceSave()
+    {
+        $this->performSave(true);
+    }
+
+    public function performSave($deleteConflicts = false)
+    {
+        foreach ($this->selectedPosts as $compositeId) {
+            $parts = explode('_', $compositeId);
+            if (count($parts) < 2)
+                continue;
+
+            $postId = $parts[0];
+            $lang = $parts[1];
+
+            if ($deleteConflicts) {
+                $query = BannerActive::where('post_id', $postId)
+                    ->where('language', $lang)
+                    ->where('location', $this->location);
+
+                $start = $this->startDate;
+                $end = $this->endDate;
+
+                $query->where(function ($q) use ($start, $end) {
+                    if ($end) {
+                        $q->where(function ($sub) use ($end) {
+                            $sub->whereNull('start_date')
+                                ->orWhere('start_date', '<=', $end);
+                        });
+                    }
+                    if ($start) {
+                        $q->where(function ($sub) use ($start) {
+                            $sub->whereNull('end_date')
+                                ->orWhere('end_date', '>=', $start);
+                        });
+                    }
+                });
+
+                $query->delete();
+            }
+
+            BannerActive::firstOrCreate(
                 [
                     'banner_group_id' => $this->bannerGroupId,
                     'post_id' => $postId,
                     'language' => $lang,
-                ],
-                [
                     'location' => $this->location,
                     'start_date' => $this->startDate,
                     'end_date' => $this->endDate,

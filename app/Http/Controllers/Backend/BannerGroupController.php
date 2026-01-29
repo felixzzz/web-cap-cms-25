@@ -264,7 +264,7 @@ class BannerGroupController extends Controller
 
     public function listJson()
     {
-        $groups = BannerGroup::withCount('items')->orderBy('title')->get();
+        $groups = BannerGroup::where('position', 'article')->withCount('items')->orderBy('title')->get();
         return response()->json($groups);
     }
 
