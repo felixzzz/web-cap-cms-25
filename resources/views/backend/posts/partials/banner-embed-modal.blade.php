@@ -6,57 +6,25 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <ul class="nav nav-tabs mb-3" id="bannerEmbedTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="new-tab" data-bs-toggle="tab" data-bs-target="#new-banner"
-                            type="button" role="tab" aria-controls="new-banner" aria-selected="true">New
-                            Banner</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="active-tab" data-bs-toggle="tab" data-bs-target="#active-list"
-                            type="button" role="tab" aria-controls="active-list" aria-selected="false">Active
-                            Banners</button>
-                    </li>
-                </ul>
-                <div class="tab-content" id="bannerEmbedTabContent">
-                    <div class="tab-pane fade show active" id="new-banner" role="tabpanel" aria-labelledby="new-tab">
-                        <form id="bannerEmbedForm">
-                            <div class="mb-3">
-                                <label for="embed_banner_group_id" class="form-label">Banner Group</label>
-                                <select class="form-select" id="embed_banner_group_id" required>
-                                    <option value="">Loading...</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="embed_start_date" class="form-label">Start Date</label>
-                                <input type="datetime-local" class="form-control" id="embed_start_date">
-                            </div>
-                            <div class="mb-3">
-                                <label for="embed_end_date" class="form-label">End Date</label>
-                                <input type="datetime-local" class="form-control" id="embed_end_date">
-                            </div>
-                        </form>
-                    </div>
-                    <div class="tab-pane fade" id="active-list" role="tabpanel" aria-labelledby="active-tab">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped" id="activeBannersTable">
-                                <thead>
-                                    <tr>
-                                        <th>Group</th>
-                                        <th>Start Date</th>
-                                        <th>End Date</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td colspan="5" class="text-center">Loading...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                <div id="bannerEmbedContent">
+                    <form id="bannerEmbedForm">
+                        <div class="mb-3">
+                            <label for="embed_banner_group_id" class="form-label">Banner Group</label>
+                            <select class="form-select" id="embed_banner_group_id" required data-control="select2"
+                                data-placeholder="Select Banner Group" data-dropdown-parent="#bannerEmbedModal"
+                                style="width: 100%">
+                                <option value="">Loading...</option>
+                            </select>
                         </div>
-                    </div>
+                        <div class="mb-3">
+                            <label for="embed_start_date" class="form-label">Start Date</label>
+                            <input type="datetime-local" class="form-control" id="embed_start_date">
+                        </div>
+                        <div class="mb-3">
+                            <label for="embed_end_date" class="form-label">End Date</label>
+                            <input type="datetime-local" class="form-control" id="embed_end_date">
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="modal-footer">
@@ -100,10 +68,8 @@
         let activeEditor = null;
         const bannerEmbedModal = document.getElementById('bannerEmbedModal');
 
-        // Fetch Banner Groups on Modal Open
-        bannerEmbedModal.addEventListener('show.bs.modal', function() {
+        bannerEmbedModal.addEventListener('show.bs.modal', function () {
             fetchBannerGroups();
-            fetchActiveBanners();
         });
 
         // Listen for event to set active editor
@@ -115,17 +81,22 @@
             fetch("{{ route('admin.banner.list-json') }}")
                 .then(res => res.json())
                 .then(data => {
-                    const select = document.getElementById('embed_banner_group_id');
-                    select.innerHTML = '<option value="">Select Group</option>';
+                    const select = $('#embed_banner_group_id');
+                    select.empty();
+                    select.append('<option value="">Select Group</option>');
                     data.forEach(group => {
-                        const option = document.createElement('option');
-                        option.value = group.id;
-                        option.textContent = `${group.title} (${group.items_count || 0} banners)`;
-                        select.appendChild(option);
+                        select.append(new Option(`${group.title} (${group.items_count || 0} banners)`, group.id));
+                    });
+
+                    select.select2({
+                        width: '100%',
+                        dropdownParent: $('#bannerEmbedModal'),
+                        minimumResultsForSearch: 0
                     });
                 })
                 .catch(err => console.error("Error fetching groups:", err));
         }
+
 
         function fetchActiveBanners() {
             fetch("{{ route('admin.banner.active.list') }}")
@@ -159,7 +130,7 @@
 
                     // Bind edit buttons
                     document.querySelectorAll('.edit-active-banner').forEach(btn => {
-                        btn.addEventListener('click', function() {
+                        btn.addEventListener('click', function () {
                             const id = this.getAttribute('data-id');
                             const start = this.getAttribute('data-start');
                             const end = this.getAttribute('data-end');
@@ -183,7 +154,7 @@
             return dateStr.replace(' ', 'T');
         }
 
-        document.getElementById('saveBannerEmbed').addEventListener('click', function() {
+        document.getElementById('saveBannerEmbed').addEventListener('click', function () {
             // Only handle insertion if "New Banner" tab is active. 
             // If "Active Banners" tab is active, this button does nothing or could be hidden.
             const groupId = document.getElementById('embed_banner_group_id').value;
@@ -207,19 +178,19 @@
                 'content'));
 
             fetch("{{ route('admin.banner.active.embedded') }}", {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
                         if (activeEditor) {
                             activeEditor.model.change(writer => {
                                 const bannerElement = writer.createElement(
-                                'embeddedBanner', {
+                                    'embeddedBanner', {
                                     id: data.id,
                                     title: data.group_title,
                                     startDate: data.start_date,
@@ -248,7 +219,7 @@
         });
 
         // Update Active Banner
-        document.getElementById('updateActiveBannerBtn').addEventListener('click', function() {
+        document.getElementById('updateActiveBannerBtn').addEventListener('click', function () {
             const id = document.getElementById('edit_active_banner_id').value;
             const startDate = document.getElementById('edit_start_date').value;
             const endDate = document.getElementById('edit_end_date').value;
@@ -260,12 +231,12 @@
                 'content'));
 
             fetch("{{ route('admin.banner.active.update', ['id' => ':id']) }}".replace(':id', id), {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {

@@ -19,6 +19,7 @@ class BannerPagesEmbed extends Component
     public $isAllSelected = false;
     public $startDate;
     public $endDate;
+    public $conflictDetails = [];
 
     public $locations = [
         'navbar' => 'Navbar',
@@ -127,20 +128,110 @@ class BannerPagesEmbed extends Component
             'endDate' => 'nullable|date|after_or_equal:startDate',
         ]);
 
+        $this->conflictDetails = [];
+
         foreach ($this->selectedPosts as $compositeId) {
             $parts = explode('_', $compositeId);
-            if (count($parts) < 2) continue;
+            if (count($parts) < 2)
+                continue;
 
             $postId = $parts[0];
             $lang = $parts[1];
 
-            BannerActive::updateOrCreate(
+            // Check for conflicts
+            $query = BannerActive::where('post_id', $postId)
+                ->where('language', $lang)
+                ->where('location', $this->location);
+
+            $start = $this->startDate;
+            $end = $this->endDate;
+
+            $query->where(function ($q) use ($start, $end) {
+                if ($end) {
+                    $q->where(function ($sub) use ($end) {
+                        $sub->whereNull('start_date')
+                            ->orWhere('start_date', '<=', $end);
+                    });
+                }
+
+                if ($start) {
+                    $q->where(function ($sub) use ($start) {
+                        $sub->whereNull('end_date')
+                            ->orWhere('end_date', '>=', $start);
+                    });
+                }
+            });
+
+            $conflicts = $query->with(['post', 'bannerGroup'])->get();
+            if ($conflicts->count() > 0) {
+                // Get post title from the first conflict
+                $conflict = $conflicts->first();
+                $postTitle = $conflict->post ? $conflict->post->title : 'Unknown Post ID: ' . $conflict->post_id;
+                $grp = $conflict->bannerGroup ? $conflict->bannerGroup->title : 'Unknown Group';
+                $startStr = $conflict->start_date ? $conflict->start_date->format('Y-m-d') : '∞';
+                $endStr = $conflict->end_date ? $conflict->end_date->format('Y-m-d') : '∞';
+
+                $this->conflictDetails[] = "{$postTitle} ({$lang}): {$grp} ({$startStr} to {$endStr})";
+            }
+        }
+
+        if (count($this->conflictDetails) > 0) {
+            \Illuminate\Support\Facades\Log::info('Conflict Details:', $this->conflictDetails);
+            $this->dispatchBrowserEvent('swal:confirm-overlap', [
+                'details' => $this->conflictDetails,
+            ]);
+            return;
+        }
+
+        $this->performSave();
+    }
+
+    public function forceSave()
+    {
+        $this->performSave(false); // Pass false to NOT delete conflicts
+    }
+
+    public function performSave($deleteConflicts = false)
+    {
+        foreach ($this->selectedPosts as $compositeId) {
+            $parts = explode('_', $compositeId);
+            if (count($parts) < 2)
+                continue;
+
+            $postId = $parts[0];
+            $lang = $parts[1];
+
+            if ($deleteConflicts) {
+                $query = BannerActive::where('post_id', $postId)
+                    ->where('language', $lang)
+                    ->where('location', $this->location);
+
+                $start = $this->startDate;
+                $end = $this->endDate;
+
+                $query->where(function ($q) use ($start, $end) {
+                    if ($end) {
+                        $q->where(function ($sub) use ($end) {
+                            $sub->whereNull('start_date')
+                                ->orWhere('start_date', '<=', $end);
+                        });
+                    }
+                    if ($start) {
+                        $q->where(function ($sub) use ($start) {
+                            $sub->whereNull('end_date')
+                                ->orWhere('end_date', '>=', $start);
+                        });
+                    }
+                });
+
+                $query->delete();
+            }
+
+            BannerActive::firstOrCreate(
                 [
                     'banner_group_id' => $this->bannerGroupId,
                     'post_id' => $postId,
                     'language' => $lang,
-                ],
-                [
                     'location' => $this->location,
                     'start_date' => $this->startDate,
                     'end_date' => $this->endDate,

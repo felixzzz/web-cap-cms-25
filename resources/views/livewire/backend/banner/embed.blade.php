@@ -245,18 +245,57 @@
             });
         });
 
-        window.addEventListener('confirm-homepage-replace', event => {
+        window.addEventListener('swal:confirm-homepage-overlap', event => {
+             let details = event.detail.details;
+            let detailsHtml = '<ul class="text-start" style="text-align: left; list-style-position: inside;">';
+             if (Array.isArray(details)) {
+                details.forEach(detail => {
+                    detailsHtml += '<li>' + detail + '</li>';
+                });
+            } else {
+                 detailsHtml += '<li>' + JSON.stringify(details) + '</li>';
+            }
+            detailsHtml += '</ul>';
+
             Swal.fire({
-                title: 'Slot already taken!',
-                text: "A banner is already active in this slot. Do you want to replace it?",
+                title: 'Conflict Detected (Homepage)!',
+                html: "A banner is already active in this slot (overlapping logic enabled):<br><br>" + detailsHtml + "<br>Do you want to add this banner anyway?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, replace it!'
+                confirmButtonText: 'Yes, add it!'
             }).then((result) => {
                 if (result.isConfirmed) {
                     @this.call('forceSaveHomepage');
+                }
+            })
+        });
+
+        window.addEventListener('swal:confirm-overlap', event => {
+            let details = event.detail.details;
+            console.log('Conflict Details received (Embed):', details);
+            let detailsHtml = '<ul class="text-start" style="text-align: left; list-style-position: inside;">';
+             if (Array.isArray(details)) {
+                details.forEach(detail => {
+                    detailsHtml += '<li>' + detail + '</li>';
+                });
+            } else {
+                 detailsHtml += '<li>' + JSON.stringify(details) + '</li>';
+            }
+            detailsHtml += '</ul>';
+
+            Swal.fire({
+                title: 'Conflict Detected!',
+                html: "There are existing banners overlapping in the selected date range:<br><br>" + detailsHtml + "<br>Do you want to add this banner anyway (will show based on latest start date)?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, add it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    @this.call('forceSave');
                 }
             })
         });
