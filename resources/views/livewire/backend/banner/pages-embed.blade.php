@@ -133,15 +133,27 @@
             $('#bannerPagesEmbedModal').modal('hide');
         });
 
-        window.addEventListener('swal:confirm-replace', event => {
+        window.addEventListener('swal:confirm-overlap', event => {
+            let details = event.detail.details;
+            console.log('Conflict Details received:', details);
+            let detailsHtml = '<ul class="text-start" style="text-align: left; list-style-position: inside;">';
+            if (Array.isArray(details)) {
+                details.forEach(detail => {
+                    detailsHtml += '<li>' + detail + '</li>';
+                });
+            } else {
+                detailsHtml += '<li>' + JSON.stringify(details) + '</li>';
+            }
+            detailsHtml += '</ul>';
+
             Swal.fire({
                 title: 'Conflict Detected!',
-                text: "There are existing banners in the selected date range for " + event.detail.count + " posts. Do you want to replace them?",
+                html: "There are existing banners overlapping in the selected date range:<br><br>" + detailsHtml + "<br>Do you want to add this banner anyway (will show based on latest start date)?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, replace them!'
+                confirmButtonText: 'Yes, add it!'
             }).then((result) => {
                 if (result.isConfirmed) {
                     @this.call('forceSave');

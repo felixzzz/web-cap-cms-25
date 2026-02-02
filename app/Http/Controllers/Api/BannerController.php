@@ -39,6 +39,7 @@ class BannerController extends Controller
                         ->orWhereNull('end_date');
                 })
                 ->with(['bannerGroup.items'])
+                ->orderBy('start_date', 'desc')
                 ->get();
 
             $response = [
@@ -55,6 +56,11 @@ class BannerController extends Controller
 
                 // Validate location key exists in our response structure
                 if (array_key_exists($location, $response)) {
+                    // Check if this location is already filled (Latest banner takes priority)
+                    if (!empty($response[$location])) {
+                        continue;
+                    }
+
                     // If a banner group is attached, merge its banners into the location array
                     if ($activeBanner->bannerGroup) {
                         if ($activeBanner->bannerGroup->items) {
@@ -159,6 +165,11 @@ class BannerController extends Controller
 
                 // Validate location key exists in our response structure
                 if (array_key_exists($location, $response)) {
+                    // Check if this location is already filled (Latest banner takes priority)
+                    if (!empty($response[$location])) {
+                        continue;
+                    }
+
                     // If a banner group is attached, merge its banners into the location array
                     if ($activeBanner->bannerGroup) {
                         if ($activeBanner->bannerGroup->items) {

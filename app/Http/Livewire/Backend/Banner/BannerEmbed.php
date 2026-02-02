@@ -20,6 +20,7 @@ class BannerEmbed extends Component
     public $isAllSelected = false;
     public $startDate;
     public $endDate;
+    public $conflictDetails = [];
 
     public $isHideInMobile = false;
 
@@ -198,14 +199,19 @@ class BannerEmbed extends Component
                 }
             });
 
-            if ($query->exists()) {
-                $conflictsCount++;
+            $conflicts = $query->with('post')->get();
+            if ($conflicts->count() > 0) {
+                // Get post title from the first conflict
+                $conflict = $conflicts->first();
+                $postTitle = $conflict->post ? $conflict->post->title : 'Unknown Post ID: ' . $conflict->post_id;
+                $this->conflictDetails[] = $postTitle . " ({$lang})";
             }
         }
 
-        if ($conflictsCount > 0) {
-            $this->dispatchBrowserEvent('swal:confirm-replace', [
-                'count' => $conflictsCount,
+        if (count($this->conflictDetails) > 0) {
+            \Illuminate\Support\Facades\Log::info('Conflict Details Embed:', $this->conflictDetails);
+            $this->dispatchBrowserEvent('swal:confirm-overlap', [
+                'details' => $this->conflictDetails,
             ]);
             return;
         }
@@ -215,7 +221,7 @@ class BannerEmbed extends Component
 
     public function forceSave()
     {
-        $this->performSave(true);
+        $this->performSave(false);
     }
 
     public function performSave($deleteConflicts = false)
@@ -288,16 +294,41 @@ class BannerEmbed extends Component
             return;
         }
 
-        // Check for existing active banner in this slot with same language
-        $existing = BannerActive::where('post_id', $homePost->id)
+        // Check for conflicts with date overlap
+        $query = BannerActive::where('post_id', $homePost->id)
             ->where('location', $this->location)
-            ->where('language', $this->language)
-            ->first();
+            ->where('language', $this->language);
 
-        if ($existing) {
-            $this->dispatchBrowserEvent('confirm-homepage-replace', [
-                'existingId' => $existing->id,
-                'location' => $this->location
+        $start = $this->startDate;
+        $end = $this->endDate;
+
+        $query->where(function ($q) use ($start, $end) {
+            if ($end) {
+                $q->where(function ($sub) use ($end) {
+                    $sub->whereNull('start_date')
+                        ->orWhere('start_date', '<=', $end);
+                });
+            }
+            if ($start) {
+                $q->where(function ($sub) use ($start) {
+                    $sub->whereNull('end_date')
+                        ->orWhere('end_date', '>=', $start);
+                });
+            }
+        });
+
+        $conflicts = $query->with('bannerGroup')->get();
+
+        if ($conflicts->count() > 0) {
+            $conflictDetails = [];
+            foreach ($conflicts as $conflict) {
+                $grp = $conflict->bannerGroup ? $conflict->bannerGroup->title : 'Unknown Group';
+                $dates = ($conflict->start_date ? $conflict->start_date->format('Y-m-d') : '∞') . ' to ' . ($conflict->end_date ? $conflict->end_date->format('Y-m-d') : '∞');
+                $conflictDetails[] = "{$grp} ({$dates})";
+            }
+
+            $this->dispatchBrowserEvent('swal:confirm-homepage-overlap', [
+                'details' => $conflictDetails,
             ]);
             return;
         }
@@ -309,11 +340,8 @@ class BannerEmbed extends Component
     {
         $homePost = Post::where('site_url', '/')->first();
         if ($homePost) {
-            // Delete existing
-            BannerActive::where('post_id', $homePost->id)
-                ->where('location', $this->location)
-                ->where('language', $this->language)
-                ->delete();
+            // Do NOT delete existing. Just add the new one.
+            // Banners will be filtered by API priority (start_date desc).
 
             $this->createHomepageBanner($homePost->id);
         }

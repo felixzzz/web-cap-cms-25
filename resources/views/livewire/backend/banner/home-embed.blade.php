@@ -13,8 +13,8 @@
                                 fill="none">
                                 <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1"
                                     transform="rotate(-45 6 17.3137)" fill="currentColor" />
-                                <rect x="7.41422" y="6" width="16" height="2" rx="1"
-                                    transform="rotate(45 7.41422 6)" fill="currentColor" />
+                                <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)"
+                                    fill="currentColor" />
                             </svg>
                         </span>
                     </div>
@@ -106,16 +106,26 @@
             });
         });
 
-        window.addEventListener('confirm-homepage-replace', event => {
+        window.addEventListener('swal:confirm-homepage-overlap', event => {
+            let details = event.detail.details;
+            let detailsHtml = '<ul class="text-start" style="text-align: left; list-style-position: inside;">';
+            if (Array.isArray(details)) {
+                details.forEach(detail => {
+                    detailsHtml += '<li>' + detail + '</li>';
+                });
+            } else {
+                detailsHtml += '<li>' + JSON.stringify(details) + '</li>';
+            }
+            detailsHtml += '</ul>';
+
             Swal.fire({
-                title: 'Slot already taken!',
-                text: "A banner is already active in this slot (" + event.detail.location +
-                    "). Do you want to replace it?",
+                title: 'Conflict Detected (Homepage)!',
+                html: "A banner is already active in this slot (overlapping logic enabled):<br><br>" + detailsHtml + "<br>Do you want to add this banner anyway?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, replace it!'
+                confirmButtonText: 'Yes, add it!'
             }).then((result) => {
                 if (result.isConfirmed) {
                     @this.call('forceSaveHomepage');

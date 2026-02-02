@@ -19,6 +19,7 @@ class BannerPagesEmbed extends Component
     public $isAllSelected = false;
     public $startDate;
     public $endDate;
+    public $conflictDetails = [];
 
     public $locations = [
         'navbar' => 'Navbar',
@@ -127,7 +128,7 @@ class BannerPagesEmbed extends Component
             'endDate' => 'nullable|date|after_or_equal:startDate',
         ]);
 
-        $conflictsCount = 0;
+        $this->conflictDetails = [];
 
         foreach ($this->selectedPosts as $compositeId) {
             $parts = explode('_', $compositeId);
@@ -147,8 +148,6 @@ class BannerPagesEmbed extends Component
 
             $query->where(function ($q) use ($start, $end) {
                 if ($end) {
-                    // If new banner ends at $end, it overlaps with existing if existing starts before $end
-                    // (and existing ends after $start, handled below)
                     $q->where(function ($sub) use ($end) {
                         $sub->whereNull('start_date')
                             ->orWhere('start_date', '<=', $end);
@@ -156,7 +155,6 @@ class BannerPagesEmbed extends Component
                 }
 
                 if ($start) {
-                    // If new banner starts at $start, it overlaps with existing if existing ends after $start
                     $q->where(function ($sub) use ($start) {
                         $sub->whereNull('end_date')
                             ->orWhere('end_date', '>=', $start);
@@ -164,14 +162,23 @@ class BannerPagesEmbed extends Component
                 }
             });
 
-            if ($query->exists()) {
-                $conflictsCount++;
+            $conflicts = $query->with(['post', 'bannerGroup'])->get();
+            if ($conflicts->count() > 0) {
+                // Get post title from the first conflict
+                $conflict = $conflicts->first();
+                $postTitle = $conflict->post ? $conflict->post->title : 'Unknown Post ID: ' . $conflict->post_id;
+                $grp = $conflict->bannerGroup ? $conflict->bannerGroup->title : 'Unknown Group';
+                $startStr = $conflict->start_date ? $conflict->start_date->format('Y-m-d') : '∞';
+                $endStr = $conflict->end_date ? $conflict->end_date->format('Y-m-d') : '∞';
+
+                $this->conflictDetails[] = "{$postTitle} ({$lang}): {$grp} ({$startStr} to {$endStr})";
             }
         }
 
-        if ($conflictsCount > 0) {
-            $this->dispatchBrowserEvent('swal:confirm-replace', [
-                'count' => $conflictsCount,
+        if (count($this->conflictDetails) > 0) {
+            \Illuminate\Support\Facades\Log::info('Conflict Details:', $this->conflictDetails);
+            $this->dispatchBrowserEvent('swal:confirm-overlap', [
+                'details' => $this->conflictDetails,
             ]);
             return;
         }
@@ -181,7 +188,7 @@ class BannerPagesEmbed extends Component
 
     public function forceSave()
     {
-        $this->performSave(true);
+        $this->performSave(false); // Pass false to NOT delete conflicts
     }
 
     public function performSave($deleteConflicts = false)
