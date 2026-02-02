@@ -178,7 +178,16 @@
                                                             <div class="tab-content flex-grow-1" id="v-pills-tabContent-{{$lang_code}}">
                                                                 @foreach(['left', 'right', 'center', 'bottom'] as $location)
                                                                     @php
-                                                                        $activeBanner = $post->activeBanners->where('location', $location)->where('language', $lang_code)->first();
+                                                                        $activeBanner = $post->activeBanners
+                                                                            ->where('location', $location)
+                                                                            ->where('language', $lang_code)
+                                                                            ->filter(function($b) {
+                                                                                $now = now();
+                                                                                return (is_null($b->end_date) || $b->end_date >= $now) &&
+                                                                                       (is_null($b->start_date) || $b->start_date <= $now);
+                                                                            })
+                                                                            ->sortByDesc('start_date')
+                                                                            ->first();
                                                                     @endphp
                                                                     <div class="tab-pane fade {{$loop->first && $location == 'left' ? 'show active' : ''}}" 
                                                                          id="v-pills-{{$location}}-{{$lang_code}}" 

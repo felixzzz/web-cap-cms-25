@@ -113,7 +113,15 @@
                                                 id="{{ $lang_code }}" role="tabpanel"
                                                 aria-labelledby="{{ $lang_code }}-tab">
                                                 @php
-                                                    $activeNav = isset($homeBanners['navbar']) ? $homeBanners['navbar']->where('language', $lang_code)->first() : null;
+                                                    $activeNav = isset($homeBanners['navbar']) ? $homeBanners['navbar']
+                                                        ->where('language', $lang_code)
+                                                        ->filter(function($b) {
+                                                            $now = now();
+                                                            return (is_null($b->end_date) || $b->end_date >= $now) &&
+                                                                   (is_null($b->start_date) || $b->start_date <= $now);
+                                                        })
+                                                        ->sortByDesc('start_date')
+                                                        ->first() : null;
                                                 @endphp
                                                 <div class="form-group pt-4 row border-bottom pb-5 mb-5 navbar-banner-config">
                                                     <label class="col-md-2 col-form-label text-capitalize">Banner Navbar</label>
@@ -159,7 +167,15 @@
 
                                                     @if ($pos)
                                                         @php
-                                                            $active = isset($homeBanners[$pos]) ? $homeBanners[$pos]->where('language', $lang_code)->first() : null;
+                                                            $active = isset($homeBanners[$pos]) ? $homeBanners[$pos]
+                                                                ->where('language', $lang_code)
+                                                                ->filter(function($b) {
+                                                                    $now = now();
+                                                                    return (is_null($b->end_date) || $b->end_date >= $now) &&
+                                                                           (is_null($b->start_date) || $b->start_date <= $now);
+                                                                })
+                                                                ->sortByDesc('start_date')
+                                                                ->first() : null;
                                                         @endphp
                                                         <div class="form-group row border-top pt-5 mt-5 {{ $pos }}-banner-config">
                                                             <label class="col-md-2 col-form-label text-capitalize">
@@ -200,7 +216,15 @@
                                                     @endif
                                                 @endforeach
                                                 @php
-                                                    $activeFoot = isset($homeBanners['footer']) ? $homeBanners['footer']->where('language', $lang_code)->first() : null;
+                                                    $activeFoot = isset($homeBanners['footer']) ? $homeBanners['footer']
+                                                        ->where('language', $lang_code)
+                                                        ->filter(function($b) {
+                                                            $now = now();
+                                                            return (is_null($b->end_date) || $b->end_date >= $now) &&
+                                                                   (is_null($b->start_date) || $b->start_date <= $now);
+                                                        })
+                                                        ->sortByDesc('start_date')
+                                                        ->first() : null;
                                                 @endphp
                                                 <div class="form-group row border-top pt-5 mt-5 footer-banner-config">
                                                     <label class="col-md-2 col-form-label fw-bold text-capitalize">Banner Footer</label>
@@ -231,7 +255,15 @@
                                     </div>
                                 @else
                                     @php
-                                        $activeNav = isset($homeBanners['navbar']) ? $homeBanners['navbar']->where('language', 'id')->first() : null;
+                                        $activeNav = isset($homeBanners['navbar']) ? $homeBanners['navbar']
+                                            ->where('language', 'id')
+                                            ->filter(function($b) {
+                                                $now = now();
+                                                return (is_null($b->end_date) || $b->end_date >= $now) &&
+                                                       (is_null($b->start_date) || $b->start_date <= $now);
+                                            })
+                                            ->sortByDesc('start_date')
+                                            ->first() : null;
                                     @endphp
                                     <div class="form-group row border-bottom pb-5 mb-5 navbar-banner-config">
                                         <label class="col-md-2 col-form-label fw-bold text-capitalize">Banner Navbar</label>
@@ -276,7 +308,15 @@
 
                                         @if ($pos)
                                             @php
-                                                $active = isset($homeBanners[$pos]) ? $homeBanners[$pos]->where('language', 'id')->first() : null;
+                                                $active = isset($homeBanners[$pos]) ? $homeBanners[$pos]
+                                                    ->where('language', 'id')
+                                                    ->filter(function($b) {
+                                                        $now = now();
+                                                        return (is_null($b->end_date) || $b->end_date >= $now) &&
+                                                               (is_null($b->start_date) || $b->start_date <= $now);
+                                                    })
+                                                    ->sortByDesc('start_date')
+                                                    ->first() : null;
                                             @endphp
                                             <div class="form-group row border-top pt-5 mt-5 {{ $pos }}-banner-config">
                                                 <label class="col-md-2 col-form-label fw-bold text-capitalize">
@@ -317,7 +357,15 @@
                                         @endif
                                     @endforeach
                                     @php
-                                        $activeFoot = isset($homeBanners['footer']) ? $homeBanners['footer']->where('language', 'id')->first() : null;
+                                        $activeFoot = isset($homeBanners['footer']) ? $homeBanners['footer']
+                                            ->where('language', 'id')
+                                            ->filter(function($b) {
+                                                $now = now();
+                                                return (is_null($b->end_date) || $b->end_date >= $now) &&
+                                                       (is_null($b->start_date) || $b->start_date <= $now);
+                                            })
+                                            ->sortByDesc('start_date')
+                                            ->first() : null;
                                     @endphp
                                     <div class="form-group row border-top pt-5 mt-5 footer-banner-config">
                                         <label class="col-md-2 col-form-label fw-bold text-capitalize">Banner Footer</label>
