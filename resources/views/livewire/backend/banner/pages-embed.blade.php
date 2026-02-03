@@ -107,6 +107,10 @@
                                                     @endif
                                                     {{ $post['title'] }}
                                                     <span class="text-muted fs-7 ms-2">({{ $post['slug'] }})</span>
+                                                    @if (isset($post['status']) && $post['status'] !== 'publish')
+                                                        <span
+                                                            class="badge badge-light-warning ms-2 text-capitalize">{{ $post['status'] }}</span>
+                                                    @endif
                                                 </div>
                                             </span>
                                         </label>

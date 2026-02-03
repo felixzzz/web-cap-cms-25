@@ -84,6 +84,7 @@ class BannerPagesEmbed extends Component
                 'title' => $post->title ?? 'No Title (ID)',
                 'slug' => $post->slug,
                 'type' => $post->type,
+                'status' => $post->status,
                 'created_at' => $post->created_at,
                 'lang' => 'id'
             ]);
@@ -95,6 +96,7 @@ class BannerPagesEmbed extends Component
                 'title' => $post->title_en ?? $post->title ?? 'No Title (EN)',
                 'slug' => $post->slug_en ?? $post->slug,
                 'type' => $post->type,
+                'status' => $post->status,
                 'created_at' => $post->created_at,
                 'lang' => 'en'
             ]);
