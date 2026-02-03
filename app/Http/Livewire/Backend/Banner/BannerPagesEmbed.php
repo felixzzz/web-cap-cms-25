@@ -3,15 +3,22 @@
 namespace App\Http\Livewire\Backend\Banner;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\BannerGroup;
 use App\Models\BannerActive;
 use App\Domains\Post\Models\Post;
 
 class BannerPagesEmbed extends Component
 {
+    use WithPagination;
+
+    protected $paginationTheme = 'bootstrap';
+
     public $bannerGroupId;
     public $bannerGroupTitle;
     public $posts = [];
+    public $allPostIds = []; // Track all post IDs for select all functionality
+    public $totalPostsCount = 0;
     public $selectedPosts = [];
     public $location = 'navbar';
     public $search = '';
@@ -21,6 +28,7 @@ class BannerPagesEmbed extends Component
     public $endDate;
     public $conflictDetails = [];
     public $isHideInMobile = false;
+    public $perPage = 25;
 
     public $locations = [
         'navbar' => 'Navbar',
@@ -36,10 +44,29 @@ class BannerPagesEmbed extends Component
     public function updatedIsAllSelected($value)
     {
         if ($value) {
-            $this->selectedPosts = collect($this->posts)->pluck('id')->toArray();
+            // Select ALL posts across all pages, not just current page
+            $this->selectedPosts = $this->allPostIds;
         } else {
             $this->selectedPosts = [];
         }
+    }
+
+    public function updatedSelectedPosts()
+    {
+        // Auto-uncheck "Select All" if not all items are selected
+        if ($this->isAllSelected && count($this->selectedPosts) < count($this->allPostIds)) {
+            $this->isAllSelected = false;
+        }
+        // Auto-check "Select All" if all items are selected
+        if (!$this->isAllSelected && count($this->selectedPosts) === count($this->allPostIds) && count($this->allPostIds) > 0) {
+            $this->isAllSelected = true;
+        }
+    }
+
+    public function updatedPerPage()
+    {
+        $this->resetPage();
+        $this->loadPosts();
     }
 
     public function mount()
@@ -49,15 +76,17 @@ class BannerPagesEmbed extends Component
 
     public function updatedSearch()
     {
+        $this->resetPage();
         $this->loadPosts();
     }
 
     public function updatedLanguage()
     {
+        $this->resetPage();
         $this->loadPosts();
     }
 
-    public function loadPosts()
+    public function loadPosts($page = null)
     {
         $query = Post::where('type', 'page');
 
@@ -70,15 +99,14 @@ class BannerPagesEmbed extends Component
             });
         }
 
-        $rawPosts = $query->orderBy('created_at', 'desc')
-            ->limit(50)
-            ->get();
+        // Get all posts for total count and select all functionality
+        $allRawPosts = (clone $query)->orderBy('created_at', 'desc')->get();
 
-        $transformedPosts = collect();
-
-        foreach ($rawPosts as $post) {
+        // Transform all posts to get all IDs
+        $allTransformedPosts = collect();
+        foreach ($allRawPosts as $post) {
             // ID Language
-            $transformedPosts->push([
+            $allTransformedPosts->push([
                 'id' => $post->id . '_id',
                 'original_id' => $post->id,
                 'title' => $post->title ?? 'No Title (ID)',
@@ -90,7 +118,7 @@ class BannerPagesEmbed extends Component
             ]);
 
             // EN Language
-            $transformedPosts->push([
+            $allTransformedPosts->push([
                 'id' => $post->id . '_en',
                 'original_id' => $post->id,
                 'title' => $post->title_en ?? $post->title ?? 'No Title (EN)',
@@ -102,13 +130,44 @@ class BannerPagesEmbed extends Component
             ]);
         }
 
+        // Filter by language
         if ($this->language == 'en') {
-            $transformedPosts = $transformedPosts->where('lang', 'en');
+            $allTransformedPosts = $allTransformedPosts->where('lang', 'en');
         } elseif ($this->language == 'id') {
-            $transformedPosts = $transformedPosts->where('lang', 'id');
+            $allTransformedPosts = $allTransformedPosts->where('lang', 'id');
         }
 
-        $this->posts = $transformedPosts->values()->toArray();
+        $allTransformedPosts = $allTransformedPosts->values();
+
+        // Store all post IDs for select all functionality
+        $this->allPostIds = $allTransformedPosts->pluck('id')->toArray();
+        $this->totalPostsCount = count($this->allPostIds);
+
+        // Paginate the transformed posts
+        $currentPage = $page ?? $this->page;
+        $offset = ($currentPage - 1) * $this->perPage;
+
+        $this->posts = $allTransformedPosts->slice($offset, $this->perPage)->values()->toArray();
+
+        // Update isAllSelected state based on current selection
+        $this->isAllSelected = count($this->selectedPosts) === count($this->allPostIds) && count($this->allPostIds) > 0;
+    }
+
+    public function getTotalPages()
+    {
+        return ceil($this->totalPostsCount / $this->perPage);
+    }
+
+    public function getCurrentPage()
+    {
+        // Use internal Livewire page state
+        return $this->page;
+    }
+
+    public function gotoPage($page)
+    {
+        $this->setPage($page);
+        $this->loadPosts($page);
     }
 
     public function openModal($bannerGroupId)
@@ -123,6 +182,9 @@ class BannerPagesEmbed extends Component
         $this->startDate = null;
         $this->endDate = null;
         $this->isHideInMobile = false;
+        $this->isAllSelected = false;
+        $this->resetPage();
+        $this->loadPosts();
         $this->dispatchBrowserEvent('open-banner-pages-embed-modal');
     }
 
