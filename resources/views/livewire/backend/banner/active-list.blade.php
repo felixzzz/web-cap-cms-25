@@ -29,7 +29,7 @@
                                         <option value="">Select Position</option>
                                         @if ($position == 'home')
                                             <option value="journey-growth">Journey Growth</option>
-                                            <option value="financial-report">Financial Report</option>
+                                            <option value="financial-reports">Financial Reports</option>
                                         @elseif ($position == 'article')
                                             <option value="center">Center</option>
                                             <option value="left">Left</option>

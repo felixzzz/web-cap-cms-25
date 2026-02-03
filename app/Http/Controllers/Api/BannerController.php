@@ -156,7 +156,6 @@ class BannerController extends Controller
             $response = [
                 'journey-growth' => [],
                 'financial-reports' => [],
-                'footer' => []
             ];
 
             // Process and group banners
