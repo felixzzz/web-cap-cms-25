@@ -94,6 +94,7 @@ class BannerEmbed extends Component
                     'original_id' => $post->id,
                     'title' => $post->title,
                     'type' => $post->type,
+                    'status' => $post->status,
                     'created_at' => $post->created_at,
                     'lang' => 'id'
                 ]);
@@ -106,6 +107,7 @@ class BannerEmbed extends Component
                     'original_id' => $post->id,
                     'title' => $post->title_en,
                     'type' => $post->type,
+                    'status' => $post->status,
                     'created_at' => $post->created_at,
                     'lang' => 'en'
                 ]);
@@ -126,7 +128,7 @@ class BannerEmbed extends Component
     public $end_date;
     public $homepageSlots = [
         'journey-growth' => 'Journey Growth',
-        'financial-report' => 'Financial Report',
+        'financial-reports' => 'Financial Reports',
     ];
 
     protected $listeners = ['openBannerEmbed' => 'openModal', 'forceSaveHomepage' => 'forceSaveHomepage'];
@@ -165,7 +167,8 @@ class BannerEmbed extends Component
             'endDate' => 'nullable|date|after_or_equal:startDate',
         ]);
 
-        $conflictsCount = 0;
+        $this->conflictDetails = [];
+        $nonConflictingPosts = [];
 
         foreach ($this->selectedPosts as $compositeId) {
             $parts = explode('_', $compositeId);
@@ -199,12 +202,21 @@ class BannerEmbed extends Component
                 }
             });
 
-            $conflicts = $query->with('post')->get();
+            $conflicts = $query->with(['post', 'bannerGroup'])->get();
             if ($conflicts->count() > 0) {
                 // Get post title from the first conflict
                 $conflict = $conflicts->first();
                 $postTitle = $conflict->post ? $conflict->post->title : 'Unknown Post ID: ' . $conflict->post_id;
-                $this->conflictDetails[] = $postTitle . " ({$lang})";
+                $grp = $conflict->bannerGroup ? $conflict->bannerGroup->title : 'Unknown Group';
+                $startStr = $conflict->start_date ? $conflict->start_date->format('Y-m-d') : '∞';
+                $endStr = $conflict->end_date ? $conflict->end_date->format('Y-m-d') : '∞';
+
+                $this->conflictDetails[] = [
+                    'id' => $compositeId,
+                    'label' => "{$postTitle} ({$lang}): {$grp} ({$startStr} to {$endStr})"
+                ];
+            } else {
+                $nonConflictingPosts[] = $compositeId;
             }
         }
 
@@ -212,6 +224,7 @@ class BannerEmbed extends Component
             \Illuminate\Support\Facades\Log::info('Conflict Details Embed:', $this->conflictDetails);
             $this->dispatchBrowserEvent('swal:confirm-overlap', [
                 'details' => $this->conflictDetails,
+                'nonConflictingPosts' => $nonConflictingPosts,
             ]);
             return;
         }
@@ -219,14 +232,24 @@ class BannerEmbed extends Component
         $this->performSave();
     }
 
-    public function forceSave()
+    public function forceSave($selectedConflictPosts = [])
     {
-        $this->performSave(false);
+        // Merge non-conflicting posts with selected conflict posts
+        $postsToSave = array_merge(
+            array_filter($this->selectedPosts, function ($id) {
+                return !in_array($id, array_column($this->conflictDetails, 'id'));
+            }),
+            $selectedConflictPosts
+        );
+
+        $this->performSave(false, $postsToSave);
     }
 
-    public function performSave($deleteConflicts = false)
+    public function performSave($deleteConflicts = false, $postsToSave = null)
     {
-        foreach ($this->selectedPosts as $compositeId) {
+        $posts = $postsToSave ?? $this->selectedPosts;
+
+        foreach ($posts as $compositeId) {
             $parts = explode('_', $compositeId);
             if (count($parts) < 2)
                 continue;
@@ -281,7 +304,7 @@ class BannerEmbed extends Component
     public function saveHomepage()
     {
         $this->validate([
-            'location' => 'required|in:journey-growth,financial-report',
+            'location' => 'required|in:journey-growth,financial-reports',
             'startDate' => 'nullable|date',
             'endDate' => 'nullable|date|after_or_equal:startDate',
         ]);

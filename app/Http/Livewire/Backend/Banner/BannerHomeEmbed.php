@@ -18,7 +18,7 @@ class BannerHomeEmbed extends Component
 
     public $homepageSlots = [
         'journey-growth' => 'Journey Growth',
-        'financial-report' => 'Financial Report',
+        'financial-reports' => 'Financial Reports',
     ];
 
     protected $listeners = ['openBannerHomeEmbed' => 'openModal', 'forceSaveHomepage' => 'forceSaveHomepage'];
@@ -40,7 +40,7 @@ class BannerHomeEmbed extends Component
     public function save()
     {
         $this->validate([
-            'location' => 'required|in:journey-growth,financial-report',
+            'location' => 'required|in:journey-growth,financial-reports',
             'language' => 'required|in:id,en',
             'startDate' => 'nullable|date',
             'endDate' => 'nullable|date|after_or_equal:startDate',

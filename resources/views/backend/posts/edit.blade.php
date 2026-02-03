@@ -224,6 +224,18 @@
                                                                                        value="{{ $activeBanner && $activeBanner->end_date ? $activeBanner->end_date->format('Y-m-d\TH:i') : '' }}">
                                                                             </div>
                                                                         </div>
+                                                                        @if(in_array($location, ['left', 'right']))
+                                                                        <div class="form-check form-check-custom form-check-solid mb-5">
+                                                                            <input class="form-check-input" type="checkbox" 
+                                                                                   name="banner_active[{{$lang_code}}][{{$location}}][is_hide_in_mobile]" 
+                                                                                   id="hide_in_mobile_{{$lang_code}}_{{$location}}"
+                                                                                   value="1"
+                                                                                   {{ $activeBanner && $activeBanner->is_hide_in_mobile ? 'checked' : '' }}>
+                                                                            <label class="form-check-label" for="hide_in_mobile_{{$lang_code}}_{{$location}}">
+                                                                                Hide in Mobile
+                                                                            </label>
+                                                                        </div>
+                                                                        @endif
                                                                         <div class="mt-3">
                                                                             <button type="button" style="font-size: 10px!important; padding: 0px 5px!important;" class="btn btn-sm btn-light-danger clear-banner-btn">Clear Banner Config in this Position</button>
                                                                         </div>
@@ -320,6 +332,7 @@
         var container = $(this).closest('.tab-pane');
         container.find('select').val(null).trigger('change'); // .val(null) works better for select2 clearing
         container.find('input[type="datetime-local"]').val('');
+        container.find('input[type="checkbox"]').prop('checked', false);
     });
 </script>
 @endpush
