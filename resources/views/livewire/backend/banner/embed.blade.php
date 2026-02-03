@@ -250,7 +250,7 @@
                                                 
                                                 @if ($startPage > 1)
                                                     <li class="page-item">
-                                                        <a class="page-link" href="#" wire:click.prevent="gotoPage(1)">1</a>
+                                                        <button type="button" class="page-link" wire:click.prevent="gotoPage(1)">1</button>
                                                     </li>
                                                     @if ($startPage > 2)
                                                         <li class="page-item disabled"><span class="page-link">...</span></li>
@@ -259,7 +259,7 @@
                                                 
                                                 @for ($i = $startPage; $i <= $endPage; $i++)
                                                     <li class="page-item {{ $i == $currentPage ? 'active' : '' }}">
-                                                        <a class="page-link" href="#" wire:click.prevent="gotoPage({{ $i }})">{{ $i }}</a>
+                                                        <button type="button" class="page-link" wire:click.prevent="gotoPage({{ $i }})">{{ $i }}</button>
                                                     </li>
                                                 @endfor
                                                 
@@ -268,7 +268,7 @@
                                                         <li class="page-item disabled"><span class="page-link">...</span></li>
                                                     @endif
                                                     <li class="page-item">
-                                                        <a class="page-link" href="#" wire:click.prevent="gotoPage({{ $totalPages }})">{{ $totalPages }}</a>
+                                                        <button type="button" class="page-link" wire:click.prevent="gotoPage({{ $totalPages }})">{{ $totalPages }}</button>
                                                     </li>
                                                 @endif
                                                 

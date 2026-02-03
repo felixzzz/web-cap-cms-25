@@ -148,10 +148,10 @@
                                         <ul class="pagination pagination-sm mb-0">
                                             {{-- Previous Button --}}
                                             <li class="page-item {{ $currentPage <= 1 ? 'disabled' : '' }}">
-                                                <a class="page-link" href="#" wire:click.prevent="gotoPage({{ $currentPage - 1 }})" 
+                                                <button type="button" class="page-link" wire:click.prevent="gotoPage({{ $currentPage - 1 }})" 
                                                    @if($currentPage <= 1) tabindex="-1" aria-disabled="true" @endif>
                                                     <i class="bi bi-chevron-left"></i>
-                                                </a>
+                                                </button>
                                             </li>
                                             
                                             {{-- Page Numbers --}}
@@ -162,7 +162,7 @@
                                             
                                             @if ($startPage > 1)
                                                 <li class="page-item">
-                                                    <a class="page-link" href="#" wire:click.prevent="gotoPage(1)">1</a>
+                                                    <button type="button" class="page-link" wire:click.prevent="gotoPage(1)">1</button>
                                                 </li>
                                                 @if ($startPage > 2)
                                                     <li class="page-item disabled"><span class="page-link">...</span></li>
@@ -171,7 +171,7 @@
                                             
                                             @for ($i = $startPage; $i <= $endPage; $i++)
                                                 <li class="page-item {{ $i == $currentPage ? 'active' : '' }}">
-                                                    <a class="page-link" href="#" wire:click.prevent="gotoPage({{ $i }})">{{ $i }}</a>
+                                                    <button type="button" class="page-link" wire:click.prevent="gotoPage({{ $i }})">{{ $i }}</button>
                                                 </li>
                                             @endfor
                                             
@@ -180,16 +180,16 @@
                                                     <li class="page-item disabled"><span class="page-link">...</span></li>
                                                 @endif
                                                 <li class="page-item">
-                                                    <a class="page-link" href="#" wire:click.prevent="gotoPage({{ $totalPages }})">{{ $totalPages }}</a>
+                                                    <button type="button" class="page-link" wire:click.prevent="gotoPage({{ $totalPages }})">{{ $totalPages }}</button>
                                                 </li>
                                             @endif
                                             
                                             {{-- Next Button --}}
                                             <li class="page-item {{ $currentPage >= $totalPages ? 'disabled' : '' }}">
-                                                <a class="page-link" href="#" wire:click.prevent="gotoPage({{ $currentPage + 1 }})"
+                                                <button type="button" class="page-link" wire:click.prevent="gotoPage({{ $currentPage + 1 }})"
                                                    @if($currentPage >= $totalPages) tabindex="-1" aria-disabled="true" @endif>
                                                     <i class="bi bi-chevron-right"></i>
-                                                </a>
+                                                </button>
                                             </li>
                                         </ul>
                                     </nav>
