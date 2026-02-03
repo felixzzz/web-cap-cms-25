@@ -159,6 +159,9 @@
                                                         <span class="text-muted fw-semibold d-block fs-7 mt-1">
                                                             <span class="text-capitalize">{{ $post['type'] }}</span> -
                                                             {{ \Carbon\Carbon::parse($post['created_at'])->format('d M Y H:i') }}
+                                                            @if (isset($post['status']) && $post['status'] !== 'publish')
+                                                                <span class="badge badge-light-warning ms-2 text-capitalize">{{ $post['status'] }}</span>
+                                                            @endif
                                                         </span>
                                                     </span>
                                                 </label>

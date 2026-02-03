@@ -94,6 +94,7 @@ class BannerEmbed extends Component
                     'original_id' => $post->id,
                     'title' => $post->title,
                     'type' => $post->type,
+                    'status' => $post->status,
                     'created_at' => $post->created_at,
                     'lang' => 'id'
                 ]);
@@ -106,6 +107,7 @@ class BannerEmbed extends Component
                     'original_id' => $post->id,
                     'title' => $post->title_en,
                     'type' => $post->type,
+                    'status' => $post->status,
                     'created_at' => $post->created_at,
                     'lang' => 'en'
                 ]);

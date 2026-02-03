@@ -97,6 +97,7 @@ class BannerActiveList extends Component
                     'title' => $post->title ?? 'No Title (ID)',
                     'slug' => $post->slug,
                     'type' => $post->type,
+                    'status' => $post->status,
                     'lang' => 'id',
                     'created_at' => $post->created_at,
                 ]);
@@ -109,6 +110,7 @@ class BannerActiveList extends Component
                     'title' => $post->title_en ?? $post->title ?? 'No Title (EN)',
                     'slug' => $post->slug_en ?? $post->slug,
                     'type' => $post->type,
+                    'status' => $post->status,
                     'lang' => 'en',
                     'created_at' => $post->created_at,
                 ]);
