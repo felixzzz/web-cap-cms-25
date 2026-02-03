@@ -120,15 +120,23 @@
 
             Swal.fire({
                 title: 'Conflict Detected (Homepage)!',
-                html: "A banner is already active in this slot (overlapping logic enabled):<br><br>" + detailsHtml + "<br>Do you want to add this banner anyway?",
+                html: "A banner is already active in this slot (overlapping logic enabled):<br><br>" + detailsHtml +
+                    "<br><div class='form-check mt-3' style='text-align: left;'>" +
+                    "<input class='form-check-input' type='checkbox' id='confirmAddHomeBanner' checked>" +
+                    "<label class='form-check-label' for='confirmAddHomeBanner'>" +
+                    " Add this banner anyway" +
+                    "</label></div>",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, add it!'
+                confirmButtonText: 'Confirm'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    @this.call('forceSaveHomepage');
+                    const addBanner = document.getElementById('confirmAddHomeBanner').checked;
+                    if (addBanner) {
+                        @this.call('forceSaveHomepage');
+                    }
                 }
             })
         });

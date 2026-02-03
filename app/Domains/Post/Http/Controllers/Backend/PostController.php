@@ -465,6 +465,7 @@ class PostController extends BackendController
                     $activeBanner->banner_group_id = $data['group_id'];
                     $activeBanner->start_date = $data['start_date'] ?? null;
                     $activeBanner->end_date = $data['end_date'] ?? null;
+                    $activeBanner->is_hide_in_mobile = isset($data['is_hide_in_mobile']) ? true : false;
                     $activeBanner->save();
                     $keepIds[] = $activeBanner->id;
                 } else {
@@ -474,6 +475,7 @@ class PostController extends BackendController
                         'banner_group_id' => $data['group_id'],
                         'start_date' => $data['start_date'] ?? null,
                         'end_date' => $data['end_date'] ?? null,
+                        'is_hide_in_mobile' => isset($data['is_hide_in_mobile']) ? true : false,
                     ]);
                     $keepIds[] = $newBanner->id;
                 }

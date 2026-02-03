@@ -31,6 +31,16 @@
                             @error('location')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
+
+                            @if (in_array($location, ['left', 'right']))
+                                <div class="form-check form-check-custom form-check-solid mt-4">
+                                    <input class="form-check-input" type="checkbox" wire:model="isHideInMobile"
+                                        id="hide_in_mobile_pages" />
+                                    <label class="form-check-label" for="hide_in_mobile_pages">
+                                        @lang('Hide in Mobile')
+                                    </label>
+                                </div>
+                            @endif
                         </div>
 
                         <div class="row mb-5">
@@ -135,28 +145,40 @@
 
         window.addEventListener('swal:confirm-overlap', event => {
             let details = event.detail.details;
+            let nonConflictingPosts = event.detail.nonConflictingPosts || [];
             console.log('Conflict Details received:', details);
-            let detailsHtml = '<ul class="text-start" style="text-align: left; list-style-position: inside;">';
+
+            let detailsHtml = '<div class="text-start" style="text-align: left; max-height: 300px; overflow-y: auto;">';
+            detailsHtml += '<p class="mb-2"><strong>The following pages have conflicts. Check the ones you want to add anyway:</strong></p>';
+
             if (Array.isArray(details)) {
-                details.forEach(detail => {
-                    detailsHtml += '<li>' + detail + '</li>';
+                details.forEach((detail, index) => {
+                    const id = detail.id || index;
+                    const label = detail.label || detail;
+                    detailsHtml += '<div class="form-check mb-2">';
+                    detailsHtml += '<input class="form-check-input conflict-checkbox" type="checkbox" value="' + id + '" id="conflict_' + index + '" checked>';
+                    detailsHtml += '<label class="form-check-label" for="conflict_' + index + '">' + label + '</label>';
+                    detailsHtml += '</div>';
                 });
-            } else {
-                detailsHtml += '<li>' + JSON.stringify(details) + '</li>';
             }
-            detailsHtml += '</ul>';
+            detailsHtml += '</div>';
 
             Swal.fire({
                 title: 'Conflict Detected!',
-                html: "There are existing banners overlapping in the selected date range:<br><br>" + detailsHtml + "<br>Do you want to add this banner anyway (will show based on latest start date)?",
+                html: detailsHtml,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, add it!'
+                confirmButtonText: 'Confirm',
+                width: '600px'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    @this.call('forceSave');
+                    const selectedConflictPosts = [];
+                    document.querySelectorAll('.conflict-checkbox:checked').forEach(checkbox => {
+                        selectedConflictPosts.push(checkbox.value);
+                    });
+                    @this.call('forceSave', selectedConflictPosts);
                 }
             })
         });

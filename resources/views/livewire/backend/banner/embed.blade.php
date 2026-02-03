@@ -259,43 +259,63 @@
 
             Swal.fire({
                 title: 'Conflict Detected (Homepage)!',
-                html: "A banner is already active in this slot (overlapping logic enabled):<br><br>" + detailsHtml + "<br>Do you want to add this banner anyway?",
+                html: "A banner is already active in this slot (overlapping logic enabled):<br><br>" + detailsHtml + 
+                    "<br><div class='form-check mt-3' style='text-align: left;'>" +
+                    "<input class='form-check-input' type='checkbox' id='confirmAddHomeBannerEmbed' checked>" +
+                    "<label class='form-check-label' for='confirmAddHomeBannerEmbed'>" +
+                    " Add this banner anyway" +
+                    "</label></div>",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, add it!'
+                confirmButtonText: 'Confirm'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    @this.call('forceSaveHomepage');
+                    const addBanner = document.getElementById('confirmAddHomeBannerEmbed').checked;
+                    if (addBanner) {
+                        @this.call('forceSaveHomepage');
+                    }
                 }
             })
         });
 
         window.addEventListener('swal:confirm-overlap', event => {
             let details = event.detail.details;
+            let nonConflictingPosts = event.detail.nonConflictingPosts || [];
             console.log('Conflict Details received (Embed):', details);
-            let detailsHtml = '<ul class="text-start" style="text-align: left; list-style-position: inside;">';
-             if (Array.isArray(details)) {
-                details.forEach(detail => {
-                    detailsHtml += '<li>' + detail + '</li>';
+            
+            let detailsHtml = '<div class="text-start" style="text-align: left; max-height: 300px; overflow-y: auto;">';
+            detailsHtml += '<p class="mb-2"><strong>The following posts have conflicts. Check the ones you want to add anyway:</strong></p>';
+            
+            if (Array.isArray(details)) {
+                details.forEach((detail, index) => {
+                    const id = detail.id || index;
+                    const label = detail.label || detail;
+                    detailsHtml += '<div class="form-check mb-2">';
+                    detailsHtml += '<input class="form-check-input conflict-checkbox-embed" type="checkbox" value="' + id + '" id="conflict_embed_' + index + '" checked>';
+                    detailsHtml += '<label class="form-check-label" for="conflict_embed_' + index + '">' + label + '</label>';
+                    detailsHtml += '</div>';
                 });
-            } else {
-                 detailsHtml += '<li>' + JSON.stringify(details) + '</li>';
             }
-            detailsHtml += '</ul>';
+            detailsHtml += '</div>';
 
             Swal.fire({
                 title: 'Conflict Detected!',
-                html: "There are existing banners overlapping in the selected date range:<br><br>" + detailsHtml + "<br>Do you want to add this banner anyway (will show based on latest start date)?",
+                html: detailsHtml,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, add it!'
+                confirmButtonText: 'Confirm',
+                width: '600px'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    @this.call('forceSave');
+                    const selectedConflictPosts = [];
+                    document.querySelectorAll('.conflict-checkbox-embed:checked').forEach(checkbox => {
+                        selectedConflictPosts.push(checkbox.value);
+                    });
+                    @this.call('forceSave', selectedConflictPosts);
                 }
             })
         });

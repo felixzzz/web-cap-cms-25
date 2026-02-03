@@ -165,7 +165,8 @@ class BannerEmbed extends Component
             'endDate' => 'nullable|date|after_or_equal:startDate',
         ]);
 
-        $conflictsCount = 0;
+        $this->conflictDetails = [];
+        $nonConflictingPosts = [];
 
         foreach ($this->selectedPosts as $compositeId) {
             $parts = explode('_', $compositeId);
@@ -199,12 +200,21 @@ class BannerEmbed extends Component
                 }
             });
 
-            $conflicts = $query->with('post')->get();
+            $conflicts = $query->with(['post', 'bannerGroup'])->get();
             if ($conflicts->count() > 0) {
                 // Get post title from the first conflict
                 $conflict = $conflicts->first();
                 $postTitle = $conflict->post ? $conflict->post->title : 'Unknown Post ID: ' . $conflict->post_id;
-                $this->conflictDetails[] = $postTitle . " ({$lang})";
+                $grp = $conflict->bannerGroup ? $conflict->bannerGroup->title : 'Unknown Group';
+                $startStr = $conflict->start_date ? $conflict->start_date->format('Y-m-d') : '∞';
+                $endStr = $conflict->end_date ? $conflict->end_date->format('Y-m-d') : '∞';
+
+                $this->conflictDetails[] = [
+                    'id' => $compositeId,
+                    'label' => "{$postTitle} ({$lang}): {$grp} ({$startStr} to {$endStr})"
+                ];
+            } else {
+                $nonConflictingPosts[] = $compositeId;
             }
         }
 
@@ -212,6 +222,7 @@ class BannerEmbed extends Component
             \Illuminate\Support\Facades\Log::info('Conflict Details Embed:', $this->conflictDetails);
             $this->dispatchBrowserEvent('swal:confirm-overlap', [
                 'details' => $this->conflictDetails,
+                'nonConflictingPosts' => $nonConflictingPosts,
             ]);
             return;
         }
@@ -219,14 +230,24 @@ class BannerEmbed extends Component
         $this->performSave();
     }
 
-    public function forceSave()
+    public function forceSave($selectedConflictPosts = [])
     {
-        $this->performSave(false);
+        // Merge non-conflicting posts with selected conflict posts
+        $postsToSave = array_merge(
+            array_filter($this->selectedPosts, function ($id) {
+                return !in_array($id, array_column($this->conflictDetails, 'id'));
+            }),
+            $selectedConflictPosts
+        );
+
+        $this->performSave(false, $postsToSave);
     }
 
-    public function performSave($deleteConflicts = false)
+    public function performSave($deleteConflicts = false, $postsToSave = null)
     {
-        foreach ($this->selectedPosts as $compositeId) {
+        $posts = $postsToSave ?? $this->selectedPosts;
+
+        foreach ($posts as $compositeId) {
             $parts = explode('_', $compositeId);
             if (count($parts) < 2)
                 continue;

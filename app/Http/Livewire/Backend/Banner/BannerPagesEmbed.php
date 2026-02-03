@@ -20,10 +20,15 @@ class BannerPagesEmbed extends Component
     public $startDate;
     public $endDate;
     public $conflictDetails = [];
+    public $isHideInMobile = false;
 
     public $locations = [
         'navbar' => 'Navbar',
         'footer' => 'Footer',
+        'left' => 'Left',
+        'right' => 'Right',
+        'center' => 'Center',
+        'bottom' => 'Bottom',
     ];
 
     protected $listeners = ['openBannerPagesEmbed' => 'openModal'];
@@ -115,6 +120,7 @@ class BannerPagesEmbed extends Component
         $this->location = 'navbar';
         $this->startDate = null;
         $this->endDate = null;
+        $this->isHideInMobile = false;
         $this->dispatchBrowserEvent('open-banner-pages-embed-modal');
     }
 
@@ -123,12 +129,14 @@ class BannerPagesEmbed extends Component
         $this->validate([
             'bannerGroupId' => 'required|exists:banner_groups,id',
             'selectedPosts' => 'required|array|min:1',
-            'location' => 'required|in:navbar,footer',
+            'location' => 'required|in:navbar,footer,left,right,center,bottom',
             'startDate' => 'nullable|date',
             'endDate' => 'nullable|date|after_or_equal:startDate',
         ]);
 
         $this->conflictDetails = [];
+        $conflictingPosts = [];
+        $nonConflictingPosts = [];
 
         foreach ($this->selectedPosts as $compositeId) {
             $parts = explode('_', $compositeId);
@@ -171,7 +179,13 @@ class BannerPagesEmbed extends Component
                 $startStr = $conflict->start_date ? $conflict->start_date->format('Y-m-d') : '∞';
                 $endStr = $conflict->end_date ? $conflict->end_date->format('Y-m-d') : '∞';
 
-                $this->conflictDetails[] = "{$postTitle} ({$lang}): {$grp} ({$startStr} to {$endStr})";
+                $this->conflictDetails[] = [
+                    'id' => $compositeId,
+                    'label' => "{$postTitle} ({$lang}): {$grp} ({$startStr} to {$endStr})"
+                ];
+                $conflictingPosts[] = $compositeId;
+            } else {
+                $nonConflictingPosts[] = $compositeId;
             }
         }
 
@@ -179,6 +193,7 @@ class BannerPagesEmbed extends Component
             \Illuminate\Support\Facades\Log::info('Conflict Details:', $this->conflictDetails);
             $this->dispatchBrowserEvent('swal:confirm-overlap', [
                 'details' => $this->conflictDetails,
+                'nonConflictingPosts' => $nonConflictingPosts,
             ]);
             return;
         }
@@ -186,14 +201,24 @@ class BannerPagesEmbed extends Component
         $this->performSave();
     }
 
-    public function forceSave()
+    public function forceSave($selectedConflictPosts = [])
     {
-        $this->performSave(false); // Pass false to NOT delete conflicts
+        // Merge non-conflicting posts with selected conflict posts
+        $postsToSave = array_merge(
+            array_filter($this->selectedPosts, function ($id) {
+                return !in_array($id, array_column($this->conflictDetails, 'id'));
+            }),
+            $selectedConflictPosts
+        );
+
+        $this->performSave(false, $postsToSave);
     }
 
-    public function performSave($deleteConflicts = false)
+    public function performSave($deleteConflicts = false, $postsToSave = null)
     {
-        foreach ($this->selectedPosts as $compositeId) {
+        $posts = $postsToSave ?? $this->selectedPosts;
+
+        foreach ($posts as $compositeId) {
             $parts = explode('_', $compositeId);
             if (count($parts) < 2)
                 continue;
@@ -235,6 +260,9 @@ class BannerPagesEmbed extends Component
                     'location' => $this->location,
                     'start_date' => $this->startDate,
                     'end_date' => $this->endDate,
+                ],
+                [
+                    'is_hide_in_mobile' => $this->isHideInMobile,
                 ]
             );
         }
