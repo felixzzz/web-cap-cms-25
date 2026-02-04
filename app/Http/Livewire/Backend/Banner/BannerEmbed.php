@@ -12,6 +12,8 @@ class BannerEmbed extends Component
     public $bannerGroupId;
     public $bannerGroupTitle;
     public $posts = [];
+    public $allPostIds = []; // Track all post IDs for select all functionality
+    public $totalPostsCount = 0;
     public $selectedPosts = [];
     public $location = 'center';
     public $search = '';
@@ -23,16 +25,36 @@ class BannerEmbed extends Component
     public $conflictDetails = [];
 
     public $isHideInMobile = false;
+    public $perPage = 25;
+    public $currentPage = 1;
 
     // listeners moved below
 
     public function updatedIsAllSelected($value)
     {
         if ($value) {
-            $this->selectedPosts = collect($this->posts)->pluck('id')->toArray();
+            $this->selectedPosts = $this->allPostIds;
         } else {
             $this->selectedPosts = [];
         }
+    }
+
+    public function updatedSelectedPosts()
+    {
+        // Auto-uncheck "Select All" if not all items are selected
+        if ($this->isAllSelected && count($this->selectedPosts) < count($this->allPostIds)) {
+            $this->isAllSelected = false;
+        }
+        // Auto-check "Select All" if all items are selected
+        if (!$this->isAllSelected && count($this->selectedPosts) === count($this->allPostIds) && count($this->allPostIds) > 0) {
+            $this->isAllSelected = true;
+        }
+    }
+
+    public function updatedPerPage()
+    {
+        $this->currentPage = 1;
+        $this->loadPosts();
     }
 
     public function mount()
@@ -42,16 +64,19 @@ class BannerEmbed extends Component
 
     public function updatedSearch()
     {
+        $this->currentPage = 1;
         $this->loadPosts();
     }
 
     public function updatedLanguage()
     {
+        $this->currentPage = 1;
         $this->loadPosts();
     }
 
     public function updatedPostType()
     {
+        $this->currentPage = 1;
         $this->loadPosts();
     }
 
@@ -80,16 +105,15 @@ class BannerEmbed extends Component
             });
         }
 
-        $rawPosts = $query->orderBy('created_at', 'desc')
-            ->limit(50)
-            ->get();
+        // Get all posts for total count and select all functionality
+        $allRawPosts = (clone $query)->orderBy('created_at', 'desc')->get();
 
-        $transformedPosts = collect();
+        $allTransformedPosts = collect();
 
-        foreach ($rawPosts as $post) {
+        foreach ($allRawPosts as $post) {
             // ID Language
             if ($post->title) {
-                $transformedPosts->push([
+                $allTransformedPosts->push([
                     'id' => $post->id . '_id',
                     'original_id' => $post->id,
                     'title' => $post->title,
@@ -102,7 +126,7 @@ class BannerEmbed extends Component
 
             // EN Language
             if ($post->title_en) {
-                $transformedPosts->push([
+                $allTransformedPosts->push([
                     'id' => $post->id . '_en',
                     'original_id' => $post->id,
                     'title' => $post->title_en,
@@ -115,12 +139,39 @@ class BannerEmbed extends Component
         }
 
         if ($this->language == 'en') {
-            $transformedPosts = $transformedPosts->where('lang', 'en');
+            $allTransformedPosts = $allTransformedPosts->where('lang', 'en');
         } elseif ($this->language == 'id') {
-            $transformedPosts = $transformedPosts->where('lang', 'id');
+            $allTransformedPosts = $allTransformedPosts->where('lang', 'id');
         }
 
-        $this->posts = $transformedPosts->values()->toArray();
+        $allTransformedPosts = $allTransformedPosts->values();
+
+        // Store all post IDs for select all functionality
+        $this->allPostIds = $allTransformedPosts->pluck('id')->toArray();
+        $this->totalPostsCount = count($this->allPostIds);
+
+        // Paginate the transformed posts
+        $currentPage = $this->currentPage;
+        $offset = ($currentPage - 1) * $this->perPage;
+
+        $this->posts = $allTransformedPosts->slice($offset, $this->perPage)->values()->toArray();
+
+        // Update isAllSelected state based on current selection
+        $this->isAllSelected = count($this->selectedPosts) === count($this->allPostIds) && count($this->allPostIds) > 0;
+    }
+
+    public function getTotalPages()
+    {
+        return ceil($this->totalPostsCount / $this->perPage);
+    }
+
+    public function gotoPage($page)
+    {
+        $totalPages = $this->getTotalPages();
+        if ($page >= 1 && $page <= $totalPages) {
+            $this->currentPage = $page;
+            $this->loadPosts();
+        }
     }
 
     public $position = 'article';
@@ -149,6 +200,8 @@ class BannerEmbed extends Component
         $this->startDate = null;
         $this->endDate = null;
         $this->isHideInMobile = false;
+        $this->isAllSelected = false;
+        $this->currentPage = 1;
         $this->dispatchBrowserEvent('open-banner-embed-modal');
     }
 

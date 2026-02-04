@@ -66,37 +66,50 @@
 
                         <div class="mb-3">
                             <label class="form-label fs-4 fw-">@lang('Select Pages to embed'): </label>
+                            <span class="text-muted fs-7">({{ $totalPostsCount }} @lang('total pages')</span>)
                         </div>
 
                         <div class="mb-5">
-                            <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
                                 <div>
-                                    <div class="mb-5">
-                                        <label class="form-check form-check-custom form-check-solid">
+                                    <div class="d-flex align-items-center">
+                                        <label class="form-check form-check-custom form-check-solid me-3">
                                             <input class="form-check-input" type="checkbox"
-                                                wire:model="isAllSelected" />
+                                                wire:model="isAllSelected" 
+                                                id="selectAllPagesCheckbox" />
                                             <span class="form-check-label fw-bold text-gray-800">
                                                 @lang('Select All')
                                             </span>
                                         </label>
+                                        @if (count($selectedPosts) > 0)
+                                            <span class="badge badge-primary">{{ count($selectedPosts) }} / {{ $totalPostsCount }}
+                                                @lang('selected')</span>
+                                        @endif
                                     </div>
                                 </div>
-                                <div class="d-flex">
-                                    <select class="form-select form-select-solid w-100px me-2" wire:model="language">
+                                <div class="d-flex align-items-center">
+                                    <select class="form-select form-select-solid w-80px me-2" wire:model="perPage" data-control="select2" data-hide-search="true" data-placeholder="Per page" id="pagesPerPageSelect">
+                                        <option value="10">10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                    <select class="form-select form-select-solid w-80px me-2" wire:model="language">
                                         <option value="all">All</option>
                                         <option value="id">ID</option>
                                         <option value="en">EN</option>
                                     </select>
-                                    <input type="text" class="form-control form-control-solid" placeholder="Search..."
+                                    <input type="text" class="form-control form-control-solid w-200px" placeholder="Search..."
                                         wire:model.debounce.500ms="search">
                                 </div>
                             </div>
+                            
                             <div class="mh-300px scroll-y p-3 p-lg-5 bg-light rounded">
                                 @forelse($posts as $post)
-                                    <div class="d-flex align-items-center mb-5">
+                                    <div class="d-flex align-items-center mb-3">
                                         <label
-                                            class="form-check form-check-custom w-100 form-check-solid me-3 border-bottom bg-white p-2">
-                                            <input class="form-check-input" type="checkbox" value="{{ $post['id'] }}"
+                                            class="form-check form-check-custom w-100 form-check-solid me-3 border-bottom bg-white p-2 rounded shadow-sm">
+                                            <input class="form-check-input page-checkbox" type="checkbox" value="{{ $post['id'] }}"
                                                 wire:model="selectedPosts" />
                                             <span class="form-check-label fw-bold text-gray-800">
                                                 <div class="mb-1">
@@ -116,9 +129,72 @@
                                         </label>
                                     </div>
                                 @empty
-                                    <div class="text-center text-muted">@lang('No pages found')</div>
+                                    <div class="text-center text-muted py-5">@lang('No pages found')</div>
                                 @endforelse
                             </div>
+
+                            {{-- Pagination Controls --}}
+                            @php
+                                $totalPages = ceil($totalPostsCount / $perPage);
+                                $currentPage = $page;
+                            @endphp
+                            @if ($totalPages > 1)
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <div class="text-muted fs-7">
+                                        @lang('Showing') {{ count($posts) }} @lang('of') {{ $totalPostsCount }} @lang('pages')
+                                        (@lang('Page') {{ $currentPage }} @lang('of') {{ $totalPages }})
+                                    </div>
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination pagination-sm mb-0">
+                                            {{-- Previous Button --}}
+                                            <li class="page-item {{ $currentPage <= 1 ? 'disabled' : '' }}">
+                                                <button type="button" class="page-link" wire:click.prevent="gotoPage({{ $currentPage - 1 }})" 
+                                                   @if($currentPage <= 1) tabindex="-1" aria-disabled="true" @endif>
+                                                    <i class="bi bi-chevron-left"></i>
+                                                </button>
+                                            </li>
+                                            
+                                            {{-- Page Numbers --}}
+                                            @php
+                                                $startPage = max(1, $currentPage - 2);
+                                                $endPage = min($totalPages, $currentPage + 2);
+                                            @endphp
+                                            
+                                            @if ($startPage > 1)
+                                                <li class="page-item">
+                                                    <button type="button" class="page-link" wire:click.prevent="gotoPage(1)">1</button>
+                                                </li>
+                                                @if ($startPage > 2)
+                                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                @endif
+                                            @endif
+                                            
+                                            @for ($i = $startPage; $i <= $endPage; $i++)
+                                                <li class="page-item {{ $i == $currentPage ? 'active' : '' }}">
+                                                    <button type="button" class="page-link" wire:click.prevent="gotoPage({{ $i }})">{{ $i }}</button>
+                                                </li>
+                                            @endfor
+                                            
+                                            @if ($endPage < $totalPages)
+                                                @if ($endPage < $totalPages - 1)
+                                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                @endif
+                                                <li class="page-item">
+                                                    <button type="button" class="page-link" wire:click.prevent="gotoPage({{ $totalPages }})">{{ $totalPages }}</button>
+                                                </li>
+                                            @endif
+                                            
+                                            {{-- Next Button --}}
+                                            <li class="page-item {{ $currentPage >= $totalPages ? 'disabled' : '' }}">
+                                                <button type="button" class="page-link" wire:click.prevent="gotoPage({{ $currentPage + 1 }})"
+                                                   @if($currentPage >= $totalPages) tabindex="-1" aria-disabled="true" @endif>
+                                                    <i class="bi bi-chevron-right"></i>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            @endif
                         </div>
 
                         <div class="text-center">
