@@ -33,10 +33,6 @@ class BannerPagesEmbed extends Component
     public $locations = [
         'navbar' => 'Navbar',
         'footer' => 'Footer',
-        'left' => 'Left',
-        'right' => 'Right',
-        'center' => 'Center',
-        'bottom' => 'Bottom',
     ];
 
     protected $listeners = ['openBannerPagesEmbed' => 'openModal'];
@@ -193,7 +189,7 @@ class BannerPagesEmbed extends Component
         $this->validate([
             'bannerGroupId' => 'required|exists:banner_groups,id',
             'selectedPosts' => 'required|array|min:1',
-            'location' => 'required|in:navbar,footer,left,right,center,bottom',
+            'location' => 'required|in:navbar,footer',
             'startDate' => 'nullable|date',
             'endDate' => 'nullable|date|after_or_equal:startDate',
         ]);
