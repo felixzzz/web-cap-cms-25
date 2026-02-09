@@ -212,13 +212,18 @@ class BannerEmbed extends Component
             return;
         }
 
-        $this->validate([
-            'bannerGroupId' => 'required|exists:banner_groups,id',
-            'selectedPosts' => 'required|array|min:1',
-            'location' => 'required|in:left,right,bottom,center',
-            'startDate' => 'nullable|date',
-            'endDate' => 'nullable|date|after_or_equal:startDate',
-        ]);
+        try {
+            $this->validate([
+                'bannerGroupId' => 'required|exists:banner_groups,id',
+                'selectedPosts' => 'required|array|min:1',
+                'location' => 'required|in:left,right,bottom,center',
+                'startDate' => 'required|date',
+                'endDate' => 'required|date|after_or_equal:startDate',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatchBrowserEvent('swal-error', ['title' => 'Validation Error!', 'text' => 'Please check the input fields.']);
+            throw $e;
+        }
 
         $this->conflictDetails = [];
         $nonConflictingPosts = [];
@@ -356,11 +361,16 @@ class BannerEmbed extends Component
 
     public function saveHomepage()
     {
-        $this->validate([
-            'location' => 'required|in:journey-growth,financial-reports',
-            'startDate' => 'nullable|date',
-            'endDate' => 'nullable|date|after_or_equal:startDate',
-        ]);
+        try {
+            $this->validate([
+                'location' => 'required|in:journey-growth,financial-reports',
+                'startDate' => 'required|date',
+                'endDate' => 'required|date|after_or_equal:startDate',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatchBrowserEvent('swal-error', ['title' => 'Validation Error!', 'text' => 'Please check the input fields.']);
+            throw $e;
+        }
 
         // Find homepage post
         $homePost = Post::where('site_url', '/')->first();

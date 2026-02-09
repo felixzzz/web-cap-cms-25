@@ -39,12 +39,17 @@ class BannerHomeEmbed extends Component
 
     public function save()
     {
-        $this->validate([
-            'location' => 'required|in:journey-growth,financial-reports',
-            'language' => 'required|in:id,en',
-            'startDate' => 'nullable|date',
-            'endDate' => 'nullable|date|after_or_equal:startDate',
-        ]);
+        try {
+            $this->validate([
+                'location' => 'required|in:journey-growth,financial-reports',
+                'language' => 'required|in:id,en',
+                'startDate' => 'required|date',
+                'endDate' => 'required|date|after_or_equal:startDate',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatchBrowserEvent('swal-error', ['title' => 'Validation Error!', 'text' => 'Please check the input fields.']);
+            throw $e;
+        }
 
         $homePost = Post::where('site_url', '/')->first();
 

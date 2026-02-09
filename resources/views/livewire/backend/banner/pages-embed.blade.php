@@ -35,7 +35,7 @@
 
                         <div class="row mb-5">
                             <div class="col-md-6">
-                                <label class="form-label fs-5 fw-bold mb-3">@lang('Start Date'):</label>
+                                <label class="form-label fs-5 fw-bold mb-3">@lang('Start Date'): <span class="text-danger">*</span></label>
                                 <input type="datetime-local" class="form-control form-control-solid"
                                     wire:model="startDate">
                                 @error('startDate')
@@ -43,7 +43,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fs-5 fw-bold mb-3">@lang('End Date'):</label>
+                                <label class="form-label fs-5 fw-bold mb-3">@lang('End Date'): <span class="text-danger">*</span></label>
                                 <input type="datetime-local" class="form-control form-control-solid"
                                     wire:model="endDate">
                                 @error('endDate')
@@ -55,7 +55,7 @@
                         <div class="separator my-5"></div>
 
                         <div class="mb-3">
-                            <label class="form-label fs-4 fw-">@lang('Select Pages to embed'): </label>
+                            <label class="form-label fs-4 fw-">@lang('Select Pages to embed'): <span class="text-danger">*</span></label>
                             <span class="text-muted fs-7">({{ $totalPostsCount }} @lang('total pages')</span>)
                         </div>
 
@@ -122,6 +122,9 @@
                                     <div class="text-center text-muted py-5">@lang('No pages found')</div>
                                 @endforelse
                             </div>
+                            @error('selectedPosts')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
 
                             {{-- Pagination Controls --}}
                             @php
@@ -211,6 +214,14 @@
 
         window.addEventListener('close-banner-pages-embed-modal', event => {
             $('#bannerPagesEmbedModal').modal('hide');
+        });
+
+        window.addEventListener('swal-error', event => {
+            Swal.fire({
+                icon: 'error',
+                title: event.detail.title,
+                text: event.detail.text,
+            });
         });
 
         window.addEventListener('swal:confirm-overlap', event => {
