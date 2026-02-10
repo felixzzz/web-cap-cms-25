@@ -5952,7 +5952,7 @@
     {
         "name": "circular-economy-and-partnership",
         "label": "Circular Economy & Partnership",
-        "slug": "sustainability/circular-economy-and-partnership",
+        "slug": "/sustainability/circular-economy-and-partnership",
         "multilanguage": "true",
         "lang_option": [
             {
@@ -6006,12 +6006,30 @@
                     {
                         "name": "image_mobile",
                         "label": "Image Mobile",
-                        "type": "image"
+                        "type": "image",
+                        "size": 100,
+                        "ratio": "9:16",
+                        "info": "Recommended 540 x 960 px (ratio 9:16) and recommended file size 100 KB"
+                    },
+                    {
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
-                        "label": "Image Desktop",
-                        "type": "image"
+                        "label": "Image desktop",
+                        "type": "image",
+                        "size": 220,
+                        "ratio": "2:1",
+                        "info": "Recommended 2160 x 1080 px (ratio 2:1) and recommended file size 220 KB"
+                    },
+                    {
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -6036,19 +6054,66 @@
                         ]
                     },
                     {
-                        "name": "title",
-                        "label": "Title",
-                        "type": "text"
-                    },
-                    {
-                        "name": "description",
-                        "label": "Description",
-                        "type": "editor"
-                    },
-                    {
-                        "name": "image",
-                        "label": "Image",
-                        "type": "image"
+                        "name": "list",
+                        "label": "List",
+                        "type": "repeater",
+                        "list": [
+                            {
+                                "name": "status",
+                                "label": "Status",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "label": "Active",
+                                        "value": "active"
+                                    },
+                                    {
+                                        "label": "Inactive",
+                                        "value": "inactive"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "image_position",
+                                "label": "Image Position",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "label": "Left",
+                                        "value": "left"
+                                    },
+                                    {
+                                        "label": "Right",
+                                        "value": "right"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "title",
+                                "label": "Title",
+                                "type": "text"
+                            },
+                            {
+                                "name": "description",
+                                "label": "Description",
+                                "type": "editor"
+                            },
+                            {
+                                "name": "image",
+                                "label": "Image",
+                                "type": "image"
+                            },
+                            {
+                                "name": "cta_label",
+                                "label": "CTA Label",
+                                "type": "text"
+                            },
+                            {
+                                "name": "cta_url",
+                                "label": "CTA URL",
+                                "type": "url"
+                            }
+                        ]
                     }
                 ]
             },
@@ -6086,6 +6151,7 @@
                         "name": "numbers",
                         "label": "Numbers",
                         "type": "repeater",
+                        "all_field_multilang": true,
                         "list": [
                             {
                                 "name": "number",
@@ -6113,7 +6179,7 @@
             },
             {
                 "keyName": "policy_performance",
-                "label": "Tab: Policy Performance",
+                "label": "Tab: Public Education Performance",
                 "section": "3",
                 "fields": [
                     {
@@ -6172,7 +6238,7 @@
             },
             {
                 "keyName": "policy_items",
-                "label": "Tab: Policy Items",
+                "label": "Tab: Public Education Items",
                 "section": "3",
                 "fields": [
                     {
@@ -6194,6 +6260,7 @@
                         "name": "items",
                         "label": "Items",
                         "type": "repeater",
+                        "all_field_multilang": true,
                         "list": [
                             {
                                 "name": "title",
@@ -6307,6 +6374,7 @@
                         "name": "items",
                         "label": "Items",
                         "type": "repeater",
+                        "all_field_multilang": true,
                         "list": [
                             {
                                 "name": "title",
@@ -6420,6 +6488,7 @@
                         "name": "items",
                         "label": "Items",
                         "type": "repeater",
+                        "all_field_multilang": true,
                         "list": [
                             {
                                 "name": "title",
@@ -6451,9 +6520,9 @@
                 ]
             },
             {
-                "keyName": "content_left_right_2",
-                "label": "Content Left Right 2",
-                "section": "6",
+                "keyName": "circular_economy_intro",
+                "label": "Circular Economy Intro",
+                "section": "3",
                 "fields": [
                     {
                         "name": "status",
@@ -6471,19 +6540,19 @@
                         ]
                     },
                     {
-                        "name": "title",
-                        "label": "Title",
+                        "name": "image",
+                        "label": "Map Image",
+                        "type": "image"
+                    },
+                    {
+                        "name": "cta_label",
+                        "label": "Report Button Label",
                         "type": "text"
                     },
                     {
-                        "name": "description",
-                        "label": "Description",
-                        "type": "editor"
-                    },
-                    {
-                        "name": "image",
-                        "label": "Image",
-                        "type": "image"
+                        "name": "cta_url",
+                        "label": "Report Button URL",
+                        "type": "url"
                     }
                 ]
             },
