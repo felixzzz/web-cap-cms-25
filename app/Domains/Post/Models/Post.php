@@ -181,4 +181,9 @@ class Post extends Model implements HasMedia
     {
         return $this->hasMany(PostMeta::class);
     }
+
+    public function activeBanners()
+    {
+        return $this->hasMany(\App\Models\BannerActive::class);
+    }
 }

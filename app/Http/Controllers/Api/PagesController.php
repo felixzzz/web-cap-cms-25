@@ -236,6 +236,13 @@ class PagesController extends Controller
             'meta' => $valueMeta,
             'storage_url' => config('filesystems.default') == 's3' ? config('filesystems.disks.s3.url') : config('app.url') . '/storage'
         ];
+
+        // Add active banners for home page
+        if ($post->site_url === '/') {
+            $lang = $request->input('lang', 'id');
+            $data['active_banners'] = $this->getHomeBanners($post, $lang);
+        }
+
         return response()->json(['data' => $data], 200);
 
     }
@@ -595,5 +602,40 @@ class PagesController extends Controller
         return !empty($string) && is_string($string) && is_array(json_decode($string, true)) && json_last_error() == 0;
     }
 
+    /**
+     * Get active banners for home page grouped by position
+     */
+    private function getHomeBanners($post, $lang = 'id')
+    {
+        $activeBanners = \App\Models\BannerActive::where('post_id', $post->id)
+            ->where('language', $lang)
+            ->with(['bannerGroup.items'])
+            ->get();
+
+        $response = [
+            'navbar' => [],
+            'journey-growth' => [],
+            'financial-reports' => []
+        ];
+
+        // Process and group banners by position
+        foreach ($activeBanners as $activeBanner) {
+            $location = strtolower($activeBanner->location);
+
+            // Validate location key exists in our response structure
+            if (array_key_exists($location, $response)) {
+                // If a banner group is attached, merge its banners into the location array
+                if ($activeBanner->bannerGroup) {
+                    if ($activeBanner->bannerGroup->items) {
+                        foreach ($activeBanner->bannerGroup->items as $banner) {
+                            $response[$location][] = $banner;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $response;
+    }
 
 }

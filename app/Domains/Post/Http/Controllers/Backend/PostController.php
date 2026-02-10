@@ -5,6 +5,8 @@ namespace App\Domains\Post\Http\Controllers\Backend;
 use App\Domains\Post\Http\Requests\StorePostRequest;
 use App\Domains\Post\Models\Post;
 use App\Domains\Post\Models\PostType;
+use App\Models\BannerGroup;
+use App\Models\BannerActive;
 use App\Domains\Post\Services\ComponentService;
 use App\Domains\Post\Services\PostMetaService;
 use App\Domains\Post\Services\PostService;
@@ -86,6 +88,7 @@ class PostController extends BackendController
         $post = new Post();
         $pages = Post::select('id', 'title', 'slug')
             ->where('pages_dynamic', 'yes')->get();
+        $bannerGroups = BannerGroup::where('position', 'article')->withCount('items')->get();
         $tagDatas = Tag::all();
         $tags = $tagDatas->map(function ($tag) {
             return $tag->getTranslation('name', 'en');
@@ -104,7 +107,9 @@ class PostController extends BackendController
                 'post',
                 'tags',
                 'tags_id',
-                'pages'
+                'tags_id',
+                'pages',
+                'bannerGroups'
             )
         );
     }
@@ -122,6 +127,7 @@ class PostController extends BackendController
         $post = (new PostService())->create_post_handler($requestValidated, $type['type']);
 
         $this->postMetaService->updatePageMetaV2($post, $request->all());
+        $this->syncBannerActive($post, $request->input('banner_active', []));
 
         if ($post->status == Post::STATUS_SCHEDULE) {
             if ($request->get('published_at')) {
@@ -147,7 +153,7 @@ class PostController extends BackendController
         $template['lang_option'] = $template[3]['lang_option'];
         $meta = $post->meta->groupBy('section');
         $pages = Post::select('id', 'title', 'slug')->where('pages_dynamic', 'yes')->get();
-
+        $bannerGroups = BannerGroup::where('position', 'article')->withCount('items')->get();
         $valueMeta = [];
         foreach ($meta as $keyName => $fields) {
             $data = new \stdClass();
@@ -180,8 +186,10 @@ class PostController extends BackendController
                 'components',
                 'tags',
                 'tags_id',
+                'tags_id',
                 'type',
-                'pages'
+                'pages',
+                'bannerGroups'
             )
         )->withMeta($valueMeta);
     }
@@ -200,6 +208,7 @@ class PostController extends BackendController
         try {
             $post = (new PostService())->update_post_handler($post, $requestValidated);
             $this->postMetaService->updatePageMetaV2($post, $request->all());
+            $this->syncBannerActive($post, $request->input('banner_active', []));
 
             if ($post->status == Post::STATUS_SCHEDULE) {
                 if ($request->get('published_at')) {
@@ -436,5 +445,54 @@ class PostController extends BackendController
             }
         }
         return true;
+    }
+
+    private function syncBannerActive(Post $post, array $bannerActiveData)
+    {
+        $existingBanners = $post->activeBanners()->get();
+        $keepIds = [];
+
+        foreach ($bannerActiveData as $lang => $locations) {
+            foreach ($locations as $location => $data) {
+                // If group_id is empty, skip (meaning it was cleared or not set)
+                if (empty($data['group_id'])) {
+                    continue;
+                }
+
+                $activeBanner = $post->activeBanners()->where('language', $lang)->where('location', $location)->first();
+
+                if ($activeBanner) {
+                    $activeBanner->banner_group_id = $data['group_id'];
+                    $activeBanner->start_date = $data['start_date'] ?? null;
+                    $activeBanner->end_date = $data['end_date'] ?? null;
+                    $activeBanner->is_hide_in_mobile = isset($data['is_hide_in_mobile']) ? true : false;
+                    $activeBanner->save();
+                    $keepIds[] = $activeBanner->id;
+                } else {
+                    $newBanner = $post->activeBanners()->create([
+                        'language' => $lang,
+                        'location' => $location,
+                        'banner_group_id' => $data['group_id'],
+                        'start_date' => $data['start_date'] ?? null,
+                        'end_date' => $data['end_date'] ?? null,
+                        'is_hide_in_mobile' => isset($data['is_hide_in_mobile']) ? true : false,
+                    ]);
+                    $keepIds[] = $newBanner->id;
+                }
+            }
+        }
+
+        // Delete banners that are no longer present in the request (unless we want to keep them if they weren't in the form?)
+        foreach ($existingBanners as $banner) {
+            // Check if this banner's lang/location is in the request with a valid group_id
+            $inRequest = false;
+            if (isset($bannerActiveData[$banner->language][$banner->location]['group_id']) && !empty($bannerActiveData[$banner->language][$banner->location]['group_id'])) {
+                $inRequest = true;
+            }
+
+            if (!$inRequest) {
+                $banner->delete();
+            }
+        }
     }
 }
