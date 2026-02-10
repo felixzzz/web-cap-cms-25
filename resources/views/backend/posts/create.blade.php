@@ -24,16 +24,74 @@
                     <div class="col-md-12 pb-4">
                         <div class="card card-flush p-3">
                             <div class="card-body p-3">
-                                @if ($type['type'] != 'managements')
-                                    <x-forms.text-input name="title" label="Title" required="{{ $required }}"
-                                        placeholder="The title of post" text="" />
-                                    <x-forms.text-input name="slug" label="URL/Slug ID" required="{{ $required }}"
-                                        placeholder="The url of post" text="" />
-                                    <x-forms.text-input name="title_en" label="Title EN" required="{{ $required }}"
-                                        placeholder="The title of post" text="" />
-                                    <x-forms.text-input name="slug_en" label="URL/Slug EN" required="{{ $required }}"
-                                        placeholder="The url of post" text="" />
-                                    @if ($type['type'] != 'blog')
+                                @if($type['type'] != 'managements')
+                                <x-forms.text-input name="title" label="Title" required="0" placeholder="The title of post" text=""/>
+                                <x-forms.text-input name="slug" label="URL/Slug ID" required="0" placeholder="The url of post" text=""/>
+                                <x-forms.text-input name="title_en" label="Title EN" required="0" placeholder="The title of post" text=""/>
+                                <x-forms.text-input name="slug_en" label="URL/Slug EN" required="0" placeholder="The url of post" text=""/>
+                                @if($type['type'] != 'blog')
+                                <div class="d-flex gap-4">
+                                    @if ($type['is_category'])
+                                        <div class="flex-fill">
+                                            <x-forms.select label="Category" name="categories[]" placeholder="Select an option" required="{{ $required }}" multiple="1" text="Choose category that has been defined" hidden="{{ $hidden }}">
+                                                @foreach($categories as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                @endforeach
+                                            </x-forms.select>
+                                        </div>
+                                    @endif
+                                </div>
+                                @endif
+                                @if($type['type'] == 'news')                        
+                                <div class="flex-fill">
+                                    <div class="mb-8 fv-row fv-plugins-icon-container">
+                                        <label for="page" class="form-label">@lang('Business Line')</label>
+                                        <select name="post_type" class=" form-control form-select-solid mb-2" id="page">
+                                            <option value=""></option>
+                                            @foreach ($pages as $page)
+                                                <option value="{{ $page['slug'] }}">{{ $page['title'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                @endif
+                                <div class="d-flex gap-4">
+                                    <div class="flex-fill">
+                                        <div class="mb-8 fv-row fv-plugins-icon-container">
+                                            <label for="status" class="form-label">@lang('Post Status')</label>
+                                            <select name="status" class=" form-control form-select-solid mb-2" required="">
+                                                <option value="{{ $model::STATUS_PUBLISH }}">@lang('Publish')</option>
+                                                <option value="{{ $model::STATUS_SCHEDULE }}">@lang('Schedule')</option>
+                                                <option value="{{ $model::STATUS_DRAFT }}">@lang('Draft')</option>
+                                            </select>
+                                        </div>
+                                        @if($type['type'] == 'blog' ||$type['type'] == 'news' || $type['type'] == 'articles-sustainability')  
+
+                                        <div class="mb-8 fv-row fv-plugins-icon-container" >
+                                            <label class="form-label">Publish At</label>
+                                            <input type="datetime-local" name="published_at" class="form-control mb-2" placeholder="{{ __('Publish time') }}" />
+                                        </div>
+                                        @else
+                                        <div class="mb-8 fv-row fv-plugins-icon-container" id="divPublishAt">
+                                            <label class="form-label">Schedule At</label>
+                                            <input type="datetime-local" name="published_at" id="published_at" class="form-control mb-2" placeholder="{{ __('Publish time') }}" />
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+                                @if($type['featured_image'] & $type['type']!= 'products')
+                                <x-forms.filepond-input name="featured_image" label="Featured Image" class="" required="0" src="" text="Set the post thumbnail image. Only *.png, *.jpg, *.webp and *.jpeg image files are accepted" hidden="{{ $hidden }}"/>
+                                <x-forms.text-input name="alt_image" label="Alt Image (ID)" required="{{ $required }}" placeholder="" text="" />
+                                <x-forms.text-input name="alt_image_en" label="Alt Image (EN)" required="{{ $required }}" placeholder="" text="" />
+                                    
+                                @endif
+                            @endif
+                        @if($components)
+                            <div class="card card-flush p-3 mt-8">
+                                <div class="card-body p-3">
+                                    <div id="app">
+                                        @if($type['type'] == 'managements')
+                                        <x-forms.text-input name="title" label="Name" required="{{ $required }}" placeholder="" text=""/>
                                         <div class="d-flex gap-4">
                                             @if ($type['is_category'])
                                                 <div class="flex-fill">

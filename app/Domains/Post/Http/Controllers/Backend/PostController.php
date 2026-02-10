@@ -45,10 +45,10 @@ class PostController extends BackendController
         // setup rules validation
         $this->rules = [
             'type' => [],
-            'title' => ['required', 'max:200'],
+            'title' => ['required_without:title_en', 'max:200'],
             'slug' => 'max:100',
             'slug_en' => 'max:100',
-            'title_en' => ['nullable', 'max:200'],
+            'title_en' => ['required_without:title', 'max:200'],
             'excerpt' => ['nullable', 'max:255'],
             'content' => ['nullable'],
             'tags' => ['nullable'],

@@ -79,8 +79,22 @@ class Post extends Model implements HasMedia
     ];
 
     protected $appends = [
-        'template'
+        'template',
+        'is_filled_en',
+        'is_filled_id'
     ];
+
+    public function getIsFilledEnAttribute()
+    {
+        // Consider filled if title_en is not empty
+        return !empty($this->title_en);
+    }
+
+    public function getIsFilledIdAttribute()
+    {
+        // Consider filled if title is not empty (ID is default 'title' column)
+        return !empty($this->title);
+    }
 
     public function isAdmin(): bool
     {

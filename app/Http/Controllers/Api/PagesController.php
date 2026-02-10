@@ -13,6 +13,7 @@ use App\Domains\Post\Services\PostService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Log;
 
 class PagesController extends Controller
 {
@@ -117,7 +118,7 @@ class PagesController extends Controller
                     'meta_keyword' => $value->meta_keyword
                 ],
                 'meta' => $valueMeta,
-                'storage_url' => config('filesystems.disks.s3.url')
+                'storage_url' => config('filesystems.default') == 's3' ? config('filesystems.disks.s3.url') : config('app.url') . '/storage'
             ];
         });
         return response()->json(['message' => 'Data Successfully Fetched', 'data' => $posts], 200);
@@ -185,6 +186,7 @@ class PagesController extends Controller
     }
     public function getDetailbySlug(Request $request, $slug)
     {
+        Log::info("DEBUG: getDetailbySlug called with $slug");
         $post = Post::where('type', Post::TYPE_PAGE)
             ->where('status', 'publish')
             ->where('slug', $slug)
@@ -194,70 +196,21 @@ class PagesController extends Controller
         if (!$post) {
             return response()->json(['message' => 'not found'], 404);
         }
-
-        $valueMeta = [];
         if ($post) {
             $meta = $post->meta->groupBy('section');
 
             foreach ($meta as $keyName => $fields) {
+                // Return status for each section to see where it stops
+                // return response()->json(['message' => 'DEBUG ALIVE INSIDE LOOP', 'key' => $keyName], 200); 
+                // We know it entered 'banner'.
+
                 $data = new \stdClass();
-                $indonesiaRepeater = [];
-                $englishRepeater = [];
+                file_put_contents('/tmp/debug.log', "Processing Section: $keyName\n", FILE_APPEND);
                 foreach ($fields as $key => $val) {
+                    if ($keyName === 'technology_items') {
+                        file_put_contents('/tmp/debug.log', "  Processing Field: {$val->key}\n", FILE_APPEND);
+                    }
                     $data->{$val->key} = $this->is_json($val->value) ? json_decode($val->value, true) : $val->value;
-                    // if($keyName == 'awards' && $val->key=='list_id'){
-                    //    $awardsData = $data->{$val->key};
-                    //    usort($awardsData, function($a, $b) {
-                    //         $yearA = isset($a['year']) ? $a['year'] : -1000;
-                    //         $yearB = isset($b['year']) ? $b['year'] : PHP_INT_MIN;
-
-                    //         if ($yearA === $yearB) {
-                    //             return strcmp($a['award_title'], $b['award_title']);
-                    //         }
-                    //         return $yearB <=> $yearA;
-                    //     });
-                    //     $data->{$val->key} = $awardsData ;
-                    // }
-                    // if($keyName == 'awards' && $val->key=='list_en'){
-                    //     $awardsData = $data->{$val->key};
-                    //     usort($awardsData, function($a, $b) {
-                    //         $yearA = isset($a['year']) ? $a['year'] : -1000;
-                    //         $yearB = isset($b['year']) ? $b['year'] : PHP_INT_MIN;
-
-                    //         if ($yearA === $yearB) {
-                    //             return strcmp($a['award_title'], $b['award_title']);
-                    //         }
-                    //         return $yearB <=> $yearA;
-                    //      });
-                    //      $data->{$val->key} = $awardsData ;
-                    //  }
-                    //  if($keyName == 'certification' && $val->key=='list_id'){
-                    //     $certificationData = $data->{$val->key};
-                    //     usort($certificationData, function($a, $b) {
-                    //         $yearA = isset($a['year']) ? $a['year'] : -1000;
-                    //         $yearB = isset($b['year']) ? $b['year'] : PHP_INT_MIN;
-
-                    //         if ($yearA === $yearB) {
-                    //             return strcmp($a['certification_title'], $b['certification_title']);
-                    //         }
-                    //         return $yearB <=> $yearA;
-                    //      });
-                    //      $data->{$val->key} = $certificationData ;
-                    //  }
-                    //  if($keyName == 'certification' && $val->key=='list_en'){
-                    //      $certificationData = $data->{$val->key};
-                    //      usort($certificationData, function($a, $b) {
-                    //         $yearA = isset($a['year']) ? $a['year'] : -1000;
-                    //         $yearB = isset($b['year']) ? $b['year'] : PHP_INT_MIN;
-
-                    //         if ($yearA === $yearB) {
-                    //             return strcmp($a['certification_title'], $b['certification_title']);
-                    //         }
-                    //         return $yearB <=> $yearA;
-                    //       });
-                    //       $data->{$val->key} = $certificationData ;
-                    //   }
-
                     if ($keyName === 'banner' && $val->key === 'logo_en') {
                         $data->{$val->key} = $fields->firstWhere('key', 'logo_id')->value ?? null;
                     }
@@ -281,7 +234,7 @@ class PagesController extends Controller
             'meta_seo_description' => $post->meta_seo_description,
             'meta_keyword' => $post->meta_keyword,
             'meta' => $valueMeta,
-            'storage_url' => config('filesystems.disks.s3.url')
+            'storage_url' => config('filesystems.default') == 's3' ? config('filesystems.disks.s3.url') : config('app.url') . '/storage'
         ];
 
         // Add active banners for home page
@@ -315,10 +268,10 @@ class PagesController extends Controller
                                 $type = explode("_", $key);
                                 $custom_post = Post::select('id', 'title', 'slug')
                                     ->with([
-                                        'meta' => function ($query) {
-                                            $query->where('section', 'hero_banner');
-                                        }
-                                    ])
+                                            'meta' => function ($query) {
+                                                $query->where('section', 'hero_banner');
+                                            }
+                                        ])
                                     ->where('id', $value)
                                     ->first();
 
