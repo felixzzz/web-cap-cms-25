@@ -24,10 +24,23 @@
                         <div class="card card-flush p-3">
                             <div class="card-body p-3">
                                 @if($type['type'] != 'managements')
-                                <x-forms.text-input name="title" label="Title" required="0" placeholder="The title of post" text="" value="{!! $post->title !!}"/>
-                                    <x-forms.text-input name="slug" label="URL/Slug" required="0" placeholder="The URL/Slug of post" text="" value="{!! $post->slug !!}"/>
-                                    <x-forms.text-input name="title_en" label="Title EN" required="0" placeholder="The title of post" text="" value="{!! $post->title_en !!}"/>
-                                        <x-forms.text-input name="slug_en" label="URL/Slug EN" required="0" placeholder="The URL/Slug  of post" text="" value="{!! $post->slug_en !!}"/>
+                                <div class="mb-8 fv-row fv-plugins-icon-container">
+                                    <label for="language_availability" class="form-label">@lang('Language Availability')</label>
+                                    <select name="language_availability" id="language_availability" class="form-control form-select-solid mb-2">
+                                        <option value="both" {{ ($post->language_availability ?? 'both') === 'both' ? 'selected' : '' }}>@lang('Both (EN & ID)')</option>
+                                        <option value="en" {{ ($post->language_availability ?? 'both') === 'en' ? 'selected' : '' }}>@lang('English Only')</option>
+                                        <option value="id" {{ ($post->language_availability ?? 'both') === 'id' ? 'selected' : '' }}>@lang('Indonesian Only')</option>
+                                    </select>
+                                    <div class="text-muted fs-7">@lang('Select which language(s) this post will be available in')</div>
+                                </div>
+                                <div id="field-title-id">
+                                    <x-forms.text-input name="title" label="Title (ID)" required="0" placeholder="The title of post" text="" value="{!! $post->title !!}"/>
+                                    <x-forms.text-input name="slug" label="URL/Slug ID" required="0" placeholder="The URL/Slug of post" text="" value="{!! $post->slug !!}"/>
+                                </div>
+                                <div id="field-title-en">
+                                    <x-forms.text-input name="title_en" label="Title (EN)" required="0" placeholder="The title of post" text="" value="{!! $post->title_en !!}"/>
+                                    <x-forms.text-input name="slug_en" label="URL/Slug EN" required="0" placeholder="The URL/Slug of post" text="" value="{!! $post->slug_en !!}"/>
+                                </div>
                                     @if($type['type'] != 'blog')
                                     <div class="d-flex gap-4">
                                         @if ($type['is_category'])
@@ -274,6 +287,29 @@
     </form>
     @include('backend.posts.partials.banner-embed-modal')
 @endsection
+
+@push('scripts')
+    <script>
+        // Language availability toggle
+        function toggleLangFields() {
+            var val = $('#language_availability').val();
+            if (val === 'en') {
+                $('#field-title-id').hide().find('input').prop('required', false);
+                $('#field-title-en').show().find('input[name="title_en"]').prop('required', true);
+            } else if (val === 'id') {
+                $('#field-title-en').hide().find('input').prop('required', false);
+                $('#field-title-id').show().find('input[name="title"]').prop('required', true);
+            } else {
+                $('#field-title-id').show();
+                $('#field-title-en').show();
+                $('#field-title-id').find('input[name="title"]').prop('required', false);
+                $('#field-title-en').find('input[name="title_en"]').prop('required', false);
+            }
+        }
+        toggleLangFields();
+        $('#language_availability').change(toggleLangFields);
+    </script>
+@endpush
 
 @push('scripts')
 

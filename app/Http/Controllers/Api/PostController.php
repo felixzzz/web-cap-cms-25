@@ -43,16 +43,16 @@ class PostController extends Controller
         $lang = $request->lang;
 
         $query = Post::with('meta')->where('type', $request->type ?? 'news')
-                    ->where('status', 'publish');
+            ->where('status', 'publish');
         if ($request->has('search') && !empty($request->search)) {
             $searchTerm = strtolower($request->search);
-            if($request->type != 'managements'){
+            if ($request->type != 'managements') {
                 if ($lang === 'id') {
                     $query->whereRaw('LOWER(posts.title) LIKE ?', ["%{$searchTerm}%"]);
                 } elseif ($lang === 'en') {
                     $query->whereRaw('LOWER(posts.title_en) LIKE ?', ["%{$searchTerm}%"]);
                 }
-            }else{
+            } else {
                 $query->whereRaw('LOWER(posts.title) LIKE ?', ["%{$searchTerm}%"]);
             }
         }
@@ -62,7 +62,7 @@ class PostController extends Controller
         }
         if ($request->has('type') && $request->type != '') {
             $query->where('type', $request->type);
-            if($request->type == 'news' && $request->type == 'articles-sustainability'){
+            if ($request->type == 'news' && $request->type == 'articles-sustainability') {
                 $query->where('published_at', '<=', date('Y-m-d H:i:s'));
             }
         }
@@ -88,9 +88,26 @@ class PostController extends Controller
             $query->orderBy($request->sort, $request->order);
         }
 
+        // Filter by language availability
+        if ($request->has('lang') && !empty($request->lang)) {
+            if ($request->lang === 'en') {
+                // For English requests, exclude Indonesian-only posts
+                $query->where(function ($q) {
+                    $q->where('language_availability', '!=', 'id')
+                        ->orWhereNull('language_availability');
+                });
+            } elseif ($request->lang === 'id') {
+                // For Indonesian requests, exclude English-only posts
+                $query->where(function ($q) {
+                    $q->where('language_availability', '!=', 'en')
+                        ->orWhereNull('language_availability');
+                });
+            }
+        }
+
         $posts = $query->paginate($request->limit ?? 10);
 
-        $posts->getCollection()->transform(function ($value) use($lang){
+        $posts->getCollection()->transform(function ($value) use ($lang) {
             $valueMeta = [];
 
             if ($value->meta) {
@@ -105,7 +122,7 @@ class PostController extends Controller
                 }
             }
 
-            return  [
+            return [
                 'id' => $value->id,
                 'post_type' => $value->post_type,
                 'template' => $value->template,
@@ -114,6 +131,7 @@ class PostController extends Controller
                 'slug_en' => $value->slug_en,
                 'title_en' => $value->title_en,
                 'type' => $value->type,
+                'language_availability' => $value->language_availability,
                 'excerpt' => $value->excerpt,
                 'image' => $value->featured_image(),
                 'alt_image' => $value->alt_image,
@@ -135,7 +153,7 @@ class PostController extends Controller
                     'meta_keyword' => $value->meta_keyword
                 ],
                 'meta' => $valueMeta,
-                'category' => $value->category()->get(['id', 'name','name_en', 'slug']),
+                'category' => $value->category()->get(['id', 'name', 'name_en', 'slug']),
                 'tag' => $value->tags->map(function ($tag) use ($lang) {
                     return $tag->getTranslation('name', $lang); // Fetch name based on locale
                 })->implode(','),
@@ -144,17 +162,19 @@ class PostController extends Controller
         });
         return response()->json(['message' => 'Data Successfully Fetched', 'data' => $posts], 200);
     }
-    public function products(){
-        $products = Post::select('id','title','slug','title_en')->where('type','products')->where('status', 'publish')->get();
+    public function products()
+    {
+        $products = Post::select('id', 'title', 'slug', 'title_en')->where('type', 'products')->where('status', 'publish')->get();
         return response()->json(['data' => $products], 200);
     }
-    public function productJson(){
-        $products = Post::select('id','title','slug','title_en')->where('type','products')->where('status', 'publish')->get();
+    public function productJson()
+    {
+        $products = Post::select('id', 'title', 'slug', 'title_en')->where('type', 'products')->where('status', 'publish')->get();
         return response()->json($products, 200);
     }
     public function getPostDetailbySlug(Request $request)
     {
-        $post = Post::where('status','publish')->with([
+        $post = Post::where('status', 'publish')->with([
             'user' => function ($query) {
                 $query->select('id', 'name');
             },
@@ -166,7 +186,7 @@ class PostController extends Controller
             }
         ])->where(function ($query) use ($request) {
             $query->where('slug_en', $request->slug)
-                  ->orWhere('slug', $request->slug);
+                ->orWhere('slug', $request->slug);
         })->first();
         if (!$post) {
             return response()->json(['message' => 'Data not found'], 404);
@@ -193,6 +213,7 @@ class PostController extends Controller
             'slug_en' => $post->slug_en,
             'post_type' => $post->post_type,
             'type' => $post->type,
+            'language_availability' => $post->language_availability,
             'excerpt' => $post->excerpt,
             'content' => $post->content,
             'featured' => $post->featured,
@@ -208,7 +229,7 @@ class PostController extends Controller
                 'meta_description' => $post->meta_description,
                 'meta_keyword' => $post->meta_keyword
             ],
-            'category' => $post->category()->get(['id', 'name','name_en', 'slug']),
+            'category' => $post->category()->get(['id', 'name', 'name_en', 'slug']),
             'published_at' => $post->published_at,
             'meta' => $valueMeta,
             'author' => $post->author,
@@ -220,36 +241,38 @@ class PostController extends Controller
 
         return response()->json(['data' => $data], 200);
     }
-    public function categories(Request $request){
+    public function categories(Request $request)
+    {
         $request->validate([
             'type' => ['required', 'string'],
             'parent' => ['nullable', 'integer'],
             'lang' => ['nullable', 'string'],
             'highlight' => ['nullable', 'integer'],
         ]);
-        $query = Category::select('id','type','name','name_en','slug','description','description_en')->withCount('active_posts');
-        
+        $query = Category::select('id', 'type', 'name', 'name_en', 'slug', 'description', 'description_en')->withCount('active_posts');
+
         $query->when(request('type'), function ($q) use ($request) {
-            if($request->type !== 'contact_us' && $request->type !== 'whistleblowing' && $request->type !== 'managements' ){
+            if ($request->type !== 'contact_us' && $request->type !== 'whistleblowing' && $request->type !== 'managements') {
                 return $q->where('type', $request->type)->having('active_posts_count', '>', 0);
-            }else{
+            } else {
                 return $q->where('type', $request->type);
             }
         });
         if ($request->has('sort') && $request->sort != '' && $request->has('order') && $request->order != '') {
             $query->orderBy($request->sort, $request->order);
-        }else{
+        } else {
             $query->orderBy('sort', 'ASC');
         }
         $posts = $query->get();
 
-        if(!$posts){
+        if (!$posts) {
             return response()->json(['message' => 'not found'], 404);
         }
 
         return response()->json(['data' => $posts], 200);
     }
-    function is_json($string) {
+    function is_json($string)
+    {
         return !empty($string) && is_string($string) && is_array(json_decode($string, true)) && json_last_error() == 0;
     }
 
