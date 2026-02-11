@@ -55,7 +55,8 @@
 
                         <div class="row mb-5">
                             <div class="col-md-6">
-                                <label class="form-label fs-5 fw-bold mb-3">Start Date:</label>
+                                <label class="form-label fs-5 fw-bold mb-3">Start Date: <span
+                                        class="text-danger">*</span></label>
                                 <input type="datetime-local" class="form-control form-control-solid"
                                     wire:model="startDate">
                                 @error('startDate')
@@ -63,7 +64,8 @@
                                 @enderror
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label fs-5 fw-bold mb-3">End Date:</label>
+                                <label class="form-label fs-5 fw-bold mb-3">End Date: <span
+                                        class="text-danger">*</span></label>
                                 <input type="datetime-local" class="form-control form-control-solid"
                                     wire:model="endDate">
                                 @error('endDate')
