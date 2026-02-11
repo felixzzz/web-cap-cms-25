@@ -45,10 +45,10 @@ class PostController extends BackendController
         // setup rules validation
         $this->rules = [
             'type' => [],
-            'title' => ['required_without:title_en', 'max:200'],
+            'title' => ['nullable', 'max:200'],
             'slug' => 'max:100',
             'slug_en' => 'max:100',
-            'title_en' => ['required_without:title', 'max:200'],
+            'title_en' => ['nullable', 'max:200'],
             'excerpt' => ['nullable', 'max:255'],
             'content' => ['nullable'],
             'tags' => ['nullable'],
@@ -64,7 +64,8 @@ class PostController extends BackendController
             'featured' => ['nullable'],
             'status' => ['nullable'],
             'published_at' => ['nullable', 'date'],
-            'post_type' => ['nullable']
+            'post_type' => ['nullable'],
+            'language_availability' => ['nullable', 'in:en,id,both']
         ];
     }
 
@@ -122,6 +123,20 @@ class PostController extends BackendController
         $componentRules = $this->componentService->getComponentRules($components);
 
         $rules = array_merge($this->rules, $componentRules);
+
+        // Dynamic title validation based on language availability
+        $langAvail = $request->input('language_availability', 'both');
+        if ($langAvail === 'en') {
+            $rules['title_en'] = ['required', 'max:200'];
+            $rules['title'] = ['nullable', 'max:200'];
+        } elseif ($langAvail === 'id') {
+            $rules['title'] = ['required', 'max:200'];
+            $rules['title_en'] = ['nullable', 'max:200'];
+        } else {
+            $rules['title'] = ['required_without:title_en', 'max:200'];
+            $rules['title_en'] = ['required_without:title', 'max:200'];
+        }
+
         $requestValidated = Validator::make($request->all(), $rules)->validate();
 
         $post = (new PostService())->create_post_handler($requestValidated, $type['type']);
@@ -201,6 +216,20 @@ class PostController extends BackendController
         list($template, $components) = $this->getTemplates($type['type']);
         $componentRules = $this->componentService->getComponentRules($components);
         $rules = array_merge($this->rules, $componentRules);
+
+        // Dynamic title validation based on language availability
+        $langAvail = $request->input('language_availability', 'both');
+        if ($langAvail === 'en') {
+            $rules['title_en'] = ['required', 'max:200'];
+            $rules['title'] = ['nullable', 'max:200'];
+        } elseif ($langAvail === 'id') {
+            $rules['title'] = ['required', 'max:200'];
+            $rules['title_en'] = ['nullable', 'max:200'];
+        } else {
+            $rules['title'] = ['required_without:title_en', 'max:200'];
+            $rules['title_en'] = ['required_without:title', 'max:200'];
+        }
+
         $requestValidated = Validator::make($request->all(), $rules)->validate();
 
         DB::beginTransaction();

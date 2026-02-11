@@ -68,7 +68,8 @@ class Post extends Model implements HasMedia
         'template',
         'post_type',
         'alt_image',
-        'alt_image_en'
+        'alt_image_en',
+        'language_availability'
     ];
 
     /**
@@ -86,13 +87,15 @@ class Post extends Model implements HasMedia
 
     public function getIsFilledEnAttribute()
     {
-        // Consider filled if title_en is not empty
+        $lang = $this->language_availability ?? 'both';
+        if ($lang === 'id') return false;
         return !empty($this->title_en);
     }
 
     public function getIsFilledIdAttribute()
     {
-        // Consider filled if title is not empty (ID is default 'title' column)
+        $lang = $this->language_availability ?? 'both';
+        if ($lang === 'en') return false;
         return !empty($this->title);
     }
 
