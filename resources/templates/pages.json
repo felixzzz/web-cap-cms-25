@@ -6257,21 +6257,40 @@
                         ]
                     },
                     {
-                        "name": "hero_image",
-                        "label": "Hero Image",
+                        "name": "hero_image_en",
+                        "label": "Hero Image (English)",
                         "type": "image",
                         "size": 300,
                         "info": "Recommended width 1920px and file size 300KB"
                     },
                     {
-                        "name": "hero_image_alt",
-                        "label": "Hero Image Alt Text",
+                        "name": "hero_image_id",
+                        "label": "Hero Image (Bahasa)",
+                        "type": "image",
+                        "size": 300,
+                        "info": "Recommended width 1920px and file size 300KB"
+                    },
+                    {
+                        "name": "hero_image_alt_en",
+                        "label": "Hero Image Alt Text (English)",
                         "type": "text",
                         "placeholder": "Alt text for hero image"
                     },
                     {
-                        "name": "tab_description",
-                        "label": "Tab Description",
+                        "name": "hero_image_alt_id",
+                        "label": "Hero Image Alt Text (Bahasa)",
+                        "type": "text",
+                        "placeholder": "Alt text for hero image"
+                    },
+                    {
+                        "name": "tab_description_en",
+                        "label": "Tab Description (English)",
+                        "type": "editor",
+                        "info": "Description below hero image"
+                    },
+                    {
+                        "name": "tab_description_id",
+                        "label": "Tab Description (Bahasa)",
                         "type": "editor",
                         "info": "Description below hero image"
                     },
@@ -6409,21 +6428,21 @@
                         ]
                     },
                     {
-                        "name": "hero_image",
-                        "label": "Hero Image",
+                        "name": "hero_image_en",
+                        "label": "Hero Image (English)",
                         "type": "image",
                         "size": 300,
                         "info": "Recommended width 1920px and file size 300KB"
                     },
                     {
-                        "name": "hero_image_alt",
-                        "label": "Hero Image Alt Text",
+                        "name": "hero_image_alt_en",
+                        "label": "Hero Image Alt Text (English)",
                         "type": "text",
                         "placeholder": "Alt text for hero image"
                     },
                     {
-                        "name": "tab_description",
-                        "label": "Tab Description",
+                        "name": "tab_description_en",
+                        "label": "Tab Description (English)",
                         "type": "editor",
                         "info": "Description below hero image"
                     },
@@ -6561,21 +6580,40 @@
                         ]
                     },
                     {
-                        "name": "hero_image",
-                        "label": "Hero Image",
+                        "name": "hero_image_en",
+                        "label": "Hero Image (English)",
                         "type": "image",
                         "size": 300,
                         "info": "Recommended width 1920px and file size 300KB"
                     },
                     {
-                        "name": "hero_image_alt",
-                        "label": "Hero Image Alt Text",
+                        "name": "hero_image_id",
+                        "label": "Hero Image (Bahasa)",
+                        "type": "image",
+                        "size": 300,
+                        "info": "Recommended width 1920px and file size 300KB"
+                    },
+                    {
+                        "name": "hero_image_alt_en",
+                        "label": "Hero Image Alt Text (English)",
                         "type": "text",
                         "placeholder": "Alt text for hero image"
                     },
                     {
-                        "name": "tab_description",
-                        "label": "Tab Description",
+                        "name": "hero_image_alt_id",
+                        "label": "Hero Image Alt Text (Bahasa)",
+                        "type": "text",
+                        "placeholder": "Alt text for hero image"
+                    },
+                    {
+                        "name": "tab_description_en",
+                        "label": "Tab Description (English)",
+                        "type": "editor",
+                        "info": "Description below hero image"
+                    },
+                    {
+                        "name": "tab_description_id",
+                        "label": "Tab Description (Bahasa)",
                         "type": "editor",
                         "info": "Description below hero image"
                     },
