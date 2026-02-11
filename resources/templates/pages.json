@@ -6257,6 +6257,25 @@
                         ]
                     },
                     {
+                        "name": "hero_image",
+                        "label": "Hero Image",
+                        "type": "image",
+                        "size": 300,
+                        "info": "Recommended width 1920px and file size 300KB"
+                    },
+                    {
+                        "name": "hero_image_alt",
+                        "label": "Hero Image Alt Text",
+                        "type": "text",
+                        "placeholder": "Alt text for hero image"
+                    },
+                    {
+                        "name": "tab_description",
+                        "label": "Tab Description",
+                        "type": "editor",
+                        "info": "Description below hero image"
+                    },
+                    {
                         "name": "items",
                         "label": "Items",
                         "type": "repeater",
@@ -6371,6 +6390,25 @@
                         ]
                     },
                     {
+                        "name": "hero_image",
+                        "label": "Hero Image",
+                        "type": "image",
+                        "size": 300,
+                        "info": "Recommended width 1920px and file size 300KB"
+                    },
+                    {
+                        "name": "hero_image_alt",
+                        "label": "Hero Image Alt Text",
+                        "type": "text",
+                        "placeholder": "Alt text for hero image"
+                    },
+                    {
+                        "name": "tab_description",
+                        "label": "Tab Description",
+                        "type": "editor",
+                        "info": "Description below hero image"
+                    },
+                    {
                         "name": "items",
                         "label": "Items",
                         "type": "repeater",
@@ -6483,6 +6521,25 @@
                                 "value": "inactive"
                             }
                         ]
+                    },
+                    {
+                        "name": "hero_image",
+                        "label": "Hero Image",
+                        "type": "image",
+                        "size": 300,
+                        "info": "Recommended width 1920px and file size 300KB"
+                    },
+                    {
+                        "name": "hero_image_alt",
+                        "label": "Hero Image Alt Text",
+                        "type": "text",
+                        "placeholder": "Alt text for hero image"
+                    },
+                    {
+                        "name": "tab_description",
+                        "label": "Tab Description",
+                        "type": "editor",
+                        "info": "Description below hero image"
                     },
                     {
                         "name": "items",
