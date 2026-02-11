@@ -6257,6 +6257,44 @@
                         ]
                     },
                     {
+                        "name": "hero_image_en",
+                        "label": "Hero Image (English)",
+                        "type": "image",
+                        "size": 300,
+                        "info": "Recommended width 1920px and file size 300KB"
+                    },
+                    {
+                        "name": "hero_image_id",
+                        "label": "Hero Image (Bahasa)",
+                        "type": "image",
+                        "size": 300,
+                        "info": "Recommended width 1920px and file size 300KB"
+                    },
+                    {
+                        "name": "hero_image_alt_en",
+                        "label": "Hero Image Alt Text (English)",
+                        "type": "text",
+                        "placeholder": "Alt text for hero image"
+                    },
+                    {
+                        "name": "hero_image_alt_id",
+                        "label": "Hero Image Alt Text (Bahasa)",
+                        "type": "text",
+                        "placeholder": "Alt text for hero image"
+                    },
+                    {
+                        "name": "tab_description_en",
+                        "label": "Tab Description (English)",
+                        "type": "editor",
+                        "info": "Description below hero image"
+                    },
+                    {
+                        "name": "tab_description_id",
+                        "label": "Tab Description (Bahasa)",
+                        "type": "editor",
+                        "info": "Description below hero image"
+                    },
+                    {
                         "name": "items",
                         "label": "Items",
                         "type": "repeater",
@@ -6270,12 +6308,31 @@
                             {
                                 "name": "description",
                                 "label": "Description",
-                                "type": "textarea"
+                                "type": "editor",
+                                "info": "Main content (max 1000 chars recommended)"
                             },
                             {
                                 "name": "image",
-                                "label": "Image",
+                                "label": "Main Image",
                                 "type": "image"
+                            },
+                            {
+                                "name": "supporting_images",
+                                "label": "Supporting Images (0-4)",
+                                "type": "repeater",
+                                "info": "Optional supporting images below content",
+                                "list": [
+                                    {
+                                        "name": "image",
+                                        "label": "Image",
+                                        "type": "image"
+                                    },
+                                    {
+                                        "name": "alt",
+                                        "label": "Alt Text",
+                                        "type": "text"
+                                    }
+                                ]
                             },
                             {
                                 "name": "cta_label",
@@ -6371,6 +6428,25 @@
                         ]
                     },
                     {
+                        "name": "hero_image_en",
+                        "label": "Hero Image (English)",
+                        "type": "image",
+                        "size": 300,
+                        "info": "Recommended width 1920px and file size 300KB"
+                    },
+                    {
+                        "name": "hero_image_alt_en",
+                        "label": "Hero Image Alt Text (English)",
+                        "type": "text",
+                        "placeholder": "Alt text for hero image"
+                    },
+                    {
+                        "name": "tab_description_en",
+                        "label": "Tab Description (English)",
+                        "type": "editor",
+                        "info": "Description below hero image"
+                    },
+                    {
                         "name": "items",
                         "label": "Items",
                         "type": "repeater",
@@ -6384,12 +6460,31 @@
                             {
                                 "name": "description",
                                 "label": "Description",
-                                "type": "textarea"
+                                "type": "editor",
+                                "info": "Main content (max 1000 chars recommended)"
                             },
                             {
                                 "name": "image",
-                                "label": "Image",
+                                "label": "Main Image",
                                 "type": "image"
+                            },
+                            {
+                                "name": "supporting_images",
+                                "label": "Supporting Images (0-4)",
+                                "type": "repeater",
+                                "info": "Optional supporting images below content",
+                                "list": [
+                                    {
+                                        "name": "image",
+                                        "label": "Image",
+                                        "type": "image"
+                                    },
+                                    {
+                                        "name": "alt",
+                                        "label": "Alt Text",
+                                        "type": "text"
+                                    }
+                                ]
                             },
                             {
                                 "name": "cta_label",
@@ -6485,6 +6580,44 @@
                         ]
                     },
                     {
+                        "name": "hero_image_en",
+                        "label": "Hero Image (English)",
+                        "type": "image",
+                        "size": 300,
+                        "info": "Recommended width 1920px and file size 300KB"
+                    },
+                    {
+                        "name": "hero_image_id",
+                        "label": "Hero Image (Bahasa)",
+                        "type": "image",
+                        "size": 300,
+                        "info": "Recommended width 1920px and file size 300KB"
+                    },
+                    {
+                        "name": "hero_image_alt_en",
+                        "label": "Hero Image Alt Text (English)",
+                        "type": "text",
+                        "placeholder": "Alt text for hero image"
+                    },
+                    {
+                        "name": "hero_image_alt_id",
+                        "label": "Hero Image Alt Text (Bahasa)",
+                        "type": "text",
+                        "placeholder": "Alt text for hero image"
+                    },
+                    {
+                        "name": "tab_description_en",
+                        "label": "Tab Description (English)",
+                        "type": "editor",
+                        "info": "Description below hero image"
+                    },
+                    {
+                        "name": "tab_description_id",
+                        "label": "Tab Description (Bahasa)",
+                        "type": "editor",
+                        "info": "Description below hero image"
+                    },
+                    {
                         "name": "items",
                         "label": "Items",
                         "type": "repeater",
@@ -6498,12 +6631,31 @@
                             {
                                 "name": "description",
                                 "label": "Description",
-                                "type": "textarea"
+                                "type": "editor",
+                                "info": "Main content (max 1000 chars recommended)"
                             },
                             {
                                 "name": "image",
-                                "label": "Image",
+                                "label": "Main Image",
                                 "type": "image"
+                            },
+                            {
+                                "name": "supporting_images",
+                                "label": "Supporting Images (0-4)",
+                                "type": "repeater",
+                                "info": "Optional supporting images below content",
+                                "list": [
+                                    {
+                                        "name": "image",
+                                        "label": "Image",
+                                        "type": "image"
+                                    },
+                                    {
+                                        "name": "alt",
+                                        "label": "Alt Text",
+                                        "type": "text"
+                                    }
+                                ]
                             },
                             {
                                 "name": "cta_label",
