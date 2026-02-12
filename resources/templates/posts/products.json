@@ -1,18 +1,18 @@
 [
     {
         "name": "products",
-        "label": "Products", 
+        "label": "Products",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -53,10 +53,10 @@
                         "info": "Recommended file size 100 KB"
                     },
                     {
-                      "name": "alt_text_thumbnail_image",
-                      "label": "Alt Text (Thumbnail Image)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_thumbnail_image",
+                        "label": "Alt Text (Thumbnail Image)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "thumbnail_desc",
@@ -67,27 +67,27 @@
                         "name": "image_mobile",
                         "label": "Image Mobile",
                         "type": "image",
-                        "size" : 100,
+                        "size": 100,
                         "info": "Recommended 540 x 960 px (ratio 9:16) and recommended file size 100 KB"
                     },
                     {
-                      "name": "alt_text_image_mobile",
-                      "label": "Alt Text (Image Mobile)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
                         "label": "Image desktop",
                         "type": "image",
-                        "size" : 220,
+                        "size": 220,
                         "info": "Recommended 2160 x 1080 px (ratio 2:1) and recommended file size 220 KB"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -161,14 +161,14 @@
                                 "name": "image",
                                 "label": "Image",
                                 "type": "image",
-                                "size" : 60,
+                                "size": 60,
                                 "info": "Recommended 450 x 450 px (ratio 1:1) and recommended file size 60 KB"
                             },
                             {
-                              "name": "alt_text",
-                              "label": "Alt Text",
-                              "type": "text",
-                              "placeholder": "ex: alt text image"
+                                "name": "alt_text",
+                                "label": "Alt Text",
+                                "type": "text",
+                                "placeholder": "ex: alt text image"
                             },
                             {
                                 "name": "card_title",
@@ -295,14 +295,14 @@
                                         "name": "image",
                                         "label": "Image",
                                         "type": "image",
-                                        "size" : 60,
+                                        "size": 60,
                                         "info": "Recommended 450 x 450 px (ratio 1:1) and recommended file size 60 KB"
                                     },
                                     {
-                                      "name": "alt_text",
-                                      "label": "Alt Text",
-                                      "type": "text",
-                                      "placeholder": "ex: alt text image"
+                                        "name": "alt_text",
+                                        "label": "Alt Text",
+                                        "type": "text",
+                                        "placeholder": "ex: alt text image"
                                     },
                                     {
                                         "name": "file",
@@ -310,6 +310,56 @@
                                         "type": "upload"
                                     }
                                 ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "keyName": "product_catalog_banners",
+                "label": "Product Catalog Banners",
+                "section": "3",
+                "info": "Display up to 4 clickable banner images below hero. Each banner links to a PDF catalog.",
+                "fields": [
+                    {
+                        "name": "product_catalog_banners",
+                        "label": "Banners",
+                        "type": "repeater",
+                        "max": 4,
+                        "list": [
+                            {
+                                "name": "status",
+                                "label": "Status",
+                                "type": "select",
+                                "options": [
+                                    {
+                                        "label": "Active",
+                                        "value": "active"
+                                    },
+                                    {
+                                        "label": "Inactive",
+                                        "value": "inactive"
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "banner_image",
+                                "label": "Banner Image",
+                                "type": "image",
+                                "size": 200,
+                                "info": "Recommended 1920 x 1080 px (16:9 ratio) and file size 200 KB"
+                            },
+                            {
+                                "name": "banner_image_alt",
+                                "label": "Banner Image Alt Text",
+                                "type": "text",
+                                "placeholder": "ex: Product Catalog - Household Products"
+                            },
+                            {
+                                "name": "pdf_file",
+                                "label": "PDF Catalog File",
+                                "type": "upload",
+                                "info": "Upload PDF catalog that opens when banner is clicked"
                             }
                         ]
                     }
