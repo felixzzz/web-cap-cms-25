@@ -57,6 +57,10 @@ Vue.component(
     "repeater-show-component",
     require("./components/RepeaterShowComponent.vue").default
 );
+Vue.component(
+    "accordion-repeater-component",
+    require("./components/AccordionRepeaterComponent.vue").default
+);
 
 // Initialize Vue
 const appElement = document.getElementById("app");

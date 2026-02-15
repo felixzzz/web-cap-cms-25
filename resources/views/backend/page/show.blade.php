@@ -9,8 +9,14 @@
         </x-slot>
 
         <x-slot name="headerActions">
-            <x-utils.link class="card-header-action me-2" :href="route('admin.page',['type'=>$type])" :text="__('Back')" />
-            <x-utils.edit-button class="card-header-action" :href="route('admin.page.edit', ['post' => $post])" :text="__('Edit')" />
+            @if($post->site_url === '/')
+                <a href="{{ route('admin.home-banners.edit') }}" class="btn btn-sm btn-primary me-2">
+                    <i class="fas fa-image"></i> @lang('Configure Banners')
+                </a>
+            @endif
+            <x-utils.link class="card-header-action me-2" :href="route('admin.page', ['type' => $type])" :text="__('Back')" />
+            <x-utils.edit-button class="card-header-action" :href="route('admin.page.edit', ['post' => $post])"
+                :text="__('Edit')" />
         </x-slot>
 
         <x-slot name="body">
@@ -99,11 +105,14 @@
 
         <x-slot name="footer">
             <small class="float-end text-muted">
-                <strong>@lang('Created at'):</strong> @displayDate($post->created_at) ({{ $post->created_at->diffForHumans() }}),
-                <strong>@lang('Last Updated'):</strong> @displayDate($post->updated_at) ({{ $post->updated_at->diffForHumans() }})
+                <strong>@lang('Created at'):</strong> @displayDate($post->created_at)
+                ({{ $post->created_at->diffForHumans() }}),
+                <strong>@lang('Last Updated'):</strong> @displayDate($post->updated_at)
+                ({{ $post->updated_at->diffForHumans() }})
 
                 @if($post->trashed())
-                    <strong>@lang('Deleted at'):</strong> @displayDate($post->deleted_at) ({{ $post->deleted_at->diffForHumans() }})
+                    <strong>@lang('Deleted at'):</strong> @displayDate($post->deleted_at)
+                    ({{ $post->deleted_at->diffForHumans() }})
                 @endif
             </small>
         </x-slot>
@@ -122,10 +131,10 @@
                             'meta' => $meta,
                             'loopIndex' => $loop->index,
                             'postId' => $post->id
-                            ])
+                        ])
                     @endforeach
-                </div>
-            </x-slot>
-        </x-backend.card>
+                        </div>
+                    </x-slot>
+                </x-backend.card>
     @endif
 @endsection

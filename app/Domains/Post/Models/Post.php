@@ -68,7 +68,8 @@ class Post extends Model implements HasMedia
         'template',
         'post_type',
         'alt_image',
-        'alt_image_en'
+        'alt_image_en',
+        'language_availability'
     ];
 
     /**
@@ -79,8 +80,24 @@ class Post extends Model implements HasMedia
     ];
 
     protected $appends = [
-        'template'
+        'template',
+        'is_filled_en',
+        'is_filled_id'
     ];
+
+    public function getIsFilledEnAttribute()
+    {
+        $lang = $this->language_availability ?? 'both';
+        if ($lang === 'id') return false;
+        return !empty($this->title_en);
+    }
+
+    public function getIsFilledIdAttribute()
+    {
+        $lang = $this->language_availability ?? 'both';
+        if ($lang === 'en') return false;
+        return !empty($this->title);
+    }
 
     public function isAdmin(): bool
     {
@@ -95,7 +112,7 @@ class Post extends Model implements HasMedia
         return null;
     }
 
-    public function getSlugOptions() : SlugOptions
+    public function getSlugOptions(): SlugOptions
     {
         $options = SlugOptions::create()->saveSlugsTo('slug');
 
@@ -124,27 +141,33 @@ class Post extends Model implements HasMedia
             ->singleFile();
     }
 
-    public function posttype(){
+    public function posttype()
+    {
         return $this->belongsTo(PostType::class);
     }
 
-    public function children(){
-        return $this->hasMany( Post::class, 'parent', 'id' );
+    public function children()
+    {
+        return $this->hasMany(Post::class, 'parent', 'id');
     }
 
-    public function parent(){
-        return $this->hasOne( Post::class, 'id', 'parent' );
+    public function parent()
+    {
+        return $this->hasOne(Post::class, 'id', 'parent');
     }
 
-    public function parent_data(){
-        return $this->hasOne( Post::class, 'id', 'parent' );
+    public function parent_data()
+    {
+        return $this->hasOne(Post::class, 'id', 'parent');
     }
 
-    public function category(){
+    public function category()
+    {
         return $this->belongsToMany(Category::class, 'post_category');
     }
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
@@ -160,5 +183,10 @@ class Post extends Model implements HasMedia
     public function meta_result()
     {
         return $this->hasMany(PostMeta::class);
+    }
+
+    public function activeBanners()
+    {
+        return $this->hasMany(\App\Models\BannerActive::class);
     }
 }

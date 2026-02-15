@@ -24,10 +24,23 @@
                         <div class="card card-flush p-3">
                             <div class="card-body p-3">
                                 @if($type['type'] != 'managements')
-                                <x-forms.text-input name="title" label="Title" required="1" placeholder="The title of post" text="" value="{!! $post->title !!}"/>
-                                    <x-forms.text-input name="slug" label="URL/Slug" required="1" placeholder="The URL/Slug of post" text="" value="{!! $post->slug !!}"/>
-                                    <x-forms.text-input name="title_en" label="Title EN" required="1" placeholder="The title of post" text="" value="{!! $post->title_en !!}"/>
-                                        <x-forms.text-input name="slug_en" label="URL/Slug EN" required="1" placeholder="The URL/Slug  of post" text="" value="{!! $post->slug_en !!}"/>
+                                <div class="mb-8 fv-row fv-plugins-icon-container">
+                                    <label for="language_availability" class="form-label">@lang('Language Availability')</label>
+                                    <select name="language_availability" id="language_availability" class="form-control form-select-solid mb-2">
+                                        <option value="both" {{ ($post->language_availability ?? 'both') === 'both' ? 'selected' : '' }}>@lang('Both (EN & ID)')</option>
+                                        <option value="en" {{ ($post->language_availability ?? 'both') === 'en' ? 'selected' : '' }}>@lang('English Only')</option>
+                                        <option value="id" {{ ($post->language_availability ?? 'both') === 'id' ? 'selected' : '' }}>@lang('Indonesian Only')</option>
+                                    </select>
+                                    <div class="text-muted fs-7">@lang('Select which language(s) this post will be available in')</div>
+                                </div>
+                                <div id="field-title-id">
+                                    <x-forms.text-input name="title" label="Title (ID)" required="0" placeholder="The title of post" text="" value="{!! $post->title !!}"/>
+                                    <x-forms.text-input name="slug" label="URL/Slug ID" required="0" placeholder="The URL/Slug of post" text="" value="{!! $post->slug !!}"/>
+                                </div>
+                                <div id="field-title-en">
+                                    <x-forms.text-input name="title_en" label="Title (EN)" required="0" placeholder="The title of post" text="" value="{!! $post->title_en !!}"/>
+                                    <x-forms.text-input name="slug_en" label="URL/Slug EN" required="0" placeholder="The URL/Slug of post" text="" value="{!! $post->slug_en !!}"/>
+                                </div>
                                     @if($type['type'] != 'blog')
                                     <div class="d-flex gap-4">
                                         @if ($type['is_category'])
@@ -156,8 +169,98 @@
                                                             'lang_option' => $template['lang_option'],
                                                         ])
                                                     @endforeach
+
+                                                    @if($type['type'] == 'news' || $type['type'] == 'blog')
+                                                        <div class="separator my-10"></div>
+                                                        <h3 class="text-dark fw-bolder mb-5">Banner Configuration</h3>
+                                                        
+                                                        <div class="d-flex align-items-start">
+                                                            <div class="nav flex-column nav-pills me-3" id="v-pills-tab-{{$lang_code}}" role="tablist" aria-orientation="vertical">
+                                                                @foreach(['left', 'right', 'center', 'bottom'] as $location)
+                                                                    <button class="nav-link {{$loop->first && $location == 'left' ? 'active' : ''}}" 
+                                                                            id="v-pills-{{$location}}-{{$lang_code}}-tab" 
+                                                                            data-bs-toggle="pill" 
+                                                                            data-bs-target="#v-pills-{{$location}}-{{$lang_code}}" 
+                                                                            type="button" role="tab" 
+                                                                            aria-controls="v-pills-{{$location}}-{{$lang_code}}" 
+                                                                            aria-selected="{{$loop->first ? 'true' : 'false'}}">
+                                                                        {{ ucfirst($location) }}
+                                                                    </button>
+                                                                @endforeach
+                                                            </div>
+                                                            <div class="tab-content flex-grow-1" id="v-pills-tabContent-{{$lang_code}}">
+                                                                @foreach(['left', 'right', 'center', 'bottom'] as $location)
+                                                                    @php
+                                                                        $activeBanner = $post->activeBanners
+                                                                            ->where('location', $location)
+                                                                            ->where('language', $lang_code)
+                                                                            ->filter(function($b) {
+                                                                                $now = now();
+                                                                                return (is_null($b->end_date) || $b->end_date >= $now) &&
+                                                                                       (is_null($b->start_date) || $b->start_date <= $now);
+                                                                            })
+                                                                            ->sortByDesc('start_date')
+                                                                            ->first();
+                                                                    @endphp
+                                                                    <div class="tab-pane fade {{$loop->first && $location == 'left' ? 'show active' : ''}}" 
+                                                                         id="v-pills-{{$location}}-{{$lang_code}}" 
+                                                                         role="tabpanel" 
+                                                                         aria-labelledby="v-pills-{{$location}}-{{$lang_code}}-tab">
+                                                                        <div class="mb-5">
+                                                                            <label class="form-label">Banner Group</label>
+                                                                            <select name="banner_active[{{$lang_code}}][{{$location}}][group_id]" 
+                                                                                    class="form-select form-select-solid banner-group-select" 
+                                                                                    data-control="select2" 
+                                                                                    data-placeholder="Select Banner Group">
+                                                                                <option value="">Select Banner Group</option>
+                                                                                @foreach($bannerGroups as $group)
+                                                                                    <option value="{{ $group->id }}" {{ $activeBanner && $activeBanner->banner_group_id == $group->id ? 'selected' : '' }}>
+                                                                                        {{ $group->title }} ({{ $group->items_count }} banners)
+                                                                                    </option>
+                                                                                @endforeach
+                                                                            </select>
+                                                                        </div>
+
+                                                                        <div class="row">
+                                                                            <div class="col-md-6 mb-5">
+                                                                                <label class="form-label">Start Date</label>
+                                                                                <input type="datetime-local" 
+                                                                                       name="banner_active[{{$lang_code}}][{{$location}}][start_date]" 
+                                                                                       class="form-control form-control-solid"
+                                                                                       value="{{ $activeBanner && $activeBanner->start_date ? $activeBanner->start_date->format('Y-m-d\TH:i') : '' }}">
+                                                                            </div>
+                                                                            <div class="col-md-6 mb-5">
+                                                                                <label class="form-label">End Date</label>
+                                                                                <input type="datetime-local" 
+                                                                                       name="banner_active[{{$lang_code}}][{{$location}}][end_date]" 
+                                                                                       class="form-control form-control-solid"
+                                                                                       value="{{ $activeBanner && $activeBanner->end_date ? $activeBanner->end_date->format('Y-m-d\TH:i') : '' }}">
+                                                                            </div>
+                                                                        </div>
+                                                                        @if(in_array($location, ['left', 'right']))
+                                                                        <div class="form-check form-check-custom form-check-solid mb-5">
+                                                                            <input class="form-check-input" type="checkbox" 
+                                                                                   name="banner_active[{{$lang_code}}][{{$location}}][is_hide_in_mobile]" 
+                                                                                   id="hide_in_mobile_{{$lang_code}}_{{$location}}"
+                                                                                   value="1"
+                                                                                   {{ $activeBanner && $activeBanner->is_hide_in_mobile ? 'checked' : '' }}>
+                                                                            <label class="form-check-label" for="hide_in_mobile_{{$lang_code}}_{{$location}}">
+                                                                                Hide in Mobile
+                                                                            </label>
+                                                                        </div>
+                                                                        @endif
+                                                                        <div class="mt-3">
+                                                                            <button type="button" style="font-size: 10px!important; padding: 0px 5px!important;" class="btn btn-sm btn-light-danger clear-banner-btn">Clear Banner Config in this Position</button>
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                                 </div>
                                             @endforeach
+
+
                                         </div>
                                     @else
                                         @foreach ($components as $component)
@@ -182,7 +285,31 @@
             </div>
         </div>
     </form>
+    @include('backend.posts.partials.banner-embed-modal')
 @endsection
+
+@push('scripts')
+    <script>
+        // Language availability toggle
+        function toggleLangFields() {
+            var val = $('#language_availability').val();
+            if (val === 'en') {
+                $('#field-title-id').hide().find('input').prop('required', false);
+                $('#field-title-en').show().find('input[name="title_en"]').prop('required', true);
+            } else if (val === 'id') {
+                $('#field-title-en').hide().find('input').prop('required', false);
+                $('#field-title-id').show().find('input[name="title"]').prop('required', true);
+            } else {
+                $('#field-title-id').show();
+                $('#field-title-en').show();
+                $('#field-title-id').find('input[name="title"]').prop('required', false);
+                $('#field-title-en').find('input[name="title_en"]').prop('required', false);
+            }
+        }
+        toggleLangFields();
+        $('#language_availability').change(toggleLangFields);
+    </script>
+@endpush
 
 @push('scripts')
 
@@ -210,4 +337,38 @@
         $('#divPublishAt').show();
         @endif
     </script>
+@endpush
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        // Initialize Select2 for all visible selects initially
+        $('.banner-group-select').select2({
+            width: '100%',
+            minimumResultsForSearch: 0 // Always show search
+        });
+
+        // specific fix for tabs: destroy and re-init on show
+        $('button[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
+            var targetId = $(e.target).data('bs-target'); // e.g. #v-pills-left-en
+            var $target = $(targetId);
+            
+            $target.find('.banner-group-select').each(function() {
+                 if ($(this).data('select2')) {
+                    $(this).select2('destroy');
+                 }
+                 $(this).select2({
+                    width: '100%',
+                    minimumResultsForSearch: 0 // Always show search
+                 });
+            });
+        });
+    });
+
+    $(document).on('click', '.clear-banner-btn', function() {
+        var container = $(this).closest('.tab-pane');
+        container.find('select').val(null).trigger('change'); // .val(null) works better for select2 clearing
+        container.find('input[type="datetime-local"]').val('');
+        container.find('input[type="checkbox"]').prop('checked', false);
+    });
+</script>
 @endpush
