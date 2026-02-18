@@ -119,8 +119,18 @@ class PostController extends BackendController
     {
         // Gate::authorize("admin.access.news.create");
         $type = $this->extract_post_type($type);
-        list($template, $components) = $this->getTemplates($type['type']);
-        $componentRules = $this->componentService->getComponentRules($components);
+        list($template, $components, $multilanguage, $lang_option) = $this->getTemplates($type['type']);
+
+        $templateInfo = [
+            'multilanguage' => $multilanguage['multilanguage'] ?? 'false',
+            'lang_option' => $lang_option['lang_option'] ?? []
+        ];
+
+        if ($templateInfo['multilanguage'] === 'true') {
+            $componentRules = $this->componentService->getComponentRulesLanguage($components, $templateInfo);
+        } else {
+            $componentRules = $this->componentService->getComponentRules($components);
+        }
 
         $rules = array_merge($this->rules, $componentRules);
 
@@ -213,8 +223,18 @@ class PostController extends BackendController
     {
         // Gate::authorize("admin.access.news.update");
         $type = $this->extract_post_type($post->type);
-        list($template, $components) = $this->getTemplates($type['type']);
-        $componentRules = $this->componentService->getComponentRules($components);
+        list($template, $components, $multilanguage, $lang_option) = $this->getTemplates($type['type']);
+
+        $templateInfo = [
+            'multilanguage' => $multilanguage['multilanguage'] ?? 'false',
+            'lang_option' => $lang_option['lang_option'] ?? []
+        ];
+
+        if ($templateInfo['multilanguage'] === 'true') {
+            $componentRules = $this->componentService->getComponentRulesLanguage($components, $templateInfo);
+        } else {
+            $componentRules = $this->componentService->getComponentRules($components);
+        }
         $rules = array_merge($this->rules, $componentRules);
 
         // Dynamic title validation based on language availability

@@ -28,9 +28,9 @@
                                 <div class="mb-8 fv-row fv-plugins-icon-container">
                                     <label for="language_availability" class="form-label">@lang('Language Availability')</label>
                                     <select name="language_availability" id="language_availability" class="form-control form-select-solid mb-2">
-                                        <option value="both">@lang('Both (EN & ID)')</option>
-                                        <option value="en">@lang('English Only')</option>
-                                        <option value="id">@lang('Indonesian Only')</option>
+                                        <option value="both" {{ old('language_availability', 'both') === 'both' ? 'selected' : '' }}>@lang('Both (EN & ID)')</option>
+                                        <option value="en" {{ old('language_availability', 'both') === 'en' ? 'selected' : '' }}>@lang('English Only')</option>
+                                        <option value="id" {{ old('language_availability', 'both') === 'id' ? 'selected' : '' }}>@lang('Indonesian Only')</option>
                                     </select>
                                     <div class="text-muted fs-7">@lang('Select which language(s) this post will be available in')</div>
                                 </div>
@@ -100,79 +100,6 @@
                                 @endif
                             @endif
                         @if($components)
-                            <div class="card card-flush p-3 mt-8">
-                                <div class="card-body p-3">
-                                    <div id="app">
-                                        @if($type['type'] == 'managements')
-                                        <x-forms.text-input name="title" label="Name" required="{{ $required }}" placeholder="" text=""/>
-                                        <div class="d-flex gap-4">
-                                            @if ($type['is_category'])
-                                                <div class="flex-fill">
-                                                    <x-forms.select label="Category" name="categories[]"
-                                                        placeholder="Select an option" required="{{ $required }}"
-                                                        multiple="1" text="Choose category that has been defined"
-                                                        hidden="{{ $hidden }}">
-                                                        @foreach ($categories as $item)
-                                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                                        @endforeach
-                                                    </x-forms.select>
-                                                </div>
-                                            @endif
-                                        </div>
-                                    @endif
-                                    @if ($type['type'] == 'news')
-                                        <div class="flex-fill">
-                                            <div class="mb-8 fv-row fv-plugins-icon-container">
-                                                <label for="page" class="form-label">@lang('Business Line')</label>
-                                                <select name="post_type" class=" form-control form-select-solid mb-2"
-                                                    id="page">
-                                                    <option value=""></option>
-                                                    @foreach ($pages as $page)
-                                                        <option value="{{ $page['slug'] }}">{{ $page['title'] }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    @endif
-                                    <div class="d-flex gap-4">
-                                        <div class="flex-fill">
-                                            <div class="mb-8 fv-row fv-plugins-icon-container">
-                                                <label for="status" class="form-label">@lang('Post Status')</label>
-                                                <select name="status" class=" form-control form-select-solid mb-2"
-                                                    required="">
-                                                    <option value="{{ $model::STATUS_PUBLISH }}">@lang('Publish')</option>
-                                                    <option value="{{ $model::STATUS_SCHEDULE }}">@lang('Schedule')
-                                                    </option>
-                                                    <option value="{{ $model::STATUS_DRAFT }}">@lang('Draft')</option>
-                                                </select>
-                                            </div>
-                                            @if ($type['type'] == 'blog' || $type['type'] == 'news' || $type['type'] == 'articles-sustainability')
-                                                <div class="mb-8 fv-row fv-plugins-icon-container">
-                                                    <label class="form-label">Publish At</label>
-                                                    <input type="datetime-local" name="published_at"
-                                                        class="form-control mb-2" placeholder="{{ __('Publish time') }}" />
-                                                </div>
-                                            @else
-                                                <div class="mb-8 fv-row fv-plugins-icon-container" id="divPublishAt">
-                                                    <label class="form-label">Schedule At</label>
-                                                    <input type="datetime-local" name="published_at" id="published_at"
-                                                        class="form-control mb-2" placeholder="{{ __('Publish time') }}" />
-                                                </div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    @if ($type['featured_image'] & ($type['type'] != 'products'))
-                                        <x-forms.filepond-input name="featured_image" label="Featured Image" class=""
-                                            required="0" src=""
-                                            text="Set the post thumbnail image. Only *.png, *.jpg, *.webp and *.jpeg image files are accepted"
-                                            hidden="{{ $hidden }}" />
-                                        <x-forms.text-input name="alt_image" label="Alt Image (ID)"
-                                            required="{{ $required }}" placeholder="" text="" />
-                                        <x-forms.text-input name="alt_image_en" label="Alt Image (EN)"
-                                            required="{{ $required }}" placeholder="" text="" />
-                                    @endif
-                                @endif
-                                @if ($components)
                                     <div class="card card-flush p-3 mt-8">
                                         <div class="card-body p-3">
                                             <div id="app">
@@ -367,17 +294,60 @@
         // Language availability toggle
         function toggleLangFields() {
             var val = $('#language_availability').val();
+
+            // Title fields
+            var $titleId = $('#field-title-id');
+            var $titleEn = $('#field-title-en');
+
+            // Alt image fields
+            var $altId = $('[name="alt_image"]').closest('.fv-row');
+            var $altEn = $('[name="alt_image_en"]').closest('.fv-row');
+
+            // Tab elements
+            var $tabs = $('#myTab');
+            var $tabPaneEn = $('#en');
+            var $tabPaneId = $('#id');
+
             if (val === 'en') {
-                $('#field-title-id').hide().find('input').prop('required', false);
-                $('#field-title-en').show().find('input[name="title_en"]').prop('required', true);
+                // Hide ID, show EN
+                $titleId.hide().find('input').prop('required', false);
+                $titleEn.show().find('input[name="title_en"]').prop('required', true);
+                $altId.hide();
+                $altEn.show();
+
+                // Tab: hide tab bar, show only EN pane
+                $tabs.hide();
+                $tabPaneId.removeClass('show active').hide();
+                $tabPaneEn.addClass('show active').show();
+
             } else if (val === 'id') {
-                $('#field-title-en').hide().find('input').prop('required', false);
-                $('#field-title-id').show().find('input[name="title"]').prop('required', true);
+                // Hide EN, show ID
+                $titleEn.hide().find('input').prop('required', false);
+                $titleId.show().find('input[name="title"]').prop('required', true);
+                $altEn.hide();
+                $altId.show();
+
+                // Tab: hide tab bar, show only ID pane
+                $tabs.hide();
+                $tabPaneEn.removeClass('show active').hide();
+                $tabPaneId.addClass('show active').show();
+
             } else {
-                $('#field-title-id').show();
-                $('#field-title-en').show();
-                $('#field-title-id').find('input[name="title"]').prop('required', false);
-                $('#field-title-en').find('input[name="title_en"]').prop('required', false);
+                // Both: show all
+                $titleId.show();
+                $titleEn.show();
+                $titleId.find('input[name="title"]').prop('required', true);
+                $titleEn.find('input[name="title_en"]').prop('required', true);
+                $altId.show();
+                $altEn.show();
+
+                // Tab: show tab bar, restore default active
+                $tabs.show();
+                $tabPaneEn.css('display', '');
+                $tabPaneId.css('display', '');
+                if (!$tabs.find('.nav-link.active').length) {
+                    $tabs.find('.nav-link:first').tab('show');
+                }
             }
         }
         toggleLangFields();
