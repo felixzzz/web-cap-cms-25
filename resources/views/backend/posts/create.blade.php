@@ -94,8 +94,8 @@
                                 </div>
                                 @if($type['featured_image'] & $type['type']!= 'products')
                                 <x-forms.filepond-input name="featured_image" label="Featured Image" class="" required="0" src="" text="Set the post thumbnail image. Only *.png, *.jpg, *.webp and *.jpeg image files are accepted" hidden="{{ $hidden }}"/>
-                                <x-forms.text-input name="alt_image" label="Alt Image (ID)" required="{{ $required }}" placeholder="" text="" />
-                                <x-forms.text-input name="alt_image_en" label="Alt Image (EN)" required="{{ $required }}" placeholder="" text="" />
+                                <x-forms.text-input name="alt_image" label="Alt Image (ID)" placeholder="" text="" />
+                                <x-forms.text-input name="alt_image_en" label="Alt Image (EN)" placeholder="" text="" />
                                     
                                 @endif
                             @endif

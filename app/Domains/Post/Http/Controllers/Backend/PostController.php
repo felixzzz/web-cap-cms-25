@@ -149,6 +149,23 @@ class PostController extends BackendController
 
         $requestValidated = Validator::make($request->all(), $rules)->validate();
 
+        // Fill missing language fields so NOT NULL DB columns are satisfied
+        if ($langAvail === 'en') {
+            if (empty($requestValidated['title'])) {
+                $requestValidated['title'] = $requestValidated['title_en'];
+            }
+            if (empty($requestValidated['slug'])) {
+                $requestValidated['slug'] = $requestValidated['slug_en'] ?? '';
+            }
+        } elseif ($langAvail === 'id') {
+            if (empty($requestValidated['title_en'])) {
+                $requestValidated['title_en'] = $requestValidated['title'];
+            }
+            if (empty($requestValidated['slug_en'])) {
+                $requestValidated['slug_en'] = $requestValidated['slug'] ?? '';
+            }
+        }
+
         $post = (new PostService())->create_post_handler($requestValidated, $type['type']);
 
         $this->postMetaService->updatePageMetaV2($post, $request->all());
@@ -251,6 +268,23 @@ class PostController extends BackendController
         }
 
         $requestValidated = Validator::make($request->all(), $rules)->validate();
+
+        // Fill missing language fields so NOT NULL DB columns are satisfied
+        if ($langAvail === 'en') {
+            if (empty($requestValidated['title'])) {
+                $requestValidated['title'] = $requestValidated['title_en'];
+            }
+            if (empty($requestValidated['slug'])) {
+                $requestValidated['slug'] = $requestValidated['slug_en'] ?? '';
+            }
+        } elseif ($langAvail === 'id') {
+            if (empty($requestValidated['title_en'])) {
+                $requestValidated['title_en'] = $requestValidated['title'];
+            }
+            if (empty($requestValidated['slug_en'])) {
+                $requestValidated['slug_en'] = $requestValidated['slug'] ?? '';
+            }
+        }
 
         DB::beginTransaction();
 
