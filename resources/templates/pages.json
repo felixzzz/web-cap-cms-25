@@ -6656,7 +6656,8 @@
                     {
                         "name": "image",
                         "label": "Map Image",
-                        "type": "image"
+                        "type": "image",
+                        "multilang": true
                     },
                     {
                         "name": "cta_label",
