@@ -254,10 +254,9 @@ class PostMetaService extends BaseService
                                     if ($metaDataId) {
                                         $metaId = json_decode($metaDataId->value, true);
                                         foreach ($metaId as $keyId => $itemid) {
-                                            // $wordToCheck = 'images/post';
-                                            // if(isset($itemid[$filteredKey])  && strpos($itemid[$filteredKey], $wordToCheck) !== false){
-                                            $metaData[$keyId][$filteredKey] = $metaId[$keyId][$filteredKey];
-                                            // }
+                                            if (isset($metaId[$keyId][$filteredKey])) {
+                                                $metaData[$keyId][$filteredKey] = $metaId[$keyId][$filteredKey];
+                                            }
                                         }
                                     }
                                 }

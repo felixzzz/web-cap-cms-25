@@ -185,7 +185,13 @@ class PageController extends Controller
     public function update(Request $request, Post $post)
     {
         $template = $this->page_templates()->where('name', $request->template)->first();
-        $componentRule = $this->componentService->getComponentRules($template['components']);
+
+        if (isset($template['multilanguage']) && $template['multilanguage'] == 'true') {
+            $componentRule = $this->componentService->getComponentRulesLanguage($template['components'], $template);
+        } else {
+            $componentRule = $this->componentService->getComponentRules($template['components']);
+        }
+
         $rules = array_merge($this->rules, $componentRule);
         if ($template['name'] === 'blank') {
             $rules['content'] = ['required', 'string'];
