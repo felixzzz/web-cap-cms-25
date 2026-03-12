@@ -5182,7 +5182,7 @@
                             {
                                 "name": "address",
                                 "label": "Address Lines",
-                                "type": "textarea2"
+                                "type": "textarea"
                             }
                         ]
                     }
