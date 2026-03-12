@@ -5151,6 +5151,40 @@
                                 "type": "text"
                             }
                         ]
+                    },
+                    {
+                        "name": "hotline_email",
+                        "label": "Hotline Email",
+                        "type": "text"
+                    },
+                    {
+                        "name": "hotline_phones",
+                        "label": "Hotline Phones",
+                        "type": "repeater",
+                        "list": [
+                            {
+                                "name": "phone",
+                                "label": "Phone Number",
+                                "type": "text"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "dropbox_locations",
+                        "label": "Dropbox Locations",
+                        "type": "repeater",
+                        "list": [
+                            {
+                                "name": "location_name",
+                                "label": "Location Name",
+                                "type": "text"
+                            },
+                            {
+                                "name": "address",
+                                "label": "Address Lines",
+                                "type": "textarea2"
+                            }
+                        ]
                     }
                 ]
             },
