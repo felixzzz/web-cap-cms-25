@@ -42,12 +42,16 @@
                     <div :id="'collapse' + no" class="accordion-collapse collapse" :aria-labelledby="'heading' + no"
                         data-bs-parent="#accordionRepeater">
                         <div class="accordion-body">
-                            <div class="row align-items-center">
-                                <div class="col-md-3" v-for="col in field.list" :key="col.name">
-                                    <label class="fw-bold text-muted">
-                                        {{ col.label }}
-                                        <span v-if="col.required" class="text-danger">*</span>
-                                    </label>
+                            <template v-for="(group, gIndex) in fieldGroups">
+                                <div :key="'acc-group-' + gIndex" class="mb-6">
+                                    <h6 class="mb-3 text-primary border-bottom pb-2" v-if="group.title && fieldGroups.length > 1">{{ group.title }}</h6>
+                                    <div class="row align-items-center">
+                                        <div class="col-md-3 mb-4" v-for="col in group.fields" :key="col.name">
+                                            <label class="fw-bold text-muted d-block mb-1">
+                                                {{ col.label }}
+                                                <span v-if="col.required" class="text-danger">*</span>
+                                                <span v-if="group.isMobile" class="text-muted fw-normal fs-7 ms-1">(Optional)</span>
+                                            </label>
                                     <div v-if="col.type === 'image' || col.type === 'video'">
                                         <template v-if="list[col.name]">
                                             <template v-if="isNaN(list[col.name])">
@@ -82,8 +86,10 @@
                                             }}
                                         </span>
                                     </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -111,11 +117,15 @@
                     </div>
 
                     <div class="modal-body">
-                        <div class="form-group row mb-5" v-for="col in field.list" v-bind:key="col.name">
-                            <label class="col-md-3 col-form-label">
-                                {{ col.label }}
-                                <span v-if="col.required" class="text-danger">*</span>
-                            </label>
+                        <template v-for="(group, gIndex) in fieldGroups">
+                            <div :key="'group-' + gIndex" class="mb-8">
+                                <h4 class="mb-4 text-primary border-bottom pb-2" v-if="group.title && fieldGroups.length > 1">{{ group.title }}</h4>
+                                <div class="form-group row mb-5" v-for="col in group.fields" v-bind:key="col.name">
+                                    <label class="col-md-3 col-form-label">
+                                        {{ col.label }}
+                                        <span v-if="col.required" class="text-danger">*</span>
+                                        <span v-if="group.isMobile" class="text-muted fw-normal fs-7 ms-1">(Optional)</span>
+                                    </label>
                             <div class="col-md-9">
                                 <template v-if="col.type == 'text'">
                                     <input type="text" class="form-control" v-model="formModal[col.name]" />
@@ -192,7 +202,9 @@
                                     </div>
                                 </template>
                             </div>
-                        </div>
+                                </div>
+                            </div>
+                        </template>
                     </div>
 
                     <div class="modal-footer">
@@ -227,6 +239,25 @@ export default {
         "editor_simple_fields",
         "locale",
     ],
+    computed: {
+        fieldGroups() {
+            if (!this.field || !this.field.list) return [];
+            
+            const desktopNames = ['aspect_ratio', 'image', 'video'];
+            const mobileNames = ['aspect_ratio_mobile', 'image_mobile', 'video_mobile'];
+            
+            const desktopFields = this.field.list.filter(c => desktopNames.includes(c.name));
+            const mobileFields = this.field.list.filter(c => mobileNames.includes(c.name));
+            const otherFields = this.field.list.filter(c => !desktopNames.includes(c.name) && !mobileNames.includes(c.name));
+            
+            let groups = [];
+            if (otherFields.length) groups.push({ title: 'General Information', isMobile: false, fields: otherFields });
+            if (desktopFields.length) groups.push({ title: 'Desktop Media', isMobile: false, fields: desktopFields });
+            if (mobileFields.length) groups.push({ title: 'Mobile Media', isMobile: true, fields: mobileFields });
+            
+            return groups;
+        }
+    },
     data() {
         return {
             feUrl: "",
