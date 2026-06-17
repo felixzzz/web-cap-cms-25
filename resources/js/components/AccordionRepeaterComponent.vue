@@ -44,15 +44,11 @@
                         <div class="accordion-body">
                             <template v-for="(group, gIndex) in fieldGroups">
                                 <div :key="'acc-group-' + gIndex" class="mb-6">
-                                    <h6 class="mb-3 text-primary border-bottom pb-2" v-if="group.title && fieldGroups.length > 1">
-                                        {{ group.title }}
-                                        <i class="fas fa-info-circle ms-2 text-muted fs-7" style="cursor: help" v-if="group.title === 'Mobile Media'" data-bs-toggle="tooltip" title="Jika ingin mengupload media dan setting yang berbeda di resolusi tablet dan handphone dengan versi media desktop. Jika tidak ingin mengubahnya, biarkan kolom kosong"></i>
-                                    </h6>
+                                    <h6 class="mb-3 text-primary border-bottom pb-2" v-if="group.title && fieldGroups.length > 1">{{ group.title }}</h6>
                                     <div class="row align-items-center">
                                         <div class="col-md-3 mb-4" v-for="col in group.fields" :key="col.name">
                                             <label class="fw-bold text-muted d-block mb-1">
                                                 {{ col.label }}
-                                                <i class="fas fa-info-circle ms-1 text-muted fs-7" style="cursor: help" v-if="position === 'pages' && (col.name === 'aspect_ratio' || col.name === 'aspect_ratio_mobile')" data-bs-toggle="tooltip" title="apabila banner di aktifkan pada posisi navbar, maka aspect ratio tidak bekerja. hal ini dikarenakan banner pada navbar menggunakan ukuran yang fixed(tetap)"></i>
                                                 <span v-if="col.required" class="text-danger">*</span>
                                                 <span v-if="group.isMobile" class="text-muted fw-normal fs-7 ms-1">(Optional)</span>
                                             </label>
@@ -123,14 +119,10 @@
                     <div class="modal-body">
                         <template v-for="(group, gIndex) in fieldGroups">
                             <div :key="'group-' + gIndex" class="mb-8">
-                                <h4 class="mb-4 text-primary border-bottom pb-2" v-if="group.title && fieldGroups.length > 1">
-                                    {{ group.title }}
-                                    <i class="fas fa-info-circle ms-2 text-muted fs-6" style="cursor: help" v-if="group.title === 'Mobile Media'" data-bs-toggle="tooltip" title="Jika ingin mengupload media dan setting yang berbeda di resolusi tablet dan handphone dengan versi media desktop. Jika tidak ingin mengubahnya, biarkan kolom kosong"></i>
-                                </h4>
+                                <h4 class="mb-4 text-primary border-bottom pb-2" v-if="group.title && fieldGroups.length > 1">{{ group.title }}</h4>
                                 <div class="form-group row mb-5" v-for="col in group.fields" v-bind:key="col.name">
                                     <label class="col-md-3 col-form-label">
                                         {{ col.label }}
-                                        <i class="fas fa-info-circle ms-1 text-muted fs-7" style="cursor: help" v-if="position === 'pages' && (col.name === 'aspect_ratio' || col.name === 'aspect_ratio_mobile')" data-bs-toggle="tooltip" title="apabila banner di aktifkan pada posisi navbar, maka aspect ratio tidak bekerja. hal ini dikarenakan banner pada navbar menggunakan ukuran yang fixed(tetap)"></i>
                                         <span v-if="col.required" class="text-danger">*</span>
                                         <span v-if="group.isMobile" class="text-muted fw-normal fs-7 ms-1">(Optional)</span>
                                     </label>
