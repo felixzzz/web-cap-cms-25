@@ -15,15 +15,18 @@ class BannerActive extends Model
     protected $fillable = [
         'banner_group_id',
         'post_id',
+
         'location',
         'start_date',
         'end_date',
         'language',
+        'is_hide_in_mobile',
     ];
 
     protected $casts = [
         'start_date' => 'datetime',
         'end_date' => 'datetime',
+        'is_hide_in_mobile' => 'boolean',
     ];
 
     public function bannerGroup()

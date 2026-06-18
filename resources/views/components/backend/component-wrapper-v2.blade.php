@@ -22,6 +22,8 @@
                     if (isset($meta[$component['keyName']])) {
                         if (isset($meta[$component['keyName']]->{$field['name'] . '_' . $lang})) {
                             $value = $meta[$component['keyName']]->{$field['name'] . '_' . $lang};
+                        } elseif ($isMasterLang && isset($meta[$component['keyName']]->{$field['name']})) {
+                            $value = $meta[$component['keyName']]->{$field['name']};
                         } else {
                             $value = '';
                         }
@@ -30,7 +32,7 @@
 
                 @if (View::exists('components.backend.partials-v2.' . $field['type']))
                     @if ($field['type'] === 'image')
-                        @if ($isMasterLang)
+                        @if ($isMasterLang || (isset($field['multilang']) && $field['multilang'] === true))
                             @include('components.backend.partials-v2.' . $field['type'], [
                                 'field' => $field,
                                 'component' => $fieldName,

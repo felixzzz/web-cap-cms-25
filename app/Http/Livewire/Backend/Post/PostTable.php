@@ -58,13 +58,14 @@ class PostTable extends DataTableComponent
                     'draft' => 'Draft',
                     'schedule' => 'Schedule',
                 ])
-                ->filter(function(Builder $builder, string $value) {
+                ->filter(function (Builder $builder, string $value) {
                     $builder->where('status', $value);
                 }),
             SelectFilter::make('Category')
-                ->options([
-                    '' => 'All'
-                ] +
+                ->options(
+                    [
+                        '' => 'All'
+                    ] +
                     Category::query()
                         ->orderBy('name')
                         ->get()
@@ -72,27 +73,27 @@ class PostTable extends DataTableComponent
                         ->map(fn($cat) => $cat->name)
                         ->toArray()
                 )
-                ->filter(function(Builder $builder, string $value) {
-                    $builder->whereHas('category', function($query) use($value) {
+                ->filter(function (Builder $builder, string $value) {
+                    $builder->whereHas('category', function ($query) use ($value) {
                         $query->where('category_id', $value);
                     });
                 }),
             SelectFilter::make('Month')
                 ->options([
                     '' => 'All Time',
-                    '01' => 'January - '.date('Y'),
-                    '02' => 'February - '.date('Y'),
-                    '03' => 'March - '.date('Y'),
-                    '04' => 'April - '.date('Y'),
-                    '05' => 'May - '.date('Y'),
-                    '06' => 'June - '.date('Y'),
-                    '07' => 'July - '.date('Y'),
-                    '08' => 'August - '.date('Y'),
-                    '09' => 'September - '.date('Y'),
-                    '10' => 'October - '.date('Y'),
-                    '11' => 'November - '.date('Y'),
-                    '12' => 'December - '.date('Y'),
-                ])->filter(function(Builder $builder, string $value) {
+                    '01' => 'January - ' . date('Y'),
+                    '02' => 'February - ' . date('Y'),
+                    '03' => 'March - ' . date('Y'),
+                    '04' => 'April - ' . date('Y'),
+                    '05' => 'May - ' . date('Y'),
+                    '06' => 'June - ' . date('Y'),
+                    '07' => 'July - ' . date('Y'),
+                    '08' => 'August - ' . date('Y'),
+                    '09' => 'September - ' . date('Y'),
+                    '10' => 'October - ' . date('Y'),
+                    '11' => 'November - ' . date('Y'),
+                    '12' => 'December - ' . date('Y'),
+                ])->filter(function (Builder $builder, string $value) {
                     $builder->whereMonth('posts.created_at', $value)->whereYear('posts.created_at', date('Y'));
                 }),
         ];
@@ -106,10 +107,10 @@ class PostTable extends DataTableComponent
                     return '
                     <div class="d-flex align-items-center">
                         <div class="d-flex justify-content-start flex-column">
-                            <a href="'. route('admin.post.show', $row) .'" class="text-dark fw-bold text-hover-primary fs-6">' . $row->title . '</a>
+                            <a href="' . route('admin.post.show', $row) . '" class="text-dark fw-bold text-hover-primary fs-6">' . $row->title . '</a>
                             <span class="text-muted fw-semibold text-muted d-block fs-7">' . $row->created_at->format(
-                            "j F 'y G:i"
-                        ) . '</span>
+                                "j F 'y G:i"
+                            ) . '</span>
                         </div>
                     </div>
                 ';
@@ -118,22 +119,22 @@ class PostTable extends DataTableComponent
                 ->sortable()
                 ->searchable(),
             Column::make(__('Title En'))->format(
-                    function ($value, $row, Column $column) {
-                        return '
+                function ($value, $row, Column $column) {
+                    return '
                         <div class="d-flex align-items-center">
                             <div class="d-flex justify-content-start flex-column">
-                                <a href="'. route('admin.post.show', $row) .'" class="text-dark fw-bold text-hover-primary fs-6">' . $row->title_en . '</a>
+                                <a href="' . route('admin.post.show', $row) . '" class="text-dark fw-bold text-hover-primary fs-6">' . $row->title_en . '</a>
                             </div>
                         </div>
                     ';
-                    }
-                )->html()
-                    ->sortable()
-                    ->searchable(),
+                }
+            )->html()
+                ->sortable()
+                ->searchable(),
             Column::make(__('Author'), 'user.name')
                 ->format(
                     function ($value, $row, Column $column) {
-                        return '<span>'.$row->user->name.' <br> '.$row->user->email.'</span>';
+                        return '<span>' . $row->user->name . ' <br> ' . $row->user->email . '</span>';
                     }
                 )->html()
                 ->sortable()
@@ -142,8 +143,8 @@ class PostTable extends DataTableComponent
             Column::make(__('Categories'), 'id')
                 ->format(
                     function ($value, $row, Column $column) {
-                        if(count($row->category)){
-                            return '<span>'.$row->category->pluck('name')->implode(', ').'</span>';
+                        if (count($row->category)) {
+                            return '<span>' . $row->category->pluck('name')->implode(', ') . '</span>';
                         }
 
                         return '';
@@ -151,9 +152,20 @@ class PostTable extends DataTableComponent
                 )->html()
                 ->eagerLoadRelations()
                 ->hideIf($this->post_type['is_category'] ? false : true),
-            Column::make('Tags')
-                ->label(fn($row) => $row->tags->pluck('name')->implode(', '))
-                ->hideIf($this->post_type['is_tags'] ? false : true),
+            Column::make(__('Language'), 'language_availability')
+                ->format(
+                    function ($value, $row, Column $column) {
+                        $lang = $row->language_availability ?? 'both';
+                        if ($lang === 'en') {
+                            return '<span class="badge badge-light-info">English Only</span>';
+                        } elseif ($lang === 'id') {
+                            return '<span class="badge badge-light-warning">Indonesian Only</span>';
+                        } else {
+                            return '<span class="badge badge-light-success">Both (EN & ID)</span>';
+                        }
+                    }
+                )->html()
+                ->sortable(),
             Column::make(__('Status'))
                 ->format(
                     function ($value, $row, Column $column) {
@@ -172,8 +184,8 @@ class PostTable extends DataTableComponent
                 )->html()
                 ->sortable(),
             Column::make('Published At')
-                    ->sortable()
-                    ->hideIf(false),
+                ->sortable()
+                ->hideIf(false),
             Column::make('Created At')
                 ->sortable()
                 ->hideIf(false),
@@ -204,7 +216,7 @@ class PostTable extends DataTableComponent
     public function reorder($items): void
     {
         foreach ($items as $item) {
-            Post::find((int)$item['value'])->update(['sort' => (int)$item['order']]);
+            Post::find((int) $item['value'])->update(['sort' => (int) $item['order']]);
         }
     }
 }

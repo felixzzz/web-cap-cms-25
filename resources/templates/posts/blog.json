@@ -3,16 +3,16 @@
         "name": "blog",
         "label": "Blog",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "components": [
@@ -52,13 +52,13 @@
                         "name": "meta_title",
                         "label": "Meta Title",
                         "type": "text",
-                        "required": true
+                        "required": false
                     },
                     {
                         "name": "meta_desc",
                         "label": "Meta Description",
                         "type": "textarea2",
-                        "required": true
+                        "required": false
                     }
                 ]
             }

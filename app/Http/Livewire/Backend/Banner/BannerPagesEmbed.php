@@ -3,36 +3,44 @@
 namespace App\Http\Livewire\Backend\Banner;
 
 use Livewire\Component;
+use Livewire\WithPagination;
 use App\Models\BannerGroup;
 use App\Models\BannerActive;
 use App\Domains\Post\Models\Post;
 
-class BannerEmbed extends Component
+class BannerPagesEmbed extends Component
 {
+    use WithPagination;
+
+    protected $paginationTheme = 'bootstrap';
+
     public $bannerGroupId;
     public $bannerGroupTitle;
     public $posts = [];
     public $allPostIds = []; // Track all post IDs for select all functionality
     public $totalPostsCount = 0;
     public $selectedPosts = [];
-    public $location = 'center';
+    public $location = 'navbar';
     public $search = '';
     public $language = 'all';
-    public $postType = 'all';
     public $isAllSelected = false;
     public $startDate;
     public $endDate;
     public $conflictDetails = [];
-
     public $isHideInMobile = false;
     public $perPage = 25;
-    public $currentPage = 1;
 
-    // listeners moved below
+    public $locations = [
+        'navbar' => 'Navbar',
+        'footer' => 'Footer',
+    ];
+
+    protected $listeners = ['openBannerPagesEmbed' => 'openModal'];
 
     public function updatedIsAllSelected($value)
     {
         if ($value) {
+            // Select ALL posts across all pages, not just current page
             $this->selectedPosts = $this->allPostIds;
         } else {
             $this->selectedPosts = [];
@@ -53,7 +61,7 @@ class BannerEmbed extends Component
 
     public function updatedPerPage()
     {
-        $this->currentPage = 1;
+        $this->resetPage();
         $this->loadPosts();
     }
 
@@ -64,80 +72,61 @@ class BannerEmbed extends Component
 
     public function updatedSearch()
     {
-        $this->currentPage = 1;
+        $this->resetPage();
         $this->loadPosts();
     }
 
     public function updatedLanguage()
     {
-        $this->currentPage = 1;
+        $this->resetPage();
         $this->loadPosts();
     }
 
-    public function updatedPostType()
+    public function loadPosts($page = null)
     {
-        $this->currentPage = 1;
-        $this->loadPosts();
-    }
-
-    public function loadPosts()
-    {
-        $types = ['article', 'blog', 'news'];
-        if ($this->postType == 'news') {
-            $types = ['news'];
-        } elseif ($this->postType == 'blog') {
-            $types = ['blog'];
-        }
-
-        $query = Post::whereIn('type', $types);
-
-        if ($this->position == 'pages') {
-            $query = Post::where('type', 'page');
-        } elseif ($this->postType == 'all') {
-            $query = Post::whereIn('type', ['article', 'blog', 'news']);
-        }
-
+        $query = Post::where('type', 'page');
 
         if ($this->search) {
             $query->where(function ($q) {
                 $q->where('title', 'like', '%' . $this->search . '%')
-                    ->orWhere('title_en', 'like', '%' . $this->search . '%');
+                    ->orWhere('title_en', 'like', '%' . $this->search . '%')
+                    ->orWhere('slug', 'like', '%' . $this->search . '%')
+                    ->orWhere('slug_en', 'like', '%' . $this->search . '%');
             });
         }
 
         // Get all posts for total count and select all functionality
         $allRawPosts = (clone $query)->orderBy('created_at', 'desc')->get();
 
+        // Transform all posts to get all IDs
         $allTransformedPosts = collect();
-
         foreach ($allRawPosts as $post) {
             // ID Language
-            if ($post->title) {
-                $allTransformedPosts->push([
-                    'id' => $post->id . '_id',
-                    'original_id' => $post->id,
-                    'title' => $post->title,
-                    'type' => $post->type,
-                    'status' => $post->status,
-                    'created_at' => $post->created_at,
-                    'lang' => 'id'
-                ]);
-            }
+            $allTransformedPosts->push([
+                'id' => $post->id . '_id',
+                'original_id' => $post->id,
+                'title' => $post->title ?? 'No Title (ID)',
+                'slug' => $post->slug,
+                'type' => $post->type,
+                'status' => $post->status,
+                'created_at' => $post->created_at,
+                'lang' => 'id'
+            ]);
 
             // EN Language
-            if ($post->title_en) {
-                $allTransformedPosts->push([
-                    'id' => $post->id . '_en',
-                    'original_id' => $post->id,
-                    'title' => $post->title_en,
-                    'type' => $post->type,
-                    'status' => $post->status,
-                    'created_at' => $post->created_at,
-                    'lang' => 'en'
-                ]);
-            }
+            $allTransformedPosts->push([
+                'id' => $post->id . '_en',
+                'original_id' => $post->id,
+                'title' => $post->title_en ?? $post->title ?? 'No Title (EN)',
+                'slug' => $post->slug_en ?? $post->slug,
+                'type' => $post->type,
+                'status' => $post->status,
+                'created_at' => $post->created_at,
+                'lang' => 'en'
+            ]);
         }
 
+        // Filter by language
         if ($this->language == 'en') {
             $allTransformedPosts = $allTransformedPosts->where('lang', 'en');
         } elseif ($this->language == 'id') {
@@ -151,7 +140,7 @@ class BannerEmbed extends Component
         $this->totalPostsCount = count($this->allPostIds);
 
         // Paginate the transformed posts
-        $currentPage = $this->currentPage;
+        $currentPage = $page ?? $this->page;
         $offset = ($currentPage - 1) * $this->perPage;
 
         $this->posts = $allTransformedPosts->slice($offset, $this->perPage)->values()->toArray();
@@ -165,58 +154,44 @@ class BannerEmbed extends Component
         return ceil($this->totalPostsCount / $this->perPage);
     }
 
-    public function gotoPage($page)
+    public function getCurrentPage()
     {
-        $totalPages = $this->getTotalPages();
-        if ($page >= 1 && $page <= $totalPages) {
-            $this->currentPage = $page;
-            $this->loadPosts();
-        }
+        // Use internal Livewire page state
+        return $this->page;
     }
 
-    public $position = 'article';
-    public $start_date;
-    public $end_date;
-    public $homepageSlots = [
-        'journey-growth' => 'Journey Growth',
-        'financial-reports' => 'Financial Reports',
-    ];
-
-    protected $listeners = ['openBannerEmbed' => 'openModal', 'forceSaveHomepage' => 'forceSaveHomepage'];
-
-    public function openModal($bannerGroupId, $position = 'article')
+    public function gotoPage($page)
     {
+        $this->setPage($page);
+        $this->loadPosts($page);
+    }
+
+    public function openModal($bannerGroupId)
+    {
+        \Illuminate\Support\Facades\Log::info('BannerPagesEmbed: openModal called with ID: ' . $bannerGroupId);
         $this->bannerGroupId = $bannerGroupId;
         $bannerGroup = BannerGroup::find($bannerGroupId);
         $this->bannerGroupTitle = $bannerGroup ? $bannerGroup->title : '';
-        $this->position = $position;
 
         $this->selectedPosts = [];
-        $this->location = 'center'; // Default loc
-        if ($this->position === 'home') {
-            $this->location = 'journey-growth'; // Default slot for home
-        }
-
+        $this->location = 'navbar';
         $this->startDate = null;
         $this->endDate = null;
         $this->isHideInMobile = false;
         $this->isAllSelected = false;
-        $this->currentPage = 1;
-        $this->dispatchBrowserEvent('open-banner-embed-modal');
+        $this->resetPage();
+        $this->loadPosts();
+        $this->dispatchBrowserEvent('open-banner-pages-embed-modal');
     }
 
     public function save()
     {
-        if ($this->position === 'home') {
-            $this->saveHomepage();
-            return;
-        }
 
         try {
             $this->validate([
                 'bannerGroupId' => 'required|exists:banner_groups,id',
                 'selectedPosts' => 'required|array|min:1',
-                'location' => 'required|in:left,right,bottom,center',
+                'location' => 'required|in:navbar,footer',
                 'startDate' => 'required|date',
                 'endDate' => 'required|date|after_or_equal:startDate',
             ]);
@@ -226,6 +201,7 @@ class BannerEmbed extends Component
         }
 
         $this->conflictDetails = [];
+        $conflictingPosts = [];
         $nonConflictingPosts = [];
 
         foreach ($this->selectedPosts as $compositeId) {
@@ -273,13 +249,14 @@ class BannerEmbed extends Component
                     'id' => $compositeId,
                     'label' => "{$postTitle} ({$lang}): {$grp} ({$startStr} to {$endStr})"
                 ];
+                $conflictingPosts[] = $compositeId;
             } else {
                 $nonConflictingPosts[] = $compositeId;
             }
         }
 
         if (count($this->conflictDetails) > 0) {
-            \Illuminate\Support\Facades\Log::info('Conflict Details Embed:', $this->conflictDetails);
+            \Illuminate\Support\Facades\Log::info('Conflict Details:', $this->conflictDetails);
             $this->dispatchBrowserEvent('swal:confirm-overlap', [
                 'details' => $this->conflictDetails,
                 'nonConflictingPosts' => $nonConflictingPosts,
@@ -356,106 +333,13 @@ class BannerEmbed extends Component
             );
         }
 
-        $this->closeAndRefresh();
-    }
-
-    public function saveHomepage()
-    {
-        try {
-            $this->validate([
-                'location' => 'required|in:journey-growth,financial-reports',
-                'startDate' => 'required|date',
-                'endDate' => 'required|date|after_or_equal:startDate',
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            $this->dispatchBrowserEvent('swal-error', ['title' => 'Validation Error!', 'text' => 'Please check the input fields.']);
-            throw $e;
-        }
-
-        // Find homepage post
-        $homePost = Post::where('site_url', '/')->first();
-
-        if (!$homePost) {
-            $this->dispatchBrowserEvent('swal-error', ['title' => 'Error', 'text' => 'Homepage post not found (site_url = "/").']);
-            return;
-        }
-
-        // Check for conflicts with date overlap
-        $query = BannerActive::where('post_id', $homePost->id)
-            ->where('location', $this->location)
-            ->where('language', $this->language);
-
-        $start = $this->startDate;
-        $end = $this->endDate;
-
-        $query->where(function ($q) use ($start, $end) {
-            if ($end) {
-                $q->where(function ($sub) use ($end) {
-                    $sub->whereNull('start_date')
-                        ->orWhere('start_date', '<=', $end);
-                });
-            }
-            if ($start) {
-                $q->where(function ($sub) use ($start) {
-                    $sub->whereNull('end_date')
-                        ->orWhere('end_date', '>=', $start);
-                });
-            }
-        });
-
-        $conflicts = $query->with('bannerGroup')->get();
-
-        if ($conflicts->count() > 0) {
-            $conflictDetails = [];
-            foreach ($conflicts as $conflict) {
-                $grp = $conflict->bannerGroup ? $conflict->bannerGroup->title : 'Unknown Group';
-                $dates = ($conflict->start_date ? $conflict->start_date->format('Y-m-d') : '∞') . ' to ' . ($conflict->end_date ? $conflict->end_date->format('Y-m-d') : '∞');
-                $conflictDetails[] = "{$grp} ({$dates})";
-            }
-
-            $this->dispatchBrowserEvent('swal:confirm-homepage-overlap', [
-                'details' => $conflictDetails,
-            ]);
-            return;
-        }
-
-        $this->createHomepageBanner($homePost->id);
-    }
-
-    public function forceSaveHomepage()
-    {
-        $homePost = Post::where('site_url', '/')->first();
-        if ($homePost) {
-            // Do NOT delete existing. Just add the new one.
-            // Banners will be filtered by API priority (start_date desc).
-
-            $this->createHomepageBanner($homePost->id);
-        }
-    }
-
-    protected function createHomepageBanner($postId)
-    {
-        BannerActive::create([
-            'banner_group_id' => $this->bannerGroupId,
-            'post_id' => $postId,
-            'language' => $this->language,
-            'location' => $this->location,
-            'start_date' => $this->startDate,
-            'end_date' => $this->endDate,
-        ]);
-
-        $this->closeAndRefresh();
-    }
-
-    protected function closeAndRefresh()
-    {
-        $this->dispatchBrowserEvent('close-banner-embed-modal');
+        $this->dispatchBrowserEvent('close-banner-pages-embed-modal');
         $this->emit('refreshBannerGroupTable');
         $this->dispatchBrowserEvent('flash-message', ['message' => 'Banners embedded successfully!', 'type' => 'success']);
     }
 
     public function render()
     {
-        return view('livewire.backend.banner.embed');
+        return view('livewire.backend.banner.pages-embed');
     }
 }

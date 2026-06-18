@@ -45,7 +45,7 @@ class PostController extends BackendController
         // setup rules validation
         $this->rules = [
             'type' => [],
-            'title' => ['required', 'max:200'],
+            'title' => ['nullable', 'max:200'],
             'slug' => 'max:100',
             'slug_en' => 'max:100',
             'title_en' => ['nullable', 'max:200'],
@@ -64,7 +64,8 @@ class PostController extends BackendController
             'featured' => ['nullable'],
             'status' => ['nullable'],
             'published_at' => ['nullable', 'date'],
-            'post_type' => ['nullable']
+            'post_type' => ['nullable'],
+            'language_availability' => ['nullable', 'in:en,id,both']
         ];
     }
 
@@ -88,7 +89,7 @@ class PostController extends BackendController
         $post = new Post();
         $pages = Post::select('id', 'title', 'slug')
             ->where('pages_dynamic', 'yes')->get();
-        $bannerGroups = BannerGroup::withCount('items')->get();
+        $bannerGroups = BannerGroup::where('position', 'article')->withCount('items')->get();
         $tagDatas = Tag::all();
         $tags = $tagDatas->map(function ($tag) {
             return $tag->getTranslation('name', 'en');
@@ -118,11 +119,52 @@ class PostController extends BackendController
     {
         // Gate::authorize("admin.access.news.create");
         $type = $this->extract_post_type($type);
-        list($template, $components) = $this->getTemplates($type['type']);
-        $componentRules = $this->componentService->getComponentRules($components);
+        list($template, $components, $multilanguage, $lang_option) = $this->getTemplates($type['type']);
+
+        $templateInfo = [
+            'multilanguage' => $multilanguage['multilanguage'] ?? 'false',
+            'lang_option' => $lang_option['lang_option'] ?? []
+        ];
+
+        if ($templateInfo['multilanguage'] === 'true') {
+            $componentRules = $this->componentService->getComponentRulesLanguage($components, $templateInfo);
+        } else {
+            $componentRules = $this->componentService->getComponentRules($components);
+        }
 
         $rules = array_merge($this->rules, $componentRules);
+
+        // Dynamic title validation based on language availability
+        $langAvail = $request->input('language_availability', 'both');
+        if ($langAvail === 'en') {
+            $rules['title_en'] = ['required', 'max:200'];
+            $rules['title'] = ['nullable', 'max:200'];
+        } elseif ($langAvail === 'id') {
+            $rules['title'] = ['required', 'max:200'];
+            $rules['title_en'] = ['nullable', 'max:200'];
+        } else {
+            $rules['title'] = ['required_without:title_en', 'max:200'];
+            $rules['title_en'] = ['required_without:title', 'max:200'];
+        }
+
         $requestValidated = Validator::make($request->all(), $rules)->validate();
+
+        // Fill missing language fields so NOT NULL DB columns are satisfied
+        if ($langAvail === 'en') {
+            if (empty($requestValidated['title'])) {
+                $requestValidated['title'] = $requestValidated['title_en'];
+            }
+            if (empty($requestValidated['slug'])) {
+                $requestValidated['slug'] = $requestValidated['slug_en'] ?? '';
+            }
+        } elseif ($langAvail === 'id') {
+            if (empty($requestValidated['title_en'])) {
+                $requestValidated['title_en'] = $requestValidated['title'];
+            }
+            if (empty($requestValidated['slug_en'])) {
+                $requestValidated['slug_en'] = $requestValidated['slug'] ?? '';
+            }
+        }
 
         $post = (new PostService())->create_post_handler($requestValidated, $type['type']);
 
@@ -153,7 +195,7 @@ class PostController extends BackendController
         $template['lang_option'] = $template[3]['lang_option'];
         $meta = $post->meta->groupBy('section');
         $pages = Post::select('id', 'title', 'slug')->where('pages_dynamic', 'yes')->get();
-        $bannerGroups = BannerGroup::withCount('items')->get();
+        $bannerGroups = BannerGroup::where('position', 'article')->withCount('items')->get();
         $valueMeta = [];
         foreach ($meta as $keyName => $fields) {
             $data = new \stdClass();
@@ -198,10 +240,51 @@ class PostController extends BackendController
     {
         // Gate::authorize("admin.access.news.update");
         $type = $this->extract_post_type($post->type);
-        list($template, $components) = $this->getTemplates($type['type']);
-        $componentRules = $this->componentService->getComponentRules($components);
+        list($template, $components, $multilanguage, $lang_option) = $this->getTemplates($type['type']);
+
+        $templateInfo = [
+            'multilanguage' => $multilanguage['multilanguage'] ?? 'false',
+            'lang_option' => $lang_option['lang_option'] ?? []
+        ];
+
+        if ($templateInfo['multilanguage'] === 'true') {
+            $componentRules = $this->componentService->getComponentRulesLanguage($components, $templateInfo);
+        } else {
+            $componentRules = $this->componentService->getComponentRules($components);
+        }
         $rules = array_merge($this->rules, $componentRules);
+
+        // Dynamic title validation based on language availability
+        $langAvail = $request->input('language_availability', 'both');
+        if ($langAvail === 'en') {
+            $rules['title_en'] = ['required', 'max:200'];
+            $rules['title'] = ['nullable', 'max:200'];
+        } elseif ($langAvail === 'id') {
+            $rules['title'] = ['required', 'max:200'];
+            $rules['title_en'] = ['nullable', 'max:200'];
+        } else {
+            $rules['title'] = ['required_without:title_en', 'max:200'];
+            $rules['title_en'] = ['required_without:title', 'max:200'];
+        }
+
         $requestValidated = Validator::make($request->all(), $rules)->validate();
+
+        // Fill missing language fields so NOT NULL DB columns are satisfied
+        if ($langAvail === 'en') {
+            if (empty($requestValidated['title'])) {
+                $requestValidated['title'] = $requestValidated['title_en'];
+            }
+            if (empty($requestValidated['slug'])) {
+                $requestValidated['slug'] = $requestValidated['slug_en'] ?? '';
+            }
+        } elseif ($langAvail === 'id') {
+            if (empty($requestValidated['title_en'])) {
+                $requestValidated['title_en'] = $requestValidated['title'];
+            }
+            if (empty($requestValidated['slug_en'])) {
+                $requestValidated['slug_en'] = $requestValidated['slug'] ?? '';
+            }
+        }
 
         DB::beginTransaction();
 
@@ -465,6 +548,7 @@ class PostController extends BackendController
                     $activeBanner->banner_group_id = $data['group_id'];
                     $activeBanner->start_date = $data['start_date'] ?? null;
                     $activeBanner->end_date = $data['end_date'] ?? null;
+                    $activeBanner->is_hide_in_mobile = isset($data['is_hide_in_mobile']) ? true : false;
                     $activeBanner->save();
                     $keepIds[] = $activeBanner->id;
                 } else {
@@ -474,6 +558,7 @@ class PostController extends BackendController
                         'banner_group_id' => $data['group_id'],
                         'start_date' => $data['start_date'] ?? null,
                         'end_date' => $data['end_date'] ?? null,
+                        'is_hide_in_mobile' => isset($data['is_hide_in_mobile']) ? true : false,
                     ]);
                     $keepIds[] = $newBanner->id;
                 }

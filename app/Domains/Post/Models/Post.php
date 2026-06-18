@@ -68,7 +68,8 @@ class Post extends Model implements HasMedia
         'template',
         'post_type',
         'alt_image',
-        'alt_image_en'
+        'alt_image_en',
+        'language_availability'
     ];
 
     /**
@@ -79,8 +80,24 @@ class Post extends Model implements HasMedia
     ];
 
     protected $appends = [
-        'template'
+        'template',
+        'is_filled_en',
+        'is_filled_id'
     ];
+
+    public function getIsFilledEnAttribute()
+    {
+        $lang = $this->language_availability ?? 'both';
+        if ($lang === 'id') return false;
+        return !empty($this->title_en);
+    }
+
+    public function getIsFilledIdAttribute()
+    {
+        $lang = $this->language_availability ?? 'both';
+        if ($lang === 'en') return false;
+        return !empty($this->title);
+    }
 
     public function isAdmin(): bool
     {

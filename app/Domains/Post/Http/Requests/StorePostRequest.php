@@ -24,16 +24,17 @@ class StorePostRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required','max:200'],
+            'title' => ['required_without:title_en', 'max:200'],
             'slug' => 'max:100',
-            'title_en' => ['required','max:200'],
+            'title_en' => ['required_without:title', 'max:200'],
             'slug_en' => 'max:100',
-            'excerpt' => ['required','max:255'],
-            'content' => ['required'],
+            'excerpt' => ['nullable', 'max:255'],
+            'content' => ['nullable'],
+            'content_en' => ['nullable'],
             'tags' => ['nullable'],
             'tags_id' => ['nullable'],
             'categories' => ['array', 'required', 'exists:categories,id'],
-            'featured_image' => ['nullable'],  
+            'featured_image' => ['nullable'],
             'alt_image' => ['nullable'],
             'alt_image_en' => ['nullable'],
             'featured_image_remove' => ['nullable'],
@@ -42,7 +43,7 @@ class StorePostRequest extends FormRequest
             'meta_description' => ['nullable'],
             'featured' => ['nullable'],
             'status' => ['nullable'],
-            'published_at' => ['nullable','date'],
+            'published_at' => ['nullable', 'date'],
         ];
     }
 }

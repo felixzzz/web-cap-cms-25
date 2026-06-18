@@ -16,6 +16,7 @@ class BannerGroup extends Model
         'title',
         'banners', // json
         'bulk_position',
+        'position',
     ];
 
     protected $casts = [

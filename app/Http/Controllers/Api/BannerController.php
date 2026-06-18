@@ -27,9 +27,19 @@ class BannerController extends Controller
                 $lang = 'en';
             }
 
+            $now = now();
             $activeBanners = BannerActive::where('post_id', $post->id)
                 ->where('language', $lang)
+                ->where(function ($query) use ($now) {
+                    $query->where('start_date', '<=', $now)
+                        ->orWhereNull('start_date');
+                })
+                ->where(function ($query) use ($now) {
+                    $query->where('end_date', '>=', $now)
+                        ->orWhereNull('end_date');
+                })
                 ->with(['bannerGroup.items'])
+                ->orderBy('start_date', 'desc')
                 ->get();
 
             $response = [
@@ -46,10 +56,17 @@ class BannerController extends Controller
 
                 // Validate location key exists in our response structure
                 if (array_key_exists($location, $response)) {
+                    // Check if this location is already filled (Latest banner takes priority)
+                    if (!empty($response[$location])) {
+                        continue;
+                    }
+
                     // If a banner group is attached, merge its banners into the location array
                     if ($activeBanner->bannerGroup) {
                         if ($activeBanner->bannerGroup->items) {
                             foreach ($activeBanner->bannerGroup->items as $banner) {
+                                // Inject is_hide_in_mobile from the active banner configuration
+                                $banner->is_hide_in_mobile = (bool) ($activeBanner->is_hide_in_mobile ?? false);
                                 $response[$location][] = $banner;
                             }
                         }
@@ -88,6 +105,9 @@ class BannerController extends Controller
             $banners = [];
             if ($activeBanner->bannerGroup && $activeBanner->bannerGroup->items) {
                 $banners = $activeBanner->bannerGroup->items;
+                foreach ($banners as $banner) {
+                    $banner->is_hide_in_mobile = (bool) ($activeBanner->is_hide_in_mobile ?? false);
+                }
             }
 
             return response()->json($banners);
@@ -102,6 +122,159 @@ class BannerController extends Controller
             return response()->json([
                 'error' => 'Server Error',
                 'message' => 'An error occurred while fetching banner active.'
+            ], 500);
+        }
+    }
+
+    /**
+     * Get active banners for home page grouped by position.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getHomeBanners(Request $request)
+    {
+        try {
+            $homePage = Post::where('site_url', '/')->firstOrFail();
+
+            $lang = $request->input('lang', 'id');
+            $now = now();
+            $activeBanners = BannerActive::where('post_id', $homePage->id)
+                ->where('language', $lang)
+                ->where(function ($query) use ($now) {
+                    $query->where('start_date', '<=', $now)
+                        ->orWhereNull('start_date');
+                })
+                ->where(function ($query) use ($now) {
+                    $query->where('end_date', '>=', $now)
+                        ->orWhereNull('end_date');
+                })
+                ->with(['bannerGroup.items'])
+                ->orderBy('start_date', 'desc')
+                ->get();
+
+            $response = [
+                'journey-growth' => [],
+                'financial-reports' => [],
+            ];
+
+            // Process and group banners
+            foreach ($activeBanners as $activeBanner) {
+                $location = strtolower($activeBanner->location);
+                \Illuminate\Support\Facades\Log::info("Processing Home BannerActive ID: {$activeBanner->id}, Location: {$location}");
+
+                // Validate location key exists in our response structure
+                if (array_key_exists($location, $response)) {
+                    // Check if this location is already filled (Latest banner takes priority)
+                    if (!empty($response[$location])) {
+                        continue;
+                    }
+
+                    // If a banner group is attached, merge its banners into the location array
+                    if ($activeBanner->bannerGroup) {
+                        if ($activeBanner->bannerGroup->items) {
+                            foreach ($activeBanner->bannerGroup->items as $banner) {
+                                $banner->is_hide_in_mobile = (bool) ($activeBanner->is_hide_in_mobile ?? false);
+                                $response[$location][] = $banner;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return response()->json($response);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Not Found',
+                'message' => 'Home page not found.'
+            ], 404);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error fetching home banners: " . $e->getMessage());
+            return response()->json([
+                'error' => 'Server Error',
+                'message' => 'An error occurred while fetching home banners.'
+            ], 500);
+        }
+    }
+
+    /**
+     * Get active banners for a page by its slug, grouped by location (navbar/footer).
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getPageBanners(Request $request)
+    {
+        try {
+            $id = $request->input('id');
+            $lang = $request->input('lang', 'id');
+
+            if (!$id) {
+                return response()->json([
+                    'error' => 'Bad Request',
+                    'message' => 'ID parameter is required.'
+                ], 400);
+            }
+
+            $post = Post::findOrFail($id);
+
+            $now = now();
+            $activeBanners = BannerActive::where('post_id', $post->id)
+                ->where('language', $lang)
+                ->where(function ($query) use ($now) {
+                    $query->where('start_date', '<=', $now)
+                        ->orWhereNull('start_date');
+                })
+                ->where(function ($query) use ($now) {
+                    $query->where('end_date', '>=', $now)
+                        ->orWhereNull('end_date');
+                })
+                ->with(['bannerGroup.items'])
+                ->orderBy('start_date', 'desc')
+                ->get();
+
+            $response = [
+                'navbar' => [],
+                'footer' => []
+            ];
+
+            // Process and group banners
+            foreach ($activeBanners as $activeBanner) {
+                $location = strtolower($activeBanner->location);
+                \Illuminate\Support\Facades\Log::info("Processing Page BannerActive ID: {$activeBanner->id}, Location: {$location}");
+
+                // Validate location key exists in our response structure
+                if (array_key_exists($location, $response)) {
+                    // Check if this location is already filled (Latest banner takes priority)
+                    if (!empty($response[$location])) {
+                        continue;
+                    }
+
+                    // If a banner group is attached, merge its banners into the location array
+                    if ($activeBanner->bannerGroup) {
+                        if ($activeBanner->bannerGroup->items) {
+                            foreach ($activeBanner->bannerGroup->items as $banner) {
+                                $banner->is_hide_in_mobile = (bool) ($activeBanner->is_hide_in_mobile ?? false);
+                                $response[$location][] = $banner;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return response()->json($response);
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'error' => 'Not Found',
+                'message' => 'Page not found for the given ID.'
+            ], 404);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error("Error fetching page banners: " . $e->getMessage());
+            return response()->json([
+                'error' => 'Server Error',
+                'message' => 'An error occurred while fetching page banners.'
             ], 500);
         }
     }

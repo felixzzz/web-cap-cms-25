@@ -10,13 +10,17 @@ use Illuminate\Support\Facades\Storage;
 
 class BannerGroupController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('backend.banner.index');
+        $position = $request->route()->parameter('position') ?? $request->input('position', 'article');
+        $bannerGroups = BannerGroup::where('position', $position)->get();
+
+        return view('backend.banner.index', compact('bannerGroups', 'position'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        $position = $request->route()->parameter('position') ?? $request->input('position', 'article');
         $field = [
             'label' => 'Banner Items',
             'name' => 'banners',
@@ -31,20 +35,38 @@ class BannerGroupController extends Controller
                         ['value' => '4/3', 'label' => '4:3'],
                         ['value' => '1/1', 'label' => '1:1'],
                         ['value' => '16/9', 'label' => '16:9'],
+                        ['value' => '21/5', 'label' => '21:5 (Ultrawide)'],
+                        ['value' => '21/4', 'label' => '21:4 (Ultrawide)'],
                         ['value' => '3/4', 'label' => '3:4 (Portrait)'],
                         ['value' => '9/16', 'label' => '9:16 (Portrait)'],
                     ]
                 ],
                 ['type' => 'image', 'name' => 'image', 'label' => 'Image', 'info' => 'Upload main image'],
                 ['type' => 'video', 'name' => 'video', 'label' => 'Video', 'info' => 'Upload video (Max 2MB)'],
-                ['type' => 'textarea', 'name' => 'html_content', 'label' => 'HTML Content'],
-                ['type' => 'text', 'name' => 'cta_url', 'label' => 'CTA URL'],
+                [
+                    'type' => 'select',
+                    'name' => 'aspect_ratio_mobile',
+                    'label' => 'Aspect Ratio Mobile',
+                    'options' => [
+                        ['value' => '4/3', 'label' => '4:3'],
+                        ['value' => '1/1', 'label' => '1:1'],
+                        ['value' => '16/9', 'label' => '16:9'],
+                        ['value' => '21/5', 'label' => '21:5 (Ultrawide)'],
+                        ['value' => '21/4', 'label' => '21:4 (Ultrawide)'],
+                        ['value' => '3/4', 'label' => '3:4 (Portrait)'],
+                        ['value' => '9/16', 'label' => '9:16 (Portrait)'],
+                    ]
+                ],
+                ['type' => 'image', 'name' => 'image_mobile', 'label' => 'Image Mobile', 'info' => 'Upload mobile image'],
+                ['type' => 'video', 'name' => 'video_mobile', 'label' => 'Video Mobile', 'info' => 'Upload mobile video (Max 2MB)'],
+                ['type' => 'code', 'name' => 'html_content', 'label' => 'HTML Content'],
+                ['type' => 'text', 'name' => 'cta_url', 'label' => 'CTA URL', 'required' => true],
                 ['type' => 'text', 'name' => 'cta_label', 'label' => 'CTA Label'],
                 ['type' => 'text', 'name' => 'cta_gtm', 'label' => 'CTA GTM'],
             ]
         ];
 
-        return view('backend.banner.create', compact('field'));
+        return view('backend.banner.create', compact('field', 'position'));
     }
 
     public function store(Request $request)
@@ -52,7 +74,8 @@ class BannerGroupController extends Controller
         $data = $request->validate([
             'title' => 'required',
             'banners' => 'nullable',
-            'bulk_position' => 'nullable'
+            'bulk_position' => 'nullable',
+            'position' => 'required|string|in:article,home,pages',
         ]);
 
         $banners = [];
@@ -73,6 +96,9 @@ class BannerGroupController extends Controller
                         'image' => $this->resolveImage($bannerData['image'] ?? null),
                         'aspect_ratio' => $bannerData['aspect_ratio'] ?? null,
                         'video' => $this->resolveImage($bannerData['video'] ?? null), // Map video input to video column
+                        'image_mobile' => $this->resolveImage($bannerData['image_mobile'] ?? null),
+                        'aspect_ratio_mobile' => $bannerData['aspect_ratio_mobile'] ?? null,
+                        'video_mobile' => $this->resolveImage($bannerData['video_mobile'] ?? null),
                         'html' => $bannerData['html_content'] ?? null, // Map html_content to html
                         'cta_url' => $bannerData['cta_url'] ?? null,
                         'cta_label' => $bannerData['cta_label'] ?? null,
@@ -82,7 +108,16 @@ class BannerGroupController extends Controller
             }
         });
 
-        return redirect()->route('admin.banner.index')->withFlashSuccess(__('Banner Group Created Successfully.'));
+        if ($data['position'] == 'home') {
+            $route = 'admin.banner.home.index';
+        } elseif ($data['position'] == 'pages') {
+            $route = 'admin.banner.pages.index';
+        } else {
+            $route = 'admin.banner.index';
+        }
+
+        return redirect()->route($route)
+            ->withFlashSuccess(__('Banner Group Created Successfully.'));
     }
 
     public function edit(BannerGroup $banner_group)
@@ -101,14 +136,34 @@ class BannerGroupController extends Controller
                         ['value' => '1/1', 'label' => '1:1'],
                         ['value' => '4/3', 'label' => '4:3'],
                         ['value' => '16/9', 'label' => '16:9'],
+                        ['value' => '21/5', 'label' => '21:5 (Ultrawide)'],
+                        ['value' => '21/4', 'label' => '21:4 (Ultrawide)'],
+                        ['value' => '21/3', 'label' => '21:3 (Ultrawide)'],
                         ['value' => '3/4', 'label' => '3:4 (Portrait)'],
                         ['value' => '9/16', 'label' => '9:16 (Portrait)'],
                     ]
                 ],
                 ['type' => 'image', 'name' => 'image', 'label' => 'Image', 'info' => 'Upload main image'],
                 ['type' => 'video', 'name' => 'video', 'label' => 'Video', 'info' => 'Upload video (Max 2MB)'],
-                ['type' => 'textarea', 'name' => 'html_content', 'label' => 'HTML Content'],
-                ['type' => 'text', 'name' => 'cta_url', 'label' => 'CTA URL'],
+                [
+                    'type' => 'select',
+                    'name' => 'aspect_ratio_mobile',
+                    'label' => 'Aspect Ratio Mobile',
+                    'options' => [
+                        ['value' => '1/1', 'label' => '1:1'],
+                        ['value' => '4/3', 'label' => '4:3'],
+                        ['value' => '16/9', 'label' => '16:9'],
+                        ['value' => '21/5', 'label' => '21:5 (Ultrawide)'],
+                        ['value' => '21/4', 'label' => '21:4 (Ultrawide)'],
+                        ['value' => '21/3', 'label' => '21:3 (Ultrawide)'],
+                        ['value' => '3/4', 'label' => '3:4 (Portrait)'],
+                        ['value' => '9/16', 'label' => '9:16 (Portrait)'],
+                    ]
+                ],
+                ['type' => 'image', 'name' => 'image_mobile', 'label' => 'Image Mobile', 'info' => 'Upload mobile image'],
+                ['type' => 'video', 'name' => 'video_mobile', 'label' => 'Video Mobile', 'info' => 'Upload mobile video (Max 2MB)'],
+                ['type' => 'code', 'name' => 'html_content', 'label' => 'HTML Content'],
+                ['type' => 'text', 'name' => 'cta_url', 'label' => 'CTA URL', 'required' => true],
                 ['type' => 'text', 'name' => 'cta_label', 'label' => 'CTA Label'],
                 ['type' => 'text', 'name' => 'cta_gtm', 'label' => 'CTA GTM'],
             ]
@@ -123,6 +178,9 @@ class BannerGroupController extends Controller
                 'image' => $banner->image,
                 'aspect_ratio' => $banner->aspect_ratio,
                 'video' => $banner->video,
+                'image_mobile' => $banner->image_mobile,
+                'aspect_ratio_mobile' => $banner->aspect_ratio_mobile,
+                'video_mobile' => $banner->video_mobile,
                 'html_content' => $banner->html,
                 'cta_url' => $banner->cta_url,
                 'cta_label' => $banner->cta_label,
@@ -136,9 +194,10 @@ class BannerGroupController extends Controller
     public function update(Request $request, BannerGroup $banner_group)
     {
         $data = $request->validate([
-            'title' => 'required',
+            'title' => 'required|string|max:255',
             'banners' => 'nullable',
-            'bulk_position' => 'nullable'
+            'bulk_position' => 'nullable',
+            'position' => 'required|string|in:article,home,pages',
         ]);
 
         $banners = [];
@@ -162,6 +221,9 @@ class BannerGroupController extends Controller
                         'image' => $this->resolveImage($bannerData['image'] ?? null),
                         'aspect_ratio' => $bannerData['aspect_ratio'] ?? null,
                         'video' => $this->resolveImage($bannerData['video'] ?? null),
+                        'image_mobile' => $this->resolveImage($bannerData['image_mobile'] ?? null),
+                        'aspect_ratio_mobile' => $bannerData['aspect_ratio_mobile'] ?? null,
+                        'video_mobile' => $this->resolveImage($bannerData['video_mobile'] ?? null),
                         'html' => $bannerData['html_content'] ?? null,
                         'cta_url' => $bannerData['cta_url'] ?? null,
                         'cta_label' => $bannerData['cta_label'] ?? null,
@@ -171,7 +233,16 @@ class BannerGroupController extends Controller
             }
         });
 
-        return redirect()->route('admin.banner.index')->withFlashSuccess(__('Banner Group Updated Successfully.'));
+        if ($banner_group->position == 'home') {
+            $route = 'admin.banner.home.index';
+        } elseif ($banner_group->position == 'pages') {
+            $route = 'admin.banner.pages.index';
+        } else {
+            $route = 'admin.banner.index';
+        }
+
+        return redirect()->route($route)
+            ->withFlashSuccess(__('Banner Group Updated Successfully.'));
     }
 
     public function destroy(BannerGroup $banner_group)
@@ -190,7 +261,15 @@ class BannerGroupController extends Controller
                     $filename = $media->file_name;
                     $uniqueFilename = time() . '_' . $filename;
                     $destPath = 'images/banners/' . $uniqueFilename;
-                    Storage::disk('public')->put($destPath, file_get_contents($media->getPath()));
+
+                    // Use stream to safely copy file from source (potentially S3) to destination
+                    // This handles large files and remote files correctly unlike file_get_contents
+                    $stream = $media->stream();
+                    Storage::disk('s3')->put($destPath, $stream);
+                    if (is_resource($stream)) {
+                        fclose($stream);
+                    }
+
                     $temp->delete();
                     return $destPath;
                 }
@@ -223,5 +302,47 @@ class BannerGroupController extends Controller
             'start_date' => $bannerActive->start_date ? $bannerActive->start_date->format('Y-m-d H:i') : 'No Start Date',
             'end_date' => $bannerActive->end_date ? $bannerActive->end_date->format('Y-m-d H:i') : 'No End Date',
         ]);
+    }
+
+    public function listJson()
+    {
+        $groups = BannerGroup::where('position', 'article')->withCount('items')->orderBy('title')->get();
+        return response()->json($groups);
+    }
+
+    public function listActiveEmbedded()
+    {
+        $activeBanners = \App\Models\BannerActive::where('location', 'embedded')
+            ->with('bannerGroup')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($banner) {
+                return [
+                    'id' => $banner->id,
+                    'group_title' => $banner->bannerGroup->title ?? 'Unknown Group',
+                    'start_date' => $banner->start_date ? $banner->start_date->format('Y-m-d H:i') : '',
+                    'end_date' => $banner->end_date ? $banner->end_date->format('Y-m-d H:i') : '',
+                    'status' => $banner->is_active ? 'Active' : 'Inactive',
+                ];
+            });
+
+        return response()->json($activeBanners);
+    }
+
+    public function updateActiveEmbedded(Request $request, $id)
+    {
+        $banner = \App\Models\BannerActive::findOrFail($id);
+
+        $data = $request->validate([
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+        ]);
+
+        $banner->update([
+            'start_date' => $data['start_date'] ?? null,
+            'end_date' => $data['end_date'] ?? null,
+        ]);
+
+        return response()->json(['success' => true]);
     }
 }
