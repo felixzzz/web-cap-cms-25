@@ -42,12 +42,20 @@
                     <div :id="'collapse' + no" class="accordion-collapse collapse" :aria-labelledby="'heading' + no"
                         data-bs-parent="#accordionRepeater">
                         <div class="accordion-body">
-                            <div class="row align-items-center">
-                                <div class="col-md-3" v-for="col in field.list" :key="col.name">
-                                    <label class="fw-bold text-muted">
-                                        {{ col.label }}
-                                        <span v-if="col.required" class="text-danger">*</span>
-                                    </label>
+                            <template v-for="(group, gIndex) in fieldGroups">
+                                <div :key="'acc-group-' + gIndex" class="mb-6">
+                                    <h6 class="mb-3 text-primary border-bottom pb-2" v-if="group.title && fieldGroups.length > 1">
+                                        {{ group.title }}
+                                        <i class="fas fa-info-circle ms-2 text-muted fs-7" style="cursor: help" v-if="group.title === 'Mobile Media'" data-bs-toggle="tooltip" title="Jika ingin mengupload media dan setting yang berbeda di resolusi tablet dan handphone dengan versi media desktop. Jika tidak ingin mengubahnya, biarkan kolom kosong"></i>
+                                    </h6>
+                                    <div class="row align-items-center">
+                                        <div class="col-md-3 mb-4" v-for="col in group.fields" :key="col.name">
+                                            <label class="fw-bold text-muted d-block mb-1">
+                                                {{ col.label }}
+                                                <i class="fas fa-info-circle ms-1 text-muted fs-7" style="cursor: help" v-if="position === 'pages' && (col.name === 'aspect_ratio' || col.name === 'aspect_ratio_mobile')" data-bs-toggle="tooltip" title="apabila banner di aktifkan pada posisi navbar, maka aspect ratio tidak bekerja. hal ini dikarenakan banner pada navbar menggunakan ukuran yang fixed(tetap)"></i>
+                                                <span v-if="col.required" class="text-danger">*</span>
+                                                <span v-if="group.isMobile" class="text-muted fw-normal fs-7 ms-1">(Optional)</span>
+                                            </label>
                                     <div v-if="col.type === 'image' || col.type === 'video'">
                                         <template v-if="list[col.name]">
                                             <template v-if="isNaN(list[col.name])">
@@ -82,8 +90,10 @@
                                             }}
                                         </span>
                                     </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -111,11 +121,19 @@
                     </div>
 
                     <div class="modal-body">
-                        <div class="form-group row mb-5" v-for="col in field.list" v-bind:key="col.name">
-                            <label class="col-md-3 col-form-label">
-                                {{ col.label }}
-                                <span v-if="col.required" class="text-danger">*</span>
-                            </label>
+                        <template v-for="(group, gIndex) in fieldGroups">
+                            <div :key="'group-' + gIndex" class="mb-8">
+                                <h4 class="mb-4 text-primary border-bottom pb-2" v-if="group.title && fieldGroups.length > 1">
+                                    {{ group.title }}
+                                    <i class="fas fa-info-circle ms-2 text-muted fs-6" style="cursor: help" v-if="group.title === 'Mobile Media'" data-bs-toggle="tooltip" title="Jika ingin mengupload media dan setting yang berbeda di resolusi tablet dan handphone dengan versi media desktop. Jika tidak ingin mengubahnya, biarkan kolom kosong"></i>
+                                </h4>
+                                <div class="form-group row mb-5" v-for="col in group.fields" v-bind:key="col.name">
+                                    <label class="col-md-3 col-form-label">
+                                        {{ col.label }}
+                                        <i class="fas fa-info-circle ms-1 text-muted fs-7" style="cursor: help" v-if="position === 'pages' && (col.name === 'aspect_ratio' || col.name === 'aspect_ratio_mobile')" data-bs-toggle="tooltip" title="apabila banner di aktifkan pada posisi navbar, maka aspect ratio tidak bekerja. hal ini dikarenakan banner pada navbar menggunakan ukuran yang fixed(tetap)"></i>
+                                        <span v-if="col.required" class="text-danger">*</span>
+                                        <span v-if="group.isMobile" class="text-muted fw-normal fs-7 ms-1">(Optional)</span>
+                                    </label>
                             <div class="col-md-9">
                                 <template v-if="col.type == 'text'">
                                     <input type="text" class="form-control" v-model="formModal[col.name]" />
@@ -192,7 +210,9 @@
                                     </div>
                                 </template>
                             </div>
-                        </div>
+                                </div>
+                            </div>
+                        </template>
                     </div>
 
                     <div class="modal-footer">
@@ -226,7 +246,27 @@ export default {
         "editor_fields",
         "editor_simple_fields",
         "locale",
+        "position",
     ],
+    computed: {
+        fieldGroups() {
+            if (!this.field || !this.field.list) return [];
+            
+            const desktopNames = ['aspect_ratio', 'image', 'video'];
+            const mobileNames = ['aspect_ratio_mobile', 'image_mobile', 'video_mobile'];
+            
+            const desktopFields = this.field.list.filter(c => desktopNames.includes(c.name));
+            const mobileFields = this.field.list.filter(c => mobileNames.includes(c.name));
+            const otherFields = this.field.list.filter(c => !desktopNames.includes(c.name) && !mobileNames.includes(c.name));
+            
+            let groups = [];
+            if (otherFields.length) groups.push({ title: 'General Information', isMobile: false, fields: otherFields });
+            if (desktopFields.length) groups.push({ title: 'Desktop Media', isMobile: false, fields: desktopFields });
+            if (mobileFields.length) groups.push({ title: 'Mobile Media', isMobile: true, fields: mobileFields });
+            
+            return groups;
+        }
+    },
     data() {
         return {
             feUrl: "",

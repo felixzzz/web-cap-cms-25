@@ -28,11 +28,15 @@ return new class extends Migration {
         });
 
         Schema::table('banner_active', function (Blueprint $table) {
-            $table->boolean('is_hide_in_mobile')->default(false)->after('language');
+            if (!Schema::hasColumn('banner_active', 'is_hide_in_mobile')) {
+                $table->boolean('is_hide_in_mobile')->default(false)->after('language');
+            }
         });
 
         Schema::table('banners', function (Blueprint $table) {
-            $table->boolean('use_html')->default(false)->after('html');
+            if (!Schema::hasColumn('banners', 'use_html')) {
+                $table->boolean('use_html')->default(false)->after('html');
+            }
         });
     }
 
