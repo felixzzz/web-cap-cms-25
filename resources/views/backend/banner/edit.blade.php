@@ -27,7 +27,7 @@
                                         placeholder="Banner Group Title" :value="$banner_group->title" />
                                     <accordion-repeater-component url="{{ config('filesystems.disks.s3.url') }}"
                                         :field="{{ json_encode($field) }}" value="{{ json_encode($banners) }}"
-                                        component="banners">
+                                        component="banners" position="{{ $banner_group->position }}">
                                     </accordion-repeater-component>
 
                                     <div class="d-flex justify-content-end mt-4">

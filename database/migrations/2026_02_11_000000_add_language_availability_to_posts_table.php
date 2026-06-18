@@ -9,7 +9,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->string('language_availability', 10)->default('both')->after('status');
+            if (!Schema::hasColumn('posts', 'language_availability')) {
+                $table->string('language_availability', 10)->default('both')->after('status');
+            }
         });
     }
 
