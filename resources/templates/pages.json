@@ -513,6 +513,23 @@
                         "type": "textarea2"
                     }
                 ]
+            },
+            {
+                "keyName": "seo",
+                "label": "SEO Schema",
+                "section": "1",
+                "fields": [
+                    {
+                        "name": "seo_schema",
+                        "label": "SEO Schema (JSON-LD)",
+                        "type": "textarea2",
+                        "max": 100000,
+                        "rules": [
+                            "nullable",
+                            "json"
+                        ]
+                    }
+                ]
             }
         ]
     },
@@ -908,6 +925,23 @@
                         "name": "meta_desc",
                         "label": "Meta Description",
                         "type": "textarea2"
+                    }
+                ]
+            },
+            {
+                "keyName": "seo",
+                "label": "SEO Schema",
+                "section": "1",
+                "fields": [
+                    {
+                        "name": "seo_schema",
+                        "label": "SEO Schema (JSON-LD)",
+                        "type": "textarea2",
+                        "max": 100000,
+                        "rules": [
+                            "nullable",
+                            "json"
+                        ]
                     }
                 ]
             }
@@ -1594,6 +1628,23 @@
                         "type": "textarea2"
                     }
                 ]
+            },
+            {
+                "keyName": "seo",
+                "label": "SEO Schema",
+                "section": "1",
+                "fields": [
+                    {
+                        "name": "seo_schema",
+                        "label": "SEO Schema (JSON-LD)",
+                        "type": "textarea2",
+                        "max": 100000,
+                        "rules": [
+                            "nullable",
+                            "json"
+                        ]
+                    }
+                ]
             }
         ]
     },
@@ -1928,6 +1979,23 @@
                         "name": "meta_desc",
                         "label": "Meta Description",
                         "type": "textarea2"
+                    }
+                ]
+            },
+            {
+                "keyName": "seo",
+                "label": "SEO Schema",
+                "section": "1",
+                "fields": [
+                    {
+                        "name": "seo_schema",
+                        "label": "SEO Schema (JSON-LD)",
+                        "type": "textarea2",
+                        "max": 100000,
+                        "rules": [
+                            "nullable",
+                            "json"
+                        ]
                     }
                 ]
             }
@@ -4123,6 +4191,23 @@
                         "type": "textarea2"
                     }
                 ]
+            },
+            {
+                "keyName": "seo",
+                "label": "SEO Schema",
+                "section": "1",
+                "fields": [
+                    {
+                        "name": "seo_schema",
+                        "label": "SEO Schema (JSON-LD)",
+                        "type": "textarea2",
+                        "max": 100000,
+                        "rules": [
+                            "nullable",
+                            "json"
+                        ]
+                    }
+                ]
             }
         ]
     },
@@ -5202,6 +5287,23 @@
                         "name": "meta_desc",
                         "label": "Meta Description",
                         "type": "textarea2"
+                    }
+                ]
+            },
+            {
+                "keyName": "seo",
+                "label": "SEO Schema",
+                "section": "1",
+                "fields": [
+                    {
+                        "name": "seo_schema",
+                        "label": "SEO Schema (JSON-LD)",
+                        "type": "textarea2",
+                        "max": 100000,
+                        "rules": [
+                            "nullable",
+                            "json"
+                        ]
                     }
                 ]
             }
