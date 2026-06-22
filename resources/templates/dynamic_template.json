@@ -4,16 +4,16 @@
         "slug": "/our-business",
         "label": "Business Solution - Infrastucture and Trading",
         "multilanguage": "true",
-        "lang_option" : [
+        "lang_option": [
             {
-                "name" : "Indonesian",
-                "value" : "id",
-                "master" : "true"
+                "name": "Indonesian",
+                "value": "id",
+                "master": "true"
             },
             {
-                "name" : "English",
-                "value" : "en",
-                "master" : "false"
+                "name": "English",
+                "value": "en",
+                "master": "false"
             }
         ],
         "description": "",
@@ -54,10 +54,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text_image_mobile",
-                      "label": "Alt Text (Image Mobile)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     },
                     {
                         "name": "image_desktop",
@@ -65,10 +65,10 @@
                         "type": "image"
                     },
                     {
-                      "name": "alt_text_image_desktop",
-                      "label": "Alt Text (Image Desktop)",
-                      "type": "text",
-                      "placeholder": "ex: alt text image"
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
                     }
                 ]
             },
@@ -222,10 +222,10 @@
                                 "type": "image"
                             },
                             {
-                              "name": "alt_text",
-                              "label": "Alt Text",
-                              "type": "text",
-                              "placeholder": "ex: alt text image"
+                                "name": "alt_text",
+                                "label": "Alt Text",
+                                "type": "text",
+                                "placeholder": "ex: alt text image"
                             },
                             {
                                 "name": "cta_label",
@@ -347,10 +347,10 @@
                                                 "type": "image"
                                             },
                                             {
-                                              "name": "alt_text",
-                                              "label": "Alt Text",
-                                              "type": "text",
-                                              "placeholder": "ex: alt text image"
+                                                "name": "alt_text",
+                                                "label": "Alt Text",
+                                                "type": "text",
+                                                "placeholder": "ex: alt text image"
                                             },
                                             {
                                                 "name": "description",
@@ -505,10 +505,10 @@
                                 "type": "image"
                             },
                             {
-                              "name": "alt_text",
-                              "label": "Alt Text",
-                              "type": "text",
-                              "placeholder": "ex: alt text image"
+                                "name": "alt_text",
+                                "label": "Alt Text",
+                                "type": "text",
+                                "placeholder": "ex: alt text image"
                             },
                             {
                                 "name": "cta_label",
@@ -666,6 +666,23 @@
                         "name": "meta_desc",
                         "label": "Meta Description",
                         "type": "textarea"
+                    }
+                ]
+            },
+            {
+                "keyName": "seo",
+                "label": "SEO Schema",
+                "section": "1",
+                "fields": [
+                    {
+                        "name": "seo_schema",
+                        "label": "SEO Schema (JSON-LD)",
+                        "type": "textarea2",
+                        "max": 100000,
+                        "rules": [
+                            "nullable",
+                            "json"
+                        ]
                     }
                 ]
             }
