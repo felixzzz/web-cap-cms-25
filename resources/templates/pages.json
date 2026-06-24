@@ -522,7 +522,7 @@
                     {
                         "name": "seo_schema",
                         "label": "SEO Schema (JSON-LD)",
-                        "type": "textarea2",
+                        "type": "json_editor",
                         "max": 100000,
                         "rules": [
                             "nullable",
@@ -936,7 +936,7 @@
                     {
                         "name": "seo_schema",
                         "label": "SEO Schema (JSON-LD)",
-                        "type": "textarea2",
+                        "type": "json_editor",
                         "max": 100000,
                         "rules": [
                             "nullable",
@@ -1178,7 +1178,7 @@
                     {
                         "name": "seo_schema",
                         "label": "SEO Schema (JSON-LD)",
-                        "type": "textarea2",
+                        "type": "json_editor",
                         "max": 100000,
                         "rules": [
                             "nullable",
@@ -1654,7 +1654,7 @@
                     {
                         "name": "seo_schema",
                         "label": "SEO Schema (JSON-LD)",
-                        "type": "textarea2",
+                        "type": "json_editor",
                         "max": 100000,
                         "rules": [
                             "nullable",
@@ -2007,7 +2007,7 @@
                     {
                         "name": "seo_schema",
                         "label": "SEO Schema (JSON-LD)",
-                        "type": "textarea2",
+                        "type": "json_editor",
                         "max": 100000,
                         "rules": [
                             "nullable",
@@ -4217,7 +4217,7 @@
                     {
                         "name": "seo_schema",
                         "label": "SEO Schema (JSON-LD)",
-                        "type": "textarea2",
+                        "type": "json_editor",
                         "max": 100000,
                         "rules": [
                             "nullable",
@@ -5315,7 +5315,7 @@
                     {
                         "name": "seo_schema",
                         "label": "SEO Schema (JSON-LD)",
-                        "type": "textarea2",
+                        "type": "json_editor",
                         "max": 100000,
                         "rules": [
                             "nullable",

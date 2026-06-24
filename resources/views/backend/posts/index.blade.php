@@ -68,7 +68,12 @@
                             </div>
                             <div class="mb-8 fv-row fv-plugins-icon-container">
                                 <label class="form-label">@lang('SEO Schema (JSON-LD) (ID)')</label>
-                                <textarea name="seo[seo_schema_id]" class="form-control" rows="8" placeholder="SEO Schema (JSON-LD) (ID)">{{ old('seo.seo_schema_id', $meta['seo']->seo_schema_id ?? '') }}</textarea>
+                                <div id="editor_seo_schema_id" class="border rounded" style="height: 300px; font-size: 14px; font-family: monospace;"></div>
+                                <textarea id="hidden_seo_schema_id" name="seo[seo_schema_id]" class="d-none">{{ old('seo.seo_schema_id', $meta['seo']->seo_schema_id ?? '') }}</textarea>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <button type="button" class="btn btn-sm btn-light-primary py-1 px-3" id="format_seo_schema_id">🪄 Format JSON</button>
+                                    <div id="error_seo_schema_id" class="text-danger fs-7" style="display: none;"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="en-seo" role="tabpanel" aria-labelledby="en-seo-tab">
@@ -82,7 +87,12 @@
                             </div>
                             <div class="mb-8 fv-row fv-plugins-icon-container">
                                 <label class="form-label">@lang('SEO Schema (JSON-LD) (EN)')</label>
-                                <textarea name="seo[seo_schema_en]" class="form-control" rows="8" placeholder="SEO Schema (JSON-LD) (EN)">{{ old('seo.seo_schema_en', $meta['seo']->seo_schema_en ?? '') }}</textarea>
+                                <div id="editor_seo_schema_en" class="border rounded" style="height: 300px; font-size: 14px; font-family: monospace;"></div>
+                                <textarea id="hidden_seo_schema_en" name="seo[seo_schema_en]" class="d-none">{{ old('seo.seo_schema_en', $meta['seo']->seo_schema_en ?? '') }}</textarea>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <button type="button" class="btn btn-sm btn-light-primary py-1 px-3" id="format_seo_schema_en">🪄 Format JSON</button>
+                                    <div id="error_seo_schema_en" class="text-danger fs-7" style="display: none;"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -92,4 +102,69 @@
             </x-backend.card>
         </x-forms.post>
     @endif
+
+    @once
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+    @endonce
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            function setupAce(containerId, hiddenInputId, errorDivId, formatBtnId) {
+                var container = document.getElementById(containerId);
+                var hiddenInput = document.getElementById(hiddenInputId);
+                var errorDiv = document.getElementById(errorDivId);
+                var formatBtn = document.getElementById(formatBtnId);
+
+                if (!container || !hiddenInput) return;
+
+                var editor = ace.edit(container);
+                editor.setTheme("ace/theme/chrome");
+                editor.session.setMode("ace/mode/json");
+                editor.session.setUseWorker(false); // Disable web workers to prevent cross-origin issues
+                editor.setShowPrintMargin(false);
+                editor.setOptions({
+                    tabSize: 2,
+                    useSoftTabs: true
+                });
+
+                // Set initial value
+                editor.setValue(hiddenInput.value || "{\n  \"@context\": \"https://schema.org\",\n  \"@type\": \"\"\n}");
+                editor.clearSelection();
+
+                // Sync editor updates back to target input
+                editor.session.on('change', function() {
+                    var value = editor.getValue();
+                    hiddenInput.value = value;
+                    try {
+                        if (value.trim()) {
+                            JSON.parse(value);
+                        }
+                        errorDiv.style.display = "none";
+                        container.style.borderColor = "#e4e6ef";
+                    } catch (e) {
+                        errorDiv.innerText = "⚠️ Invalid JSON: " + e.message;
+                        errorDiv.style.display = "block";
+                        container.style.borderColor = "#f1416c";
+                    }
+                });
+
+                // Format/Beautify button functionality
+                formatBtn.addEventListener("click", function() {
+                    try {
+                        var content = editor.getValue();
+                        if (content.trim()) {
+                            var parsed = JSON.parse(content);
+                            editor.setValue(JSON.stringify(parsed, null, 2));
+                            editor.clearSelection();
+                        }
+                    } catch (e) {
+                        alert("Cannot format: JSON is invalid.\n" + e.message);
+                    }
+                });
+            }
+
+            setupAce("editor_seo_schema_id", "hidden_seo_schema_id", "error_seo_schema_id", "format_seo_schema_id");
+            setupAce("editor_seo_schema_en", "hidden_seo_schema_en", "error_seo_schema_en", "format_seo_schema_en");
+        });
+    </script>
 @endsection
