@@ -48,6 +48,7 @@ Route::group([
             });
 
         Route::patch('/', [PostController::class, 'update'])->name('update');
+        Route::patch('update-seo', [PostController::class, 'updateSeo'])->name('update-seo');
         Route::delete('/', [PostController::class, 'delete'])->name('destroy');
 
         Route::patch('restore', [PostController::class, 'restore'])->name('restore');
