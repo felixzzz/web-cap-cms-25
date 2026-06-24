@@ -74,7 +74,41 @@ class PostController extends BackendController
         // Gate::authorize("admin.access.news.read");
         $type = $this->extract_post_type($type);
         $posts = Post::with('tags')->get();
-        return view('backend.posts.index', compact('type', 'posts'));
+
+        $page = null;
+        $valueMeta = [];
+        if ($type['type'] == 'articles-sustainability') {
+            $pageSlug = 'sustainability-in-action';
+            $pageTitle = 'Sustainability in Action';
+        } elseif ($type['type'] == 'blog') {
+            $pageSlug = 'news';
+            $pageTitle = 'News';
+        } else {
+            $pageSlug = null;
+        }
+
+        if ($pageSlug) {
+            $page = Post::where('type', 'page')->where('slug', $pageSlug)->first();
+            if (!$page) {
+                $page = Post::create([
+                    'type' => 'page',
+                    'slug' => $pageSlug,
+                    'title' => $pageTitle,
+                    'status' => 'publish',
+                ]);
+            }
+            
+            $meta = $page->meta->groupBy('section');
+            foreach ($meta as $keyName => $fields) {
+                $data = new \stdClass();
+                foreach ($fields as $key => $val) {
+                    $data->{$val->key} = $val->value;
+                }
+                $valueMeta[$keyName] = $data;
+            }
+        }
+
+        return view('backend.posts.index', compact('type', 'posts', 'page'))->withMeta($valueMeta);
     }
 
     public function create($type = 'news')
@@ -577,5 +611,23 @@ class PostController extends BackendController
                 $banner->delete();
             }
         }
+    }
+
+    public function updateSeo(Request $request, Post $post)
+    {
+        $rules = [
+            'seo_meta.meta_title_id' => ['nullable', 'string', 'max:1000'],
+            'seo_meta.meta_title_en' => ['nullable', 'string', 'max:1000'],
+            'seo_meta.meta_desc_id' => ['nullable', 'string'],
+            'seo_meta.meta_desc_en' => ['nullable', 'string'],
+            'seo.seo_schema_id' => ['nullable', 'string'],
+            'seo.seo_schema_en' => ['nullable', 'string'],
+        ];
+
+        Validator::make($request->all(), $rules)->validate();
+
+        $this->postMetaService->updatePageMetaV2($post, $request->all());
+
+        return redirect()->back()->withFlashSuccess(__('SEO settings updated successfully.'));
     }
 }
