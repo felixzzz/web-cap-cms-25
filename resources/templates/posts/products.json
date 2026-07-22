@@ -186,6 +186,31 @@
                                 "type": "editor"
                             },
                             {
+                                "name": "thickness",
+                                "label": "[Card] Thickness - Ketebalan",
+                                "type": "editor"
+                            },
+                            {
+                                "name": "film_width",
+                                "label": "[Card] Film Width - Lebar Film",
+                                "type": "editor"
+                            },
+                            {
+                                "name": "printing",
+                                "label": "[Card] Printing - Printing",
+                                "type": "editor"
+                            },
+                            {
+                                "name": "optional_additive",
+                                "label": "[Card] Optional Additive - Aditif Opsional",
+                                "type": "editor"
+                            },
+                            {
+                                "name": "optional_feature",
+                                "label": "[Card] Optional Feature - Fitur Tambahan",
+                                "type": "editor"
+                            },
+                            {
                                 "name": "datasheet_name",
                                 "label": "[Card] Datasheet Name 1",
                                 "type": "text"
