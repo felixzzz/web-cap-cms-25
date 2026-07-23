@@ -827,12 +827,19 @@ export default {
                         previewsInData:true
                     },
                     toolbar: [
-                        'heading', '|', 'alignment',
-                        'bold', 'italic', 'link', '|',
-                        'bulletedList', 'numberedList', '|',
+                        'sourceEditing', '|',
+                        'heading', '|',
+                        'bold', 'italic', 'underline', 'link', '|',
+                        'alignment', '|',
+                        'bulletedList', 'numberedList', 'outdent', 'indent', '|',
                         'imageUpload', 'blockQuote', 'insertTable', 'mediaEmbed', '|',
                         'undo', 'redo'
                     ],
+                    table: {
+                        contentToolbar: [
+                            'tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties'
+                        ]
+                    },
                     heading: {
                         options: [
                             { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },

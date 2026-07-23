@@ -59,7 +59,12 @@
     <script src="{{ mix('js/vendor.js') }}"></script>
     <script src="{{ asset('js/backend.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/37.1.0/classic/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/37.1.0/super-build/ckeditor.js"></script>
+    <script>
+        if (typeof CKEDITOR !== 'undefined' && CKEDITOR.ClassicEditor) {
+            window.ClassicEditor = CKEDITOR.ClassicEditor;
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>

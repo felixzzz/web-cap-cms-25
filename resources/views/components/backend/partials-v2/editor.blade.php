@@ -161,12 +161,19 @@
                         previewsInData: true
                     },
                     toolbar: [
+                        'sourceEditing', '|',
                         'heading', '|',
-                        'bold', 'italic', 'link', '|',
-                        'bulletedList', 'numberedList', '|',
+                        'bold', 'italic', 'underline', 'link', '|',
+                        'alignment', '|',
+                        'bulletedList', 'numberedList', 'outdent', 'indent', '|',
                         'imageUpload', 'blockQuote', 'insertTable', 'mediaEmbed', 'insertBanner', '|',
                         'undo', 'redo'
                     ],
+                    table: {
+                        contentToolbar: [
+                            'tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties'
+                        ]
+                    },
                     heading: {
                         options: [
                             { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
