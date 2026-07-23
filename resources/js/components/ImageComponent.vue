@@ -37,7 +37,7 @@ export default {
         field: Object,
         value: String,
         component: String,
-        masterlang: String
+        masterlang: [String, Boolean]
     },
     data() {
         return {

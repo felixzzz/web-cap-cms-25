@@ -68,6 +68,7 @@
             'ExportPdf',
             'ExportWord',
             'CKBox',
+            'CKFinder',
             'CKFinderUploadAdapter',
             'CloudServices',
             'RealTimeCollaborativeEditing',
