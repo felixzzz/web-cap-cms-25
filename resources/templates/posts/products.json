@@ -92,6 +92,51 @@
                 ]
             },
             {
+                "keyName": "product_profile",
+                "label": "Product Profile",
+                "section": "3",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "type": "textarea"
+                    },
+                    {
+                        "name": "image",
+                        "label": "Image",
+                        "type": "image",
+                        "size": 200,
+                        "info": "Recommended 1200 x 600 px (ratio 2:1) and recommended file size 200 KB"
+                    },
+                    {
+                        "name": "alt_text_image",
+                        "label": "Alt Text (Image)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
+                    }
+                ]
+            },
+            {
                 "keyName": "product_datasheet",
                 "label": "Product Solutions",
                 "section": "3",
@@ -183,31 +228,6 @@
                             {
                                 "name": "application",
                                 "label": "[Card] Application",
-                                "type": "editor"
-                            },
-                            {
-                                "name": "thickness",
-                                "label": "[Card] Thickness - Ketebalan",
-                                "type": "editor"
-                            },
-                            {
-                                "name": "film_width",
-                                "label": "[Card] Film Width - Lebar Film",
-                                "type": "editor"
-                            },
-                            {
-                                "name": "printing",
-                                "label": "[Card] Printing - Printing",
-                                "type": "editor"
-                            },
-                            {
-                                "name": "optional_additive",
-                                "label": "[Card] Optional Additive - Aditif Opsional",
-                                "type": "editor"
-                            },
-                            {
-                                "name": "optional_feature",
-                                "label": "[Card] Optional Feature - Fitur Tambahan",
                                 "type": "editor"
                             },
                             {
