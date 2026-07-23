@@ -32,7 +32,7 @@
 
                 @if (View::exists('components.backend.partials-v2.' . $field['type']))
                     @if ($field['type'] === 'image')
-                        @if ($isMasterLang || (isset($field['multilang']) && $field['multilang'] === true))
+                        @if ($isMasterLang || !empty($field['multilang']) || !empty($field['multilang_file']) || !empty($field['multilang_image']))
                             @include('components.backend.partials-v2.' . $field['type'], [
                                 'field' => $field,
                                 'component' => $fieldName,
