@@ -125,6 +125,7 @@
                         "name": "image",
                         "label": "Image",
                         "type": "image",
+                        "multilang_file": true,
                         "size": 200,
                         "info": "Recommended 1600 x 600 px (ratio 8:3) and recommended file size 200 KB"
                     },
