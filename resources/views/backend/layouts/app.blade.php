@@ -64,6 +64,33 @@
         if (typeof CKEDITOR !== 'undefined' && CKEDITOR.ClassicEditor) {
             window.ClassicEditor = CKEDITOR.ClassicEditor;
         }
+        window.defaultCKEditorRemovePlugins = [
+            'ExportPdf',
+            'ExportWord',
+            'CKBox',
+            'CKFinderUploadAdapter',
+            'CloudServices',
+            'RealTimeCollaborativeEditing',
+            'RealTimeCollaborativeComments',
+            'RealTimeCollaborativeTrackChanges',
+            'RealTimeCollaborativeRevisionHistory',
+            'PresenceList',
+            'Comments',
+            'TrackChanges',
+            'RevisionHistory',
+            'Pagination',
+            'WProofreader',
+            'MathType',
+            'SlashCommand',
+            'Template',
+            'DocumentOutline',
+            'FormatPainter',
+            'TableOfContents',
+            'PasteFromOfficeEnhanced',
+            'CaseChange',
+            'AIAdapter',
+            'AIAssistant'
+        ];
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

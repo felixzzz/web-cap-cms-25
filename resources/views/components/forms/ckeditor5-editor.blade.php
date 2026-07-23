@@ -22,6 +22,7 @@
         document.addEventListener("DOMContentLoaded", () => {
             ClassicEditor
                 .create( document.querySelector( '#{{$name}}' ),{
+                    removePlugins: window.defaultCKEditorRemovePlugins || [],
                     ckfinder: {
                         uploadUrl: "{{ route('admin.image.upload').'?_token='.csrf_token()}}",
                     },

@@ -24,7 +24,7 @@
             let index = this.{{ $component }}.length - 1;
             this.$nextTick(() => {
                 @foreach($editor_fields as $editor_field_name)
-                    window.ClassicEditor.create(document.querySelector('#{{ $component }}_' + index + '_{{ $editor_field_name }}'));
+                    window.ClassicEditor.create(document.querySelector('#{{ $component }}_' + index + '_{{ $editor_field_name }}'), { removePlugins: window.defaultCKEditorRemovePlugins || [] });
                 @endforeach
             });
         },
@@ -36,7 +36,7 @@
         $nextTick(() => {
             for(let index = 0; index < {{ $component }}.length; index++) {
                 @foreach($editor_fields as $editor_field_name)
-                    window.ClassicEditor.create(document.querySelector('#{{ $component }}_' + index + '_{{ $editor_field_name }}'));
+                    window.ClassicEditor.create(document.querySelector('#{{ $component }}_' + index + '_{{ $editor_field_name }}'), { removePlugins: window.defaultCKEditorRemovePlugins || [] });
                 @endforeach
             }
         });

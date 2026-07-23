@@ -20,7 +20,7 @@ $inputValue = ( !empty($oldData) )? $oldData : $value;
 @if(!isset($index))
     @push('after-scripts')
         <script>
-            window.ClassicEditor.create(document.querySelector("#{{ $component }}"))
+            window.ClassicEditor.create(document.querySelector("#{{ $component }}"), { removePlugins: window.defaultCKEditorRemovePlugins || [] })
             .then(editor => {
                 editor.plugins.get("FileRepository").createUploadAdapter = loader => {
                     let MyUploadAdapter = window.MyUploadAdapter;

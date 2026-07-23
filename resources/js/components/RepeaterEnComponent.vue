@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="card-body">
-            <draggable v-model="lists" @end="onDragEnd" :key="lists">
+            <draggable v-model="lists" @end="onDragEnd" :key="lists.length">
             <div
                 class="row align-items-center"
                 v-for="(list, no) in lists"
@@ -820,6 +820,7 @@ export default {
         this.editor_fields.forEach(editor_field => {
           ClassicEditor
                 .create( document.querySelector('#' + this.aliascomponent + '_' + editor_field), {
+                    removePlugins: window.defaultCKEditorRemovePlugins || [],
                     ckfinder: {
                         uploadUrl: '/antiadmin/image-upload',
                     },
@@ -875,6 +876,7 @@ export default {
         this.editor_simple_fields.forEach(editor_field => {
           ClassicEditor
                 .create( document.querySelector('#' + this.aliascomponent + '_' + editor_field), {
+                    removePlugins: window.defaultCKEditorRemovePlugins || [],
                     ckfinder: {
                         uploadUrl: '/antiadmin/image-upload',
                     },

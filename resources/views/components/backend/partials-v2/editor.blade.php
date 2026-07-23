@@ -153,6 +153,7 @@
 
             ClassicEditor
                 .create(document.querySelector('#{{ $aliasComponent }}'), {
+                    removePlugins: window.defaultCKEditorRemovePlugins || [],
                     extraPlugins: [BannerRenderPlugin, InsertBannerPlugin],
                     ckfinder: {
                         uploadUrl: "{{ route('admin.image.upload') . '?_token=' . csrf_token()}}",
