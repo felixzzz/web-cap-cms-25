@@ -852,7 +852,6 @@ export default {
         this.editor_fields.forEach(editor_field => {
           ClassicEditor
                 .create( document.querySelector('#' + this.aliascomponent + '_' + editor_field), {
-                    removePlugins: window.defaultCKEditorRemovePlugins || [],
                     ckfinder: {
                         uploadUrl: '/antiadmin/image-upload',
                     },

@@ -405,7 +405,6 @@ export default {
                                 "#" + this.aliascomponent + "_" + editor_field
                             ),
                             {
-                                removePlugins: window.defaultCKEditorRemovePlugins || [],
                                 ckfinder: {
                                     uploadUrl: "/antiadmin/image-upload",
                                 },
@@ -506,7 +505,6 @@ export default {
                                 "#" + this.aliascomponent + "_" + editor_field
                             ),
                             {
-                                removePlugins: window.defaultCKEditorRemovePlugins || [],
                                 ckfinder: {
                                     uploadUrl: "/antiadmin/image-upload",
                                 },

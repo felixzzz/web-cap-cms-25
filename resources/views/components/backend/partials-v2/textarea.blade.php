@@ -19,7 +19,6 @@ $inputValue = ( !empty($oldData) )? $oldData : $value;
         document.addEventListener("DOMContentLoaded", () => {
             ClassicEditor
                 .create( document.querySelector( '#{{ $aliasComponent }}' ),{
-                    removePlugins: window.defaultCKEditorRemovePlugins || [],
                     toolbar: [],
                     ckfinder: {
                         uploadUrl: "{{ route('admin.image.upload').'?_token='.csrf_token()}}",

@@ -153,7 +153,6 @@
 
             ClassicEditor
                 .create(document.querySelector('#{{ $aliasComponent }}'), {
-                    removePlugins: window.defaultCKEditorRemovePlugins || [],
                     extraPlugins: [BannerRenderPlugin, InsertBannerPlugin],
                     ckfinder: {
                         uploadUrl: "{{ route('admin.image.upload') . '?_token=' . csrf_token()}}",
@@ -162,17 +161,15 @@
                         previewsInData: true
                     },
                     toolbar: [
-                        'sourceEditing', '|',
                         'heading', '|',
                         'bold', 'italic', 'underline', 'link', '|',
-                        'alignment', '|',
                         'bulletedList', 'numberedList', 'outdent', 'indent', '|',
                         'imageUpload', 'blockQuote', 'insertTable', 'mediaEmbed', 'insertBanner', '|',
                         'undo', 'redo'
                     ],
                     table: {
                         contentToolbar: [
-                            'tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties'
+                            'tableColumn', 'tableRow', 'mergeTableCells'
                         ]
                     },
                     heading: {

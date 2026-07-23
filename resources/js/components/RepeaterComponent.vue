@@ -934,7 +934,6 @@ export default {
         this.editor_fields.forEach(editor_field => {
           ClassicEditor
                 .create( document.querySelector('#' + this.aliascomponent + '_' + editor_field), {
-                    removePlugins: window.defaultCKEditorRemovePlugins || [],
                     ckfinder: {
                         uploadUrl: '/antiadmin/image-upload',
                     },
@@ -942,17 +941,15 @@ export default {
                         previewsInData:true
                     },
                     toolbar: [
-                        'sourceEditing', '|',
                         'heading', '|',
                         'bold', 'italic', 'underline', 'link', '|',
-                        'alignment', '|',
                         'bulletedList', 'numberedList', 'outdent', 'indent', '|',
                         'imageUpload', 'blockQuote', 'insertTable', 'mediaEmbed', '|',
                         'undo', 'redo'
                     ],
                     table: {
                         contentToolbar: [
-                            'tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties'
+                            'tableColumn', 'tableRow', 'mergeTableCells'
                         ]
                     },
                     heading: {
@@ -990,7 +987,6 @@ export default {
         this.editor_simple_fields.forEach(editor_field => {
           ClassicEditor
                 .create( document.querySelector('#' + this.aliascomponent + '_' + editor_field), {
-                    removePlugins: window.defaultCKEditorRemovePlugins || [],
                     ckfinder: {
                         uploadUrl: '/antiadmin/image-upload',
                     },
