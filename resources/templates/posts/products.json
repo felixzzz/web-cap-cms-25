@@ -135,6 +135,27 @@
                         "label": "Alt Text (Image)",
                         "type": "text",
                         "placeholder": "ex: alt text image"
+                    },
+                    {
+                        "name": "image_url",
+                        "label": "Image Link / URL",
+                        "type": "text",
+                        "placeholder": "ex: https://example.com or /documents/catalog.pdf"
+                    },
+                    {
+                        "name": "open_new_tab",
+                        "label": "Open Link in New Tab",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "No (Same Tab)",
+                                "value": "no"
+                            },
+                            {
+                                "label": "Yes (New Tab)",
+                                "value": "yes"
+                            }
+                        ]
                     }
                 ]
             },
