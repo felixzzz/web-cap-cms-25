@@ -27,19 +27,20 @@ class PostService extends CrudService
      * @param StorePostRequest $request
      * @return void
      */
-    public function create_post_handler($data, $type = null) : Post
+    public function create_post_handler($data, $type = null): Post
     {
         $data['type'] = $type;
-        $data['slug'] = isset($data['slug']) && $data['slug'] ? Str::slug($data['slug']) : Str::slug($data['title']);
+        $data['slug'] = isset($data['slug']) && $data['slug'] ? Str::slug($data['slug']) : Str::slug($data['title'] ?? '');
+        $data['slug_en'] = isset($data['slug_en']) && $data['slug_en'] ? Str::slug($data['slug_en']) : Str::slug($data['title_en'] ?? '');
         $maxSortValue = Post::where('type', $type)
-        ->max('sort');
+            ->max('sort');
         $newSortValue = $maxSortValue !== null ? $maxSortValue + 1 : 1;
         $data['sort'] = $newSortValue;
         $post = Post::create(array_merge(['user_id' => Auth::user()->id], $data));
         if ($post) {
-			if (isset($data['categories'])) {
-				$post->category()->sync($data['categories']);
-			}
+            if (isset($data['categories'])) {
+                $post->category()->sync($data['categories']);
+            }
 
             if (isset($data['featured_image'])) {
                 $this->filepond_resolver($data['featured_image'], 'featured_image', $post);
@@ -57,24 +58,27 @@ class PostService extends CrudService
      * @param StorePostRequest $request
      * @return void
      */
-    public function update_post_handler(Post $post, $data) : Post
+    public function update_post_handler(Post $post, $data): Post
     {
         if (isset($data['slug'])) {
             $data['slug'] = Str::slug($data['slug']);
         }
+        if (isset($data['slug_en']) && $data['slug_en']) {
+            $data['slug_en'] = Str::slug($data['slug_en']);
+        }
 
         $update = $post->update($data);
         if ($update) {
-			if (isset($data['categories'])) {
-				$post->category()->sync($data['categories']);
-			}
+            if (isset($data['categories'])) {
+                $post->category()->sync($data['categories']);
+            }
 
             if (isset($data['featured_image'])) {
                 $this->filepond_resolver($data['featured_image'], 'featured_image', $post);
             }
 
             if (isset($data['tags'])) {
-                $this->sync_tags($data['tags'],$data['tags_id'], $post);
+                $this->sync_tags($data['tags'], $data['tags_id'], $post);
             }
         }
         return $post;
