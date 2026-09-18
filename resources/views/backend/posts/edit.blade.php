@@ -100,6 +100,8 @@
                                         <x-forms.filepond-input name="featured_image" label="Featured Image" class="" required="0" src="{{ $post->featured_image() }}"  text="Set the post thumbnail image. Only *.png, *.jpg and *.jpeg image files are accepted" hidden="{{ $hidden }}"/>
                                         <x-forms.text-input name="alt_image" label="Alt Image (ID)"  placeholder="" text="" value="{{ $post->alt_image }}"/>
                                         <x-forms.text-input name="alt_image_en" label="Alt Image (EN)"  placeholder="" text="" value="{{ $post->alt_image_en }}"/>
+                                        <x-forms.text-input name="caption_image" label="Caption Image (ID)" placeholder="" text="" value="{{ $post->caption_image }}"/>
+                                        <x-forms.text-input name="caption_image_en" label="Caption Image (EN)" placeholder="" text="" value="{{ $post->caption_image_en }}"/>
                                     @endif
                                 @endif
                         @if($components)
@@ -300,6 +302,10 @@
             var $altId = $('[name="alt_image"]').closest('.fv-row');
             var $altEn = $('[name="alt_image_en"]').closest('.fv-row');
 
+            // Caption image fields
+            var $captionId = $('[name="caption_image"]').closest('.fv-row');
+            var $captionEn = $('[name="caption_image_en"]').closest('.fv-row');
+
             // Tab elements
             var $tabs = $('#myTab');
             var $tabPaneEn = $('#en');
@@ -311,6 +317,8 @@
                 $titleEn.show().find('input[name="title_en"]').prop('required', true);
                 $altId.hide();
                 $altEn.show();
+                $captionId.hide();
+                $captionEn.show();
 
                 // Tab: hide tab bar, show only EN pane
                 $tabs.hide();
@@ -323,6 +331,8 @@
                 $titleId.show().find('input[name="title"]').prop('required', true);
                 $altEn.hide();
                 $altId.show();
+                $captionEn.hide();
+                $captionId.show();
 
                 // Tab: hide tab bar, show only ID pane
                 $tabs.hide();
@@ -337,6 +347,8 @@
                 $titleEn.find('input[name="title_en"]').prop('required', true);
                 $altId.show();
                 $altEn.show();
+                $captionId.show();
+                $captionEn.show();
 
                 // Tab: show tab bar, restore default active
                 $tabs.show();

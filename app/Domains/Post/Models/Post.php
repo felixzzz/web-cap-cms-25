@@ -69,6 +69,8 @@ class Post extends Model implements HasMedia
         'post_type',
         'alt_image',
         'alt_image_en',
+        'caption_image',
+        'caption_image_en',
         'language_availability'
     ];
 

@@ -57,6 +57,8 @@ class PostController extends BackendController
             'featured_image' => ['nullable'],
             'alt_image' => ['nullable'],
             'alt_image_en' => ['nullable'],
+            'caption_image' => ['nullable'],
+            'caption_image_en' => ['nullable'],
             'featured_image_remove' => ['nullable'],
             'meta_title' => ['nullable'],
             'meta_keyword' => ['nullable'],
