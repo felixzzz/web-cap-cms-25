@@ -42,7 +42,6 @@
                                     <x-forms.text-input name="title_en" label="Title (EN)" required="0" placeholder="The title of post" text=""/>
                                     <x-forms.text-input name="slug_en" label="URL/Slug EN" required="0" placeholder="The url of post" text=""/>
                                 </div>
-                                @if($type['type'] != 'blog')
                                 <div class="d-flex gap-4">
                                     @if ($type['is_category'])
                                         <div class="flex-fill">
@@ -54,7 +53,6 @@
                                         </div>
                                     @endif
                                 </div>
-                                @endif
                                 @if($type['type'] == 'news')                        
                                 <div class="flex-fill">
                                     <div class="mb-8 fv-row fv-plugins-icon-container">

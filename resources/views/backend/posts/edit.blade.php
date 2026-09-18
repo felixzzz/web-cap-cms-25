@@ -41,11 +41,10 @@
                                     <x-forms.text-input name="title_en" label="Title (EN)" required="0" placeholder="The title of post" text="" value="{!! $post->title_en !!}"/>
                                     <x-forms.text-input name="slug_en" label="URL/Slug EN" required="0" placeholder="The URL/Slug of post" text="" value="{!! $post->slug_en !!}"/>
                                 </div>
-                                    @if($type['type'] != 'blog')
                                     <div class="d-flex gap-4">
                                         @if ($type['is_category'])
                                         <div class="flex-fill">
-                                            <x-forms.select label="Category" name="categories[]" placeholder="Select an option" required="1" multiple="1" hidden="0" text="Choose category that has been defined">--}}
+                                            <x-forms.select label="Category" name="categories[]" placeholder="Select an option" required="1" multiple="1" hidden="0" text="Choose category that has been defined">
                                                 @foreach($categories as $item)
                                                     @if (in_array($item->id, $post->category()->pluck('id')->toArray()))
                                                         <option value="{{ $item->id }}" selected>{{ $item->name }}</option>
@@ -58,7 +57,6 @@
                                         @endif
     
                                     </div>
-                                    @endif
                                     @if($type['type'] == 'news')
                                     <div class="flex-fill">
                                         <div class="mb-8 fv-row fv-plugins-icon-container">
