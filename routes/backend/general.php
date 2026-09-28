@@ -17,6 +17,7 @@ Route::group([
         });
 
     Route::post('/', [GeneralController::class, 'store'])->name('store');
+    Route::post('/generate-llms', [GeneralController::class, 'generateLlms'])->name('generate-llms');
     Route::group([
         'prefix' => 'sidebar-menu',
         'as' => 'sidebar-menu.',

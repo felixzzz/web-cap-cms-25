@@ -4,7 +4,9 @@ namespace App\Domains\Core\Http\Controllers\Backend;
 
 use App\Domains\Core\Http\Requests\Setting\StoreGeneralRequest;
 use App\Domains\Core\Http\Requests\Setting\StoreRequest;
+use App\Http\Controllers\Api\LlmsController;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 use function view;
 
@@ -21,6 +23,16 @@ class GeneralController extends Controller
         $this->save_options_array($this->getValidated($request));
 
         return redirect()->route('admin.general.index')->withFlashSuccess(__('The setting has been updated successfully'));
+    }
+
+    public function generateLlms(): JsonResponse
+    {
+        $generated = LlmsController::generateDefaultContent();
+
+        return response()->json([
+            'message' => 'Default llms.txt and llms-full.txt generated from CMS content.',
+            'data' => $generated,
+        ]);
     }
 
     /**
