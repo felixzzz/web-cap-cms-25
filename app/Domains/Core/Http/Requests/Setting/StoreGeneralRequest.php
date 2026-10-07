@@ -33,6 +33,7 @@ class StoreGeneralRequest extends FormRequest
             'app.meta_title' => ['required', 'string'],
             'app.meta_description' => ['nullable', 'string'],
             'app.meta_keywords' => ['nullable', 'string'],
+            'app.robots_txt' => ['nullable', 'string'],
             'app.llms_txt' => ['nullable', 'string'],
             'app.llms_full_txt' => ['nullable', 'string'],
         ];

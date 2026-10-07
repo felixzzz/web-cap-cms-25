@@ -43,5 +43,6 @@ Route::get('/banner-active/{id}', [\App\Http\Controllers\Api\BannerController::c
 Route::get('/home-banners', [\App\Http\Controllers\Api\BannerController::class, 'getHomeBanners']);
 Route::get('/banner-page', [\App\Http\Controllers\Api\BannerController::class, 'getPageBanners']);
 Route::get('/llms', [\App\Http\Controllers\Api\LlmsController::class, 'index']);
+Route::get('/robots', [\App\Http\Controllers\Api\RobotsController::class, 'index']);
 
 

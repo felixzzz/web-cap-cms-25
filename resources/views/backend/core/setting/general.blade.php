@@ -26,6 +26,11 @@
             <x-forms.text-input name="app[meta_keywords]" label="Meta Keywords" value="{{ $model->getOption('app.meta_keywords') }}" isSide="1" text="The Meta keywords" required="0"/>
 
             @php
+                $savedRobotsTxt = $model->getOption('app.robots_txt');
+                if (empty(trim((string) $savedRobotsTxt))) {
+                    $savedRobotsTxt = \App\Http\Controllers\Api\RobotsController::generateDefaultContent();
+                }
+
                 $savedLlmsTxt = $model->getOption('app.llms_txt');
                 $savedLlmsFullTxt = $model->getOption('app.llms_full_txt');
                 if (empty(trim((string) $savedLlmsTxt)) || empty(trim((string) $savedLlmsFullTxt))) {
@@ -34,6 +39,38 @@
                     $savedLlmsFullTxt = !empty(trim((string) $savedLlmsFullTxt)) ? $savedLlmsFullTxt : $defaultLlms['llms_full_txt'];
                 }
             @endphp
+
+            <div class="d-flex justify-content-between align-items-center mt-10 mb-5">
+                <div>
+                    <h3 class="card-title align-items-start flex-column mb-0">
+                        <span class="card-label fw-bold fs-3 mb-1">Search Engine &amp; Crawler Access (robots.txt)</span>
+                    </h3>
+                    <div class="text-muted fs-7">
+                        Controls crawler indexing rules served dynamically at <code>/robots.txt</code>.
+                    </div>
+                </div>
+                <button id="generate-robots-button" type="button" class="btn btn-light-primary btn-sm" style="display:none">
+                    Reset to Default robots.txt
+                </button>
+            </div>
+
+            <div class="row mb-8">
+                <div class="col-xl-3">
+                    <div class="fs-6 fw-semibold mt-2 mb-1">robots.txt</div>
+                    <div class="text-muted fs-7">Exclusion rules served at <code>/robots.txt</code></div>
+                </div>
+                <div class="col-xl-9 fv-row">
+                    <textarea
+                        id="robots-txt-input"
+                        name="app[robots_txt]"
+                        class="form-control font-monospace fs-7"
+                        rows="14"
+                        placeholder="User-agent: *&#10;Disallow: /...">{{ old('app.robots_txt', $savedRobotsTxt) }}</textarea>
+                    @error('app.robots_txt')
+                        <div class="fv-plugins-message-container invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
 
             <div class="d-flex justify-content-between align-items-center mt-10 mb-5">
                 <div>
@@ -103,7 +140,34 @@
                 $('#general-form input[type="checkbox"]').prop('disabled', false);
                 $('#edit-button').hide();
                 $('#save-button').show();
+                $('#generate-robots-button').show();
                 $('#generate-llms-button').show();
+            });
+
+            // Reset default robots.txt
+            $('#generate-robots-button').click(function() {
+                var $btn = $(this);
+                var originalText = $btn.text();
+                $btn.prop('disabled', true).text('Loading...');
+
+                $.ajax({
+                    url: "{{ route('admin.general.generate-robots') }}",
+                    type: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        if (response && response.data && response.data.robots_txt) {
+                            $('#robots-txt-input').val(response.data.robots_txt);
+                        }
+                    },
+                    error: function() {
+                        alert('Failed to generate default robots.txt content.');
+                    },
+                    complete: function() {
+                        $btn.prop('disabled', false).text(originalText);
+                    }
+                });
             });
 
             // Auto-generate default llms.txt & llms-full.txt from CMS content

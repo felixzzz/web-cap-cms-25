@@ -5,6 +5,7 @@ namespace App\Domains\Core\Http\Controllers\Backend;
 use App\Domains\Core\Http\Requests\Setting\StoreGeneralRequest;
 use App\Domains\Core\Http\Requests\Setting\StoreRequest;
 use App\Http\Controllers\Api\LlmsController;
+use App\Http\Controllers\Api\RobotsController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
@@ -32,6 +33,18 @@ class GeneralController extends Controller
         return response()->json([
             'message' => 'Default llms.txt and llms-full.txt generated from CMS content.',
             'data' => $generated,
+        ]);
+    }
+
+    public function generateRobots(): JsonResponse
+    {
+        $generated = RobotsController::generateDefaultContent();
+
+        return response()->json([
+            'message' => 'Default robots.txt generated.',
+            'data' => [
+                'robots_txt' => $generated,
+            ],
         ]);
     }
 
