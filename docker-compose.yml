@@ -1,7 +1,10 @@
 version: '3.8'
 services:
   app:
-    image: 'lorisleiva/laravel-docker:8.2'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: 'chandra-asri-cms-app:8.2.35'
     container_name: chandra-asri-cms-app
     ports:
       - '8000:8000'
