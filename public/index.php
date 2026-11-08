@@ -57,6 +57,8 @@ $response = $kernel->handle(
     $request = Illuminate\Http\Request::capture()
 );
 
+header_remove('X-Powered-By');
+
 $response->send();
 
 $kernel->terminate($request, $response);
