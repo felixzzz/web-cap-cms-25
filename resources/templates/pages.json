@@ -68,6 +68,7 @@
                         "name": "image_mobile",
                         "label": "Image Mobile",
                         "type": "image",
+                        "multilang": true,
                         "size": 100,
                         "ratio": "9:16",
                         "info": "Recommended 540 x 960 px (ratio 9:16) and recommended file size 100 KB"
@@ -82,6 +83,7 @@
                         "name": "image_desktop",
                         "label": "Image desktop",
                         "type": "image",
+                        "multilang": true,
                         "size": 220,
                         "ratio": "2:1",
                         "info": "Recommended 2160 x 1080 px (ratio 2:1) and recommended file size 220 KB"
@@ -6160,6 +6162,7 @@
                         "name": "image_mobile",
                         "label": "Image Mobile",
                         "type": "image",
+                        "multilang": true,
                         "size": 100,
                         "ratio": "9:16",
                         "info": "Recommended 540 x 960 px (ratio 9:16) and recommended file size 100 KB"
@@ -6174,6 +6177,7 @@
                         "name": "image_desktop",
                         "label": "Image desktop",
                         "type": "image",
+                        "multilang": true,
                         "size": 220,
                         "ratio": "2:1",
                         "info": "Recommended 2160 x 1080 px (ratio 2:1) and recommended file size 220 KB"
@@ -6901,6 +6905,7 @@
                         "name": "image_mobile",
                         "label": "Image Mobile",
                         "type": "image",
+                        "multilang": true,
                         "size": 100,
                         "ratio": "9:16",
                         "info": "Recommended 540 x 960 px (ratio 9:16) and recommended file size 100 KB"
@@ -6915,6 +6920,7 @@
                         "name": "image_desktop",
                         "label": "Image desktop",
                         "type": "image",
+                        "multilang": true,
                         "size": 220,
                         "ratio": "2:1",
                         "info": "Recommended 2160 x 1080 px (ratio 2:1) and recommended file size 220 KB"
@@ -7078,9 +7084,81 @@
                 ]
             },
             {
+                "keyName": "bottom_banner",
+                "label": "Bottom CTA Banner",
+                "section": "5",
+                "fields": [
+                    {
+                        "name": "status",
+                        "label": "Status",
+                        "type": "select",
+                        "options": [
+                            {
+                                "label": "Active",
+                                "value": "active"
+                            },
+                            {
+                                "label": "Inactive",
+                                "value": "inactive"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "type": "textarea"
+                    },
+                    {
+                        "name": "button_label",
+                        "label": "Button Label",
+                        "type": "text"
+                    },
+                    {
+                        "name": "button_url",
+                        "label": "Button URL",
+                        "type": "text"
+                    },
+                    {
+                        "name": "image_desktop",
+                        "label": "Background Image Desktop",
+                        "type": "image",
+                        "multilang": true,
+                        "size": 500,
+                        "ratio": "2:1",
+                        "info": "Recommended 1920 x 600 px and recommended file size 500 KB"
+                    },
+                    {
+                        "name": "alt_text_image_desktop",
+                        "label": "Alt Text (Image Desktop)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
+                    },
+                    {
+                        "name": "image_mobile",
+                        "label": "Background Image Mobile",
+                        "type": "image",
+                        "multilang": true,
+                        "size": 250,
+                        "ratio": "9:16",
+                        "info": "Recommended 768 x 600 px and recommended file size 250 KB"
+                    },
+                    {
+                        "name": "alt_text_image_mobile",
+                        "label": "Alt Text (Image Mobile)",
+                        "type": "text",
+                        "placeholder": "ex: alt text image"
+                    }
+                ]
+            },
+            {
                 "keyName": "seo_meta",
                 "label": "Seo Meta",
-                "section": "5",
+                "section": "6",
                 "fields": [
                     {
                         "name": "meta_title",

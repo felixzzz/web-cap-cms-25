@@ -20,8 +20,10 @@
                     $isMasterLang = $lang === $masterLang;
 
                     if (isset($meta[$component['keyName']])) {
-                        if (isset($meta[$component['keyName']]->{$field['name'] . '_' . $lang})) {
+                        if (!empty($meta[$component['keyName']]->{$field['name'] . '_' . $lang})) {
                             $value = $meta[$component['keyName']]->{$field['name'] . '_' . $lang};
+                        } elseif (!$isMasterLang && empty($field['multilang']) && empty($field['multilang_image']) && !empty($meta[$component['keyName']]->{$field['name'] . '_' . $masterLang})) {
+                            $value = $meta[$component['keyName']]->{$field['name'] . '_' . $masterLang};
                         } elseif ($isMasterLang && isset($meta[$component['keyName']]->{$field['name']})) {
                             $value = $meta[$component['keyName']]->{$field['name']};
                         } else {
