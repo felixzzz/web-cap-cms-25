@@ -13,8 +13,8 @@ class ProductFlowBuilderController extends Controller
      */
     public function index()
     {
-        $frontendUrl = env('FRONTEND_URL', 'http://localhost:3000');
-        $secret = env('FLOW_BUILDER_SECRET', 'cap25-product-flow-secret-2026');
+        $frontendUrl = config('app.frontend_url', env('FRONTEND_URL', 'https://chandra-asri.com'));
+        $secret = config('app.flow_builder_secret', env('FLOW_BUILDER_SECRET', 'cap25-product-flow-secret-2026'));
         $editorUrl = $frontendUrl . '/en/admin/flow-editor?secret=' . urlencode($secret);
         $option = Option::where('option_name', 'product_flow_coordinates')->first();
         $hasCustomLayout = !empty($option && $option->option_value && $option->option_value !== '{}');

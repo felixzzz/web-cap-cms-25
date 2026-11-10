@@ -61,6 +61,10 @@ return [
 
     'asset_url' => env('ASSET_URL', null),
 
+    'frontend_url' => env('FRONTEND_URL', 'https://chandra-asri.com'),
+
+    'flow_builder_secret' => env('FLOW_BUILDER_SECRET', 'cap25-product-flow-secret-2026'),
+
     'register' => [
         'admin' => env('ADMIN_REGISTER', true),
         'user' => env('USER_REGISTER', true)

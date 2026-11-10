@@ -28,7 +28,7 @@ class RobotsController extends Controller
 
     public static function generateDefaultContent(): string
     {
-        $siteUrl = rtrim((string) env('FRONTEND_URL', 'https://chandra-asri.com'), '/');
+        $siteUrl = rtrim((string) config('app.frontend_url', env('FRONTEND_URL', 'https://chandra-asri.com')), '/');
 
         return <<<TXT
 User-agent: Googlebot

@@ -49,7 +49,7 @@ class LlmsController extends Controller
             $option->getOption('app.meta_description')
             ?: 'Chandra Asri Group is Indonesia\'s leading energy, chemical, and infrastructure solutions company, supplying products and services to various manufacturing industries in both domestic and international markets.'
         ));
-        $siteUrl = rtrim((string) env('FRONTEND_URL', 'https://chandra-asri.com'), '/');
+        $siteUrl = rtrim((string) config('app.frontend_url', env('FRONTEND_URL', 'https://chandra-asri.com')), '/');
 
         $pages = collect();
         $products = collect();
