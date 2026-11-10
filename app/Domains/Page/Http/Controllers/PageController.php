@@ -107,7 +107,20 @@ class PageController extends Controller
         }
         $location = $create->getMeta('location');
         $parents = Post::where('type', 'page')->where('id', '!=', $create->id)->pluck('id', 'title');
-        return view('backend.page.edit', compact('template', 'components', 'post', 'parents', 'location'))->withMeta($valueMeta)->withFlashSuccess(__('Page was successfully created.'));
+
+        $bannerGroups = BannerGroup::where('position', 'pages')->get();
+        $homeBannerGroups = BannerGroup::where('position', 'home')->get();
+        $homeBanners = BannerActive::where('post_id', $create->id)
+            ->whereIn('location', ['journey-growth', 'financial-report', 'financial-reports', 'navbar', 'footer'])
+            ->get()
+            ->map(function ($banner) {
+                if ($banner->location == 'financial-report')
+                    $banner->location = 'financial-reports';
+                return $banner;
+            })
+            ->groupBy('location');
+
+        return view('backend.page.edit', compact('template', 'components', 'post', 'parents', 'location', 'bannerGroups', 'homeBannerGroups', 'homeBanners'))->withMeta($valueMeta)->withFlashSuccess(__('Page was successfully created.'));
     }
 
     public function edit(Post $post)
