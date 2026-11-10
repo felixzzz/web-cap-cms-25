@@ -59,13 +59,14 @@ class PageTable extends DataTableComponent
                 ->searchable(),
             Column::make(__('Template'), 'id')
                 ->format(function ($value, $row, Column $column) {
-                    $template = $this->getMeta('template', $row->id);
-                    $theme = $this->page_templates()->where('name', $template)->first();
+                    $template = $this->getMeta('template', $row->id) ?: ($row->template ?? null);
+                    $theme = $this->page_templates() ? $this->page_templates()->where('name', $template)->first() : null;
+                    $label = $theme['label'] ?? ($template ?: '-');
                    
                     return '
                         <div class="d-flex align-items-center">
                             <div class="d-flex justify-content-start flex-column">
-                                <span  class="text-dark fw-bold text-hover-primary fs-6">'.$theme['label'].'</span>
+                                <span class="text-dark fw-bold text-hover-primary fs-6">'.$label.'</span>
                             </div>
                         </div>
                     ';
