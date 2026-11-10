@@ -45,4 +45,11 @@ Route::get('/banner-page', [\App\Http\Controllers\Api\BannerController::class, '
 Route::get('/llms', [\App\Http\Controllers\Api\LlmsController::class, 'index']);
 Route::get('/robots', [\App\Http\Controllers\Api\RobotsController::class, 'index']);
 
+// Product Flow Interactive Builder Routes
+Route::prefix('product-flow')->group(function () {
+    Route::get('/layout', [\App\Http\Controllers\Api\ProductFlowController::class, 'getLayout']);
+    Route::post('/layout', [\App\Http\Controllers\Api\ProductFlowController::class, 'saveLayout']);
+});
+
+
 

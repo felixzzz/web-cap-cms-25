@@ -81,6 +81,11 @@
                     @endif
                 @endforeach
             @endif
+
+            <div class="menu-item">
+                <x-utils.menu-link :href="route('admin.product-flow.index')" class="menu-link" :active="activeClass(Route::is('admin.product-flow.*'), 'active')" :text="__('Product Flow Builder')" />
+            </div>
+
             @if ($logged_in_user->hasAllAccess() ||($logged_in_user->can('admin.access.user.list') ||
                                     $logged_in_user->can('admin.access.user.deactivate') ||
                                     $logged_in_user->can('admin.access.user.reactivate') ||
