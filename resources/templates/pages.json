@@ -7085,7 +7085,7 @@
             },
             {
                 "keyName": "bottom_banner",
-                "label": "Bottom CTA Banner",
+                "label": "Bottom Banner (Image Only)",
                 "section": "5",
                 "fields": [
                     {
@@ -7104,54 +7104,40 @@
                         ]
                     },
                     {
-                        "name": "title",
-                        "label": "Title",
-                        "type": "text"
-                    },
-                    {
-                        "name": "description",
-                        "label": "Description",
-                        "type": "textarea"
-                    },
-                    {
-                        "name": "button_label",
-                        "label": "Button Label",
-                        "type": "text"
-                    },
-                    {
-                        "name": "button_url",
-                        "label": "Button URL",
-                        "type": "text"
-                    },
-                    {
                         "name": "image_desktop",
-                        "label": "Background Image Desktop",
+                        "label": "Banner Image (Desktop)",
                         "type": "image",
                         "multilang": true,
                         "size": 500,
-                        "ratio": "2:1",
-                        "info": "Recommended 1920 x 600 px and recommended file size 500 KB"
+                        "ratio": "2.5:1",
+                        "info": "Recommended 1060 x 424 px (ratio ~2.5:1) and file size max 500 KB"
                     },
                     {
                         "name": "alt_text_image_desktop",
-                        "label": "Alt Text (Image Desktop)",
+                        "label": "Alt Text (Desktop)",
                         "type": "text",
-                        "placeholder": "ex: alt text image"
+                        "placeholder": "ex: Chandra Asri Bottom Banner"
                     },
                     {
                         "name": "image_mobile",
-                        "label": "Background Image Mobile",
+                        "label": "Banner Image (Mobile)",
                         "type": "image",
                         "multilang": true,
-                        "size": 250,
-                        "ratio": "9:16",
-                        "info": "Recommended 768 x 600 px and recommended file size 250 KB"
+                        "size": 300,
+                        "ratio": "2.5:1",
+                        "info": "Recommended 1060 x 424 px and file size max 300 KB"
                     },
                     {
                         "name": "alt_text_image_mobile",
-                        "label": "Alt Text (Image Mobile)",
+                        "label": "Alt Text (Mobile)",
                         "type": "text",
-                        "placeholder": "ex: alt text image"
+                        "placeholder": "ex: Chandra Asri Bottom Banner Mobile"
+                    },
+                    {
+                        "name": "url",
+                        "label": "Target URL (Optional)",
+                        "type": "text",
+                        "placeholder": "e.g. /our-business"
                     }
                 ]
             },
