@@ -7085,7 +7085,7 @@
             },
             {
                 "keyName": "bottom_banner",
-                "label": "Bottom Banner (Image Only)",
+                "label": "Bottom Banner",
                 "section": "5",
                 "fields": [
                     {
@@ -7104,13 +7104,37 @@
                         ]
                     },
                     {
+                        "name": "title",
+                        "label": "Title",
+                        "type": "text",
+                        "placeholder": "ex: Let's Build What's Next, Together"
+                    },
+                    {
+                        "name": "description",
+                        "label": "Description",
+                        "type": "textarea",
+                        "placeholder": "ex: Discover how Chandra Asri Group can be your growth partner in building stronger businesses"
+                    },
+                    {
+                        "name": "button_label",
+                        "label": "Button Label",
+                        "type": "text",
+                        "placeholder": "ex: Discover Our Business"
+                    },
+                    {
+                        "name": "button_url",
+                        "label": "Button URL",
+                        "type": "text",
+                        "placeholder": "ex: /our-business"
+                    },
+                    {
                         "name": "image_desktop",
-                        "label": "Banner Image (Desktop)",
+                        "label": "Banner Background (Desktop)",
                         "type": "image",
                         "multilang": true,
-                        "size": 500,
-                        "ratio": "2.5:1",
-                        "info": "Recommended 1060 x 424 px (ratio ~2.5:1) and file size max 500 KB"
+                        "size": 1000,
+                        "ratio": "16:9",
+                        "info": "Recommended 1920 x 800 px or 1060 x 424 px and file size max 1 MB"
                     },
                     {
                         "name": "alt_text_image_desktop",
@@ -7120,24 +7144,18 @@
                     },
                     {
                         "name": "image_mobile",
-                        "label": "Banner Image (Mobile)",
+                        "label": "Banner Background (Mobile)",
                         "type": "image",
                         "multilang": true,
-                        "size": 300,
-                        "ratio": "2.5:1",
-                        "info": "Recommended 1060 x 424 px and file size max 300 KB"
+                        "size": 500,
+                        "ratio": "1:1",
+                        "info": "Recommended 720 x 720 px or mobile ratio"
                     },
                     {
                         "name": "alt_text_image_mobile",
                         "label": "Alt Text (Mobile)",
                         "type": "text",
                         "placeholder": "ex: Chandra Asri Bottom Banner Mobile"
-                    },
-                    {
-                        "name": "url",
-                        "label": "Target URL (Optional)",
-                        "type": "text",
-                        "placeholder": "e.g. /our-business"
                     }
                 ]
             },
